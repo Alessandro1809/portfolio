@@ -1,0 +1,14 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import ContactSection from "@/components/ui/ContactSecction.astro";
+import FallingTechBackground from "@/components/react/FallingTechBackgound";
+import FeaturedProjects from "@/components/ui/FeaturedProjects.astro";
+---
+
+<Layout>
+    <div class="pt-44">
+        <FallingTechBackground client:load />
+        <FeaturedProjects />
+        <ContactSection />
+    </div>
+</Layout>

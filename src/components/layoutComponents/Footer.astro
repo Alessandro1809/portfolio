@@ -1,0 +1,90 @@
+---
+import Button from "@/components/ui/buttons/Button.astro";
+import Flag from "@/components/ui/icons/Flag.astro";
+import SocialApps from "@/components/ui/SocialApps.astro";
+import footerImage from "@/assets/FooterAvatar.png";
+---
+
+<footer
+    class="container mx-auto max-w-12xl relative z-10 pt-20 sm:pt-32 md:pt-44 pb-6 sm:pb-8 md:pb-10 px-4 sm:px-6 md:px-8 overflow-hidden"
+>
+    <div
+        class="h-px bg-linear-to-r from-primary-green via-white to-primary-green mt-1"
+    >
+    </div>
+    <article
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-6"
+    >
+        <div
+            class="flex flex-col sm:flex-row gap-6 sm:gap-8 md:col-span-2 lg:col-span-2 mt-6 sm:mt-8 md:mt-10"
+        >
+            <div class="flex flex-col gap-4 sm:gap-6 md:gap-8">
+                <h3 class="text-2xl sm:text-3xl font-bold">Get in touch</h3>
+                <Button
+                    text="Schedule a 15 minutes meeting"
+                    variant="tertiary"
+                />
+
+                <SocialApps />
+            </div>
+            <div class="flex flex-col gap-4 sm:gap-6 md:gap-8">
+                <h3 class="text-2xl sm:text-3xl font-bold">Interest links</h3>
+                <ul class="flex flex-col gap-3 sm:gap-4">
+                    <li>
+                        <a
+                            class="text-neutral-400 hover:text-primary-green transition-colors"
+                            href="/projects">Projects</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            class="text-neutral-400 hover:text-primary-green transition-colors"
+                            href="/blog">Blog</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            class="text-neutral-400 hover:text-primary-green transition-colors"
+                            href="/know-my-iniciative">Know my iniciative</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            class="text-neutral-400 hover:text-primary-green transition-colors"
+                            href="/experience">Experience</a
+                        >
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="hidden lg:block lg:col-span-1">
+            <img
+                class="max-h-48 lg:max-h-64 translate-y-8 lg:translate-y-12"
+                src={footerImage.src}
+                alt=""
+            />
+        </div>
+
+        <div class="md:col-span-2 lg:col-span-1 mt-6 sm:mt-8 md:mt-10">
+            <div class="flex flex-col place-items-start md:place-items-end">
+                <h3 class="text-2xl sm:text-3xl font-bold">Alessandro Diaz</h3>
+                <p
+                    class="text-neutral-400 mt-3 sm:mt-4 text-base sm:text-lg max-w-4xl flex gap-2"
+                >
+                    Made in <Flag />
+                </p>
+                <p class="text-neutral-400 mt-3 sm:mt-4 text-sm max-w-4xl">
+                    Evolving through code, bring freedom through innovation.
+                </p>
+                <p class="text-neutral-400 mt-3 sm:mt-4 text-xs max-w-4xl">
+                    Copyright © {new Date().getFullYear()} Alessandro Diaz. All
+                    rights reserved.
+                </p>
+                <p class="text-neutral-400 mt-3 sm:mt-4 text-xs max-w-4xl">
+                    This web was designed in figma, an developed with Astro,
+                    React, Tailwindcss v.4 and Typescrypt and love 🤍
+                </p>
+            </div>
+        </div>
+    </article>
+</footer>

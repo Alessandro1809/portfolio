@@ -1,0 +1,35 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import ContactSection from "@/components/ui/ContactSecction.astro";
+import WorkTimeline from "@/components/react/TimeLine";
+import ImageCard from "@/components/cards/ImageCard.astro";
+import SocialApps from "@/components/ui/SocialApps.astro";
+import Button from "@/components/ui/buttons/Button.astro";
+---
+
+<Layout>
+    <div class="pt-44 relative max-w-7xl container mx-auto">
+        <div
+            class="grid grid-cols-1 md:grid-cols-2 items-center justify-center"
+        >
+            <div class="-mt-24 justify-center flex flex-col items-center mb-12">
+                <ImageCard />
+                <SocialApps />
+                <div class="mt-6 max-w-4xl mx-auto">
+                    <Button href="/contact" text="Download my CV" />
+                </div>
+            </div>
+
+            <ContactSection />
+        </div>
+
+        <div class="h-screen relative mb-[60vh] mx-4">
+            <div
+                class="absolute h-full w-full bg-[radial-gradient(#00D47C_.5px,transparent_1px)] bg-size-[32px_32px] mask-[radial-gradient(ellipse_40%_50%_at_50%_50%,#000_70%,transparent_100%)]"
+            >
+            </div>
+
+            <WorkTimeline client:only="react" />
+        </div>
+    </div>
+</Layout>

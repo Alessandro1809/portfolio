@@ -1,0 +1,129 @@
+---
+import Button from "@/components/ui/buttons/Button.astro";
+import GoToAll from "@/components/ui/icons/goToAll.astro";
+import GoIcon from "@/components/ui/icons/goIcon.astro";
+import nous from "@/assets/videos/nous.webm";
+import erlingnails from "@/assets/videos/erlingnails.webm";
+export interface FeaturedProject {
+    title: string;
+    description: string;
+    image: string;
+    tags: string[];
+    link: string;
+}
+
+const projects: FeaturedProject[] = [
+    {
+        title: "NOUS",
+        description:
+            "This project is a modern, high-performance web platform built with a fully customized CMS designed specifically around the company’s operational needs. It includes integrated AI modules that deliver real-time analytics, actionable insights, and intelligent automation to improve decision-making across the business. Beyond its technical execution, this project also represents the foundation of my entrepreneurial initiative — a scalable, client-focused solution built to demonstrate how tailored software and AI can transform everyday workflows.",
+        image: nous,
+        tags: [
+            "Astro",
+            "Typescrypt",
+            "PostgreSQL",
+            "Tailwind CSS",
+            "React.js",
+            "Node.js",
+        ],
+        link: "#",
+    },
+    {
+        title: "Erling Nails",
+        description:
+            "This project is a modern, elegant website designed for a professional manicurist, featuring a fast and seamless gallery experience optimized for high-quality images. It includes an integrated content management service that allows effortless uploading, organizing, and updating of work samples, ensuring the portfolio stays fresh and visually engaging. The result is a refined, user-friendly platform that highlights the artist’s craft while providing a smooth, high-performance browsing experience.",
+        image: erlingnails,
+        tags: [
+            "Astro",
+            "Typescrypt",
+            "PostgreSQL",
+            "Tailwind CSS",
+            "React.js",
+            "Node.js",
+        ],
+        link: "#",
+    },
+];
+---
+
+<section
+    class="container mx-auto max-w-12xl z-10 relative pb-20 md:pb-32 lg:pb-40 px-4 sm:px-6 md:px-8"
+>
+    <header
+        class="pb-6 md:pb-8 lg:pb-10"
+        data-aos="fade-up"
+        data-aos-duration="1000"
+        data-aos-delay="100"
+        data-aos-once="true"
+    >
+        <h2
+            class="text-2xl sm:text-3xl md:text-4xl font-bold text-white pb-3 sm:pb-4"
+        >
+            Some Projects that I'm proud of
+        </h2>
+        <div
+            class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-6"
+        >
+            <p class="text-neutral-400 text-sm sm:text-base max-w-2xl">
+                A collection of things I’ve built, broken, and rebuilt — always
+                learning along the way.
+            </p>
+
+            <a
+                href="#"
+                class="flex items-center gap-2 text-neutral-200 hover:underline text-base sm:text-lg md:text-xl whitespace-nowrap"
+            >
+                <p class="text-primary-green">View All</p>
+                <GoToAll />
+            </a>
+        </div>
+    </header>
+    <article>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+            {
+                projects.map((project) => {
+                    return (
+                        <article>
+                            <video
+                                autoPlay
+                                muted
+                                loop
+                                src={project.image}
+                                class="rounded-xl"
+                                data-aos="fade-up"
+                                data-aos-duration="1000"
+                                data-aos-delay="300"
+                                data-aos-once="true"
+                            />
+                            <footer class="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-3 sm:mt-4 gap-3 sm:gap-0">
+                                <div class="flex items-center gap-2 flex-nowrap whitespace-nowrap">
+                                    <a
+                                        href={project.link}
+                                        class="flex items-center gap-2"
+                                    >
+                                        <p class="text-primary-green font-semibold text-sm sm:text-lg">
+                                            {project.title}
+                                        </p>
+                                        <GoIcon color="#00D47C" />
+                                    </a>
+                                </div>
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    {project.tags.map((tag) => {
+                                        return (
+                                            <p class="text-dark-green bg-primary-green rounded-full px-2 py-0.5 sm:px-2 sm:py-1 text-xs sm:text-sm">
+                                                {tag}
+                                            </p>
+                                        );
+                                    })}
+                                </div>
+                            </footer>
+                            <p class="text-neutral-400 mt-2 text-sm sm:text-base">
+                                {project.description}
+                            </p>
+                        </article>
+                    );
+                })
+            }
+        </div>
+    </article>
+</section>

@@ -1,0 +1,255 @@
+---
+import avatar from "@/assets/avatar1.png";
+import { Image } from "astro:assets";
+import Button from "../ui/buttons/Button.astro";
+---
+
+<script>
+    const init = () => {
+        const navLinks = document.querySelectorAll("nav ul li a");
+        const mobileNavLinks = document.querySelectorAll(
+            "#mobileMenu nav ul li a",
+        );
+        const activeClasses =
+            "bg-linear-to-b from-white/10 to-white/5 border-white/20 backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_4px_6px_rgba(0,0,0,0.05)]".split(
+                " ",
+            );
+        const inactiveClasses = "hover:bg-white/5 border-transparent".split(
+            " ",
+        );
+
+        // Function to set active link based on current URL
+        const setActiveLink = () => {
+            const currentPath = window.location.pathname;
+
+            // Desktop links
+            const allDesktopLinks = document.querySelectorAll("nav ul li a");
+            allDesktopLinks.forEach((link) => {
+                const href = link.getAttribute("href");
+                link.classList.remove(...activeClasses);
+                link.classList.add(...inactiveClasses);
+
+                if (
+                    href === currentPath ||
+                    (currentPath === "/" && href === "/")
+                ) {
+                    link.classList.remove(...inactiveClasses);
+                    link.classList.add(...activeClasses);
+                }
+            });
+
+            // Mobile links
+            const allMobileLinks = document.querySelectorAll(
+                "#mobileMenu nav ul li a",
+            );
+            allMobileLinks.forEach((link) => {
+                const href = link.getAttribute("href");
+                link.classList.remove(...activeClasses);
+                link.classList.add(...inactiveClasses);
+
+                if (
+                    href === currentPath ||
+                    (currentPath === "/" && href === "/")
+                ) {
+                    link.classList.remove(...inactiveClasses);
+                    link.classList.add(...activeClasses);
+                }
+            });
+        };
+
+        // Set active link on page load
+        setActiveLink();
+
+        // Desktop navigation
+        navLinks.forEach((link) => {
+            link.addEventListener("click", (e) => {
+                const currentLinks = document.querySelectorAll("nav ul li a");
+                currentLinks.forEach((l) => {
+                    l.classList.remove(...activeClasses);
+                    l.classList.add(...inactiveClasses);
+                });
+
+                const clickedLink = e.currentTarget as HTMLElement;
+                clickedLink.classList.remove(...inactiveClasses);
+                clickedLink.classList.add(...activeClasses);
+            });
+        });
+
+        // Mobile navigation
+        mobileNavLinks.forEach((link) => {
+            link.addEventListener("click", (e) => {
+                const currentLinks = document.querySelectorAll(
+                    "#mobileMenu nav ul li a",
+                );
+                currentLinks.forEach((l) => {
+                    l.classList.remove(...activeClasses);
+                    l.classList.add(...inactiveClasses);
+                });
+
+                const clickedLink = e.currentTarget as HTMLElement;
+                clickedLink.classList.remove(...inactiveClasses);
+                clickedLink.classList.add(...activeClasses);
+
+                // Close mobile menu after selection
+                const mobileMenu = document.getElementById("mobileMenu");
+                const hamburger = document.getElementById("hamburger");
+                if (mobileMenu && hamburger) {
+                    mobileMenu.classList.add("translate-x-full");
+                    hamburger.classList.remove("open");
+                }
+            });
+        });
+
+        // Hamburger menu toggle
+        const hamburger = document.getElementById("hamburger");
+        const mobileMenu = document.getElementById("mobileMenu");
+
+        hamburger?.addEventListener("click", () => {
+            hamburger.classList.toggle("open");
+            mobileMenu?.classList.toggle("translate-x-full");
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener("click", (e) => {
+            const target = e.target as HTMLElement;
+            if (
+                mobileMenu &&
+                hamburger &&
+                !mobileMenu.contains(target) &&
+                !hamburger.contains(target) &&
+                !mobileMenu.classList.contains("translate-x-full")
+            ) {
+                mobileMenu.classList.add("translate-x-full");
+                hamburger.classList.remove("open");
+            }
+        });
+    };
+
+    // Run on initial load
+    init();
+
+    // Run on view transition updates
+    document.addEventListener("astro:after-swap", init);
+</script>
+
+<header
+    transition:persist="true"
+    class="container mx-auto max-w-12xl fixed top-0 left-0 right-0 z-50"
+    data-aos="fade-down"
+    data-aos-duration="1000"
+    data-aos-delay="800"
+>
+    <div
+        class="flex justify-between items-center pt-4 px-4 sm:px-6 md:px-8"
+        id="headerContainer"
+    >
+        <div
+            class="min-w-[58px] bg-linear-to-t from-white/20 via-[#34635C]/20 to-[#34635C]/20 border-2 border-primary-green items-center justify-center flex rounded-full overflow-hidden backdrop-blur-[20px]"
+        >
+            <Image class="w-auto h-14" src={avatar} alt="Profile avatar" />
+        </div>
+
+        <!-- Desktop Navigation -->
+        <nav class="sm:block md:block hidden lg:block">
+            <ul class="flex gap-2 text-white items-center">
+                <li>
+                    <a
+                        href="/"
+                        class="px-5 py-2 rounded-full bg-linear-to-b from-white/10 to-white/5 border border-white/20 backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300"
+                        >Home</a
+                    >
+                </li>
+                <li>
+                    <a
+                        href="/my-projects"
+                        class="px-5 py-2 rounded-full hover:bg-white/5 transition-all duration-300 border border-transparent"
+                        >Projects</a
+                    >
+                </li>
+                <li>
+                    <a
+                        href="/blog"
+                        class="px-5 py-2 rounded-full hover:bg-white/5 transition-all duration-300 border border-transparent"
+                        >Blog</a
+                    >
+                </li>
+            </ul>
+        </nav>
+
+        <div class="hidden sm:block md:block lg:block">
+            <Button text="Hire Me" variant="primary" href="/hire-me" />
+        </div>
+
+        <!-- Mobile Hamburger Button -->
+        <button
+            id="hamburger"
+            class="sm:hidden md:hidden lg:hidden relative w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-lg bg-linear-to-b from-white/10 to-white/5 border border-white/20 backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:bg-white/10"
+            aria-label="Toggle menu"
+        >
+            <span
+                class="block w-6 h-0.5 bg-white rounded-full transition-all duration-300"
+            ></span>
+            <span
+                class="block w-6 h-0.5 bg-white rounded-full transition-all duration-300"
+            ></span>
+            <span
+                class="block w-6 h-0.5 bg-white rounded-full transition-all duration-300"
+            ></span>
+        </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div
+        id="mobileMenu"
+        class="md:hidden sm:hidden lg:hidden fixed top-0 right-0 h-screen w-80 max-w-[85vw] bg-linear-to-b from-[#1a1a1a]/10 via-[#2a2a2a]/10 to-[#1a1a1a]/10 backdrop-blur-xl border-l border-white/10 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out"
+    >
+        <div class="flex flex-col h-full p-6 pt-20">
+            <!-- Mobile Navigation -->
+            <nav class="flex-1">
+                <ul class="flex flex-col gap-3 text-white">
+                    <li>
+                        <a
+                            href="/"
+                            class="block px-6 py-3 rounded-xl bg-linear-to-b from-white/10 to-white/5 border border-white/20 backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 text-center font-medium"
+                            >Home</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            href="/about-me"
+                            class="block px-6 py-3 rounded-xl hover:bg-white/5 transition-all duration-300 border border-transparent text-center font-medium"
+                            >About</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            href="/blog"
+                            class="block px-6 py-3 rounded-xl hover:bg-white/5 transition-all duration-300 border border-transparent text-center font-medium"
+                            >Blog</a
+                        >
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Mobile CTA Button -->
+            <div class="mt-6">
+                <Button text="Hire Me" variant="primary" href="/contact" />
+            </div>
+        </div>
+    </div>
+</header>
+
+<style>
+    /* Hamburger animation */
+    #hamburger.open span:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+
+    #hamburger.open span:nth-child(2) {
+        opacity: 0;
+    }
+
+    #hamburger.open span:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+</style>

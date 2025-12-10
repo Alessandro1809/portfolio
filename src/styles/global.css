@@ -1,0 +1,14 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+    --color-primary-green: #00D47C;
+    --color-dark-green: #0B100E;
+}
+
+html {
+    scroll-behavior: smooth;
+    color: white;
+}

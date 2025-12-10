@@ -1,0 +1,44 @@
+---
+import GoToAll from "./icons/goToAll.astro";
+---
+
+<section
+    class="container mx-auto max-w-12xl relative z-10 pb-[35vh] px-4 sm:px-6 md:px-8"
+    data-aos="fade-up"
+    data-aos-duration="800"
+    data-aos-once="true"
+>
+    <header class="mb-32">
+        <div class="flex justify-between gap-8">
+            <h2 class="md:text-4xl text-2xl font-bold">
+                Some Thoughts, Grab a coffee and read along ☕
+            </h2>
+            <p
+                class="flex flex-nowrap whitespace-nowrap gap-2 md:text-xl text-lg text-primary-green place-items-end hover:cursor-pointer hover:underline"
+            >
+                View all <GoToAll />
+            </p>
+        </div>
+        <div
+            class="h-px bg-linear-to-r from-primary-green via-white to-primary-green mt-1"
+        >
+        </div>
+        <div
+            class="bg-linear-to-br from-primary-green to-purple-500 w-64 h-64 rounded-full absolute right-0 top-0 -z-1 blur-3xl"
+        >
+        </div>
+        <p class="text-neutral-400 mt-4 text-lg max-w-4xl">
+            Welcome to my little corner of thoughts and experiments. Here, I
+            share what I learn along the way — from code and design to personal
+            insights and side projects. Grab a coffee, take a scroll, and maybe
+            you’ll find something that sparks an idea.
+        </p>
+    </header>
+    <article class="flex items-center justify-center h-44">
+        <p
+            class="text-neutral-400 text-lg bg-primary-green/20 border border-primary-green rounded-xl p-32"
+        >
+            Coming soon...
+        </p>
+    </article>
+</section>

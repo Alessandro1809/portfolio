@@ -1,0 +1,79 @@
+---
+import ImageCard from "@/components/cards/ImageCard.astro";
+import Button from "./ui/buttons/Button.astro";
+import GoToAll from "./ui/icons/goToAll.astro";
+import SocialApps from "./ui/SocialApps.astro";
+import { TechStack } from "./react/TechStack";
+import { NumberTicker } from "./react/NumberTicker";
+import FeaturedInfo from "./ui/FeaturedInfo.astro";
+---
+
+<section
+    class="container mx-auto max-w-12xl relative z-10 pb-24 md:pb-32 lg:pb-44 px-4 sm:px-6 md:px-8"
+    data-aos="fade-up"
+    data-aos-duration="800"
+    data-aos-delay="100"
+    data-aos-once="true"
+>
+    <header class="pb-6 md:pb-8 lg:pb-10">
+        <h2
+            class="text-2xl sm:text-3xl md:text-4xl font-bold text-white pb-3 sm:pb-4"
+        >
+            Here's a bit about who I am
+        </h2>
+        <div class="flex items-center">
+            <p class="text-neutral-400 text-sm sm:text-base max-w-3xl">
+                I see coding as both art and problem-solving — a way to turn
+                ideas into something people can use and enjoy. I believe good
+                work comes from passion and collaboration.
+            </p>
+        </div>
+    </header>
+    <article
+        class="flex flex-col lg:flex-row md:gap-20 items-center lg:items-center text-neutral-400"
+    >
+        <ImageCard />
+        <div class="flex flex-col gap-4 w-full">
+            <p class="text-pretty leading-relaxed text-sm sm:text-base">
+                I’m a Full-Stack Developer with over three years of experience
+                building management systems, custom CMS platforms, end-to-end
+                web applications, and AI-powered modules. I specialize in
+                creating scalable backends, clean and modular frontends, and
+                automation solutions that simplify complex business processes.
+            </p>
+            <p class="text-pretty leading-relaxed text-sm sm:text-base">
+                My main stack includes TypeScript, React, Astro, Tailwind CSS,
+                Next.js, Node.js, MongoDB, PostgreSQL, and SQLite. Whether it’s
+                architecting a flexible system, integrating external services,
+                optimizing performance, or designing efficient data flows, I aim
+                to deliver solutions that are both robust and elegant.
+            </p>
+
+            <p>
+                Every project I take on is an opportunity to learn, refine my
+                craft, and build something that truly makes a difference.
+            </p>
+
+            <footer
+                class="flex flex-col sm:flex-row justify-between mt-12 sm:mt-24 md:mt-32 lg:mt-44 gap-6 sm:gap-4"
+            >
+                <div
+                    class="flex flex-row items-start sm:items-center gap-4 place-items-start sm:place-items-end justify-between"
+                >
+                    <Button text="Download my CV" variant="primary" />
+                    <a
+                        href="#"
+                        class="flex items-center gap-2 hover:text-white text-base sm:text-lg md:text-xl whitespace-nowrap"
+                    >
+                        <p class="text-primary-green">Projects</p>
+                        <GoToAll />
+                    </a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <SocialApps />
+                </div>
+            </footer>
+        </div>
+    </article>
+    <FeaturedInfo />
+</section>

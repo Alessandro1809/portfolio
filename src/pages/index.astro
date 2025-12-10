@@ -1,11 +1,25 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Layout from "@/layouts/Layout.astro";
+import Hero from "@/components/ui/Hero.astro";
+import FeaturedProjects from "@/components/ui/FeaturedProjects.astro";
+import AboutMe from "@/components/AboutMe.astro";
+// import BlogSection from "@/components/ui/BlogSection.astro";
+import ContactSection from "@/components/ui/ContactSecction.astro";
+import WorkTimeline from "@/components/react/TimeLine";
 ---
 
 <Layout>
-	<Welcome />
+    <Hero />
+    <FeaturedProjects />
+    <div class="h-screen relative mb-[60vh] mx-4">
+        <div
+            class="absolute h-full w-full bg-[radial-gradient(#00D47C_.5px,transparent_1px)] bg-size-[32px_32px] mask-[radial-gradient(ellipse_40%_50%_at_50%_50%,#000_70%,transparent_100%)]"
+        >
+        </div>
+
+        <WorkTimeline client:only="react" />
+    </div>
+    <AboutMe />
+    <!-- <BlogSection /> -->
+    <ContactSection />
 </Layout>
