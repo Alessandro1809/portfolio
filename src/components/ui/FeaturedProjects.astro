@@ -4,6 +4,7 @@ import GoToAll from "@/components/ui/icons/goToAll.astro";
 import GoIcon from "@/components/ui/icons/goIcon.astro";
 import nous from "@/assets/videos/nous.webm";
 import erlingnails from "@/assets/videos/erlingnails.webm";
+import cms from "@/assets/videos/cms.webm";
 export interface FeaturedProject {
     title: string;
     description: string;
@@ -18,6 +19,21 @@ const projects: FeaturedProject[] = [
         description:
             "This project is a modern, high-performance web platform built with a fully customized CMS designed specifically around the company’s operational needs. It includes integrated AI modules that deliver real-time analytics, actionable insights, and intelligent automation to improve decision-making across the business. Beyond its technical execution, this project also represents the foundation of my entrepreneurial initiative — a scalable, client-focused solution built to demonstrate how tailored software and AI can transform everyday workflows.",
         image: nous,
+        tags: [
+            "Astro",
+            "Typescrypt",
+            "PostgreSQL",
+            "Tailwind CSS",
+            "React.js",
+            "Node.js",
+        ],
+        link: "#",
+    },
+    {
+        title: "Content Management System",
+        description:
+            "This project is a custom headless CMS built from scratch, focused on flexible content management and a decoupled architecture. It provides a complete editorial workflow for creating and publishing blog content, along with content monitoring and seamless integration with Astro-based websites, prioritizing performance, SEO, and full control over the data. The system is designed to serve as a content backend for multiple projects, adapting to different deployments through environment configuration rather than code duplication. This makes it a solid solution for portfolios, corporate websites, and digital products that require speed, scalability, and long-term maintainability.",
+        image: cms,
         tags: [
             "Astro",
             "Typescrypt",
@@ -85,7 +101,9 @@ const projects: FeaturedProject[] = [
                     return (
                         <article>
                             <video
-                                autoPlay
+                                id="project-video"
+                                autoplay="true"
+                                playback-rate="2"
                                 muted
                                 loop
                                 src={project.image}
@@ -127,3 +145,12 @@ const projects: FeaturedProject[] = [
         </div>
     </article>
 </section>
+
+<script>
+    document.addEventListener("astro:after-swap", () => {
+        const videos = document.querySelectorAll("#project-video");
+        videos.forEach((video) => {
+            video.playbackRate = 2;
+        });
+    });
+</script>

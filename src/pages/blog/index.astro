@@ -1,0 +1,70 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { HeroVideoDialog } from "@/components/react/VideoDialog";
+import BlogGrid from "@/components/BlogGrid.astro";
+---
+
+<Layout>
+    <div
+        class="pt-44 container mx-auto max-w-12xl z-10 relative pb-20 md:pb-32 lg:pb-40 px-4 sm:px-6 md:px-8"
+    >
+        <div class="flex justify-center gap-2">
+            <h2
+                class="text-sm font-medium text-primary-green bg-primary-green/20 border border-primary-green/40 rounded-full px-4 py-2 text center w-fit tracking-wider leading-6"
+            >
+                Blog / Articles
+            </h2>
+        </div>
+        <h3
+            class="text-8xl font-bold my-8 flex items-center justify-center flex-col"
+        >
+            Exploring the<span
+                class="text-primary-green [text-shadow:0_0_60px_#00D47C]"
+                >Digital World</span
+            >
+        </h3>
+
+        <div class="flex flex-col items-center justify-center gap-2">
+            <article class="">
+                <p
+                    class="text-neutral-400 text-sm sm:text-base max-w-4xl text-center"
+                >
+                    This blog is a space where I document technical decisions,
+                    architectural trade-offs, and lessons learned while working
+                    on real-world software systems. I focus on practical
+                    problem-solving, performance, and maintainability, sharing
+                    insights gained from building, breaking, and refining
+                    products over time. The goal is not to provide quick tips,
+                    but to reflect on the reasoning behind solutions and the
+                    impact of those decisions in production environments.
+                </p>
+            </article>
+            <div class="mt-8 flex gap-2">
+                <div class="h-1.5 w-12 rounded-full bg-primary glow-effect">
+                </div>
+                <div class="h-1.5 w-12 rounded-full bg-secondary"></div>
+                <div class="h-1.5 w-12 rounded-full bg-accent"></div>
+            </div>
+        </div>
+        <div class="relative justify-center flex mt-12">
+            <HeroVideoDialog
+                client:idle
+                className="block dark:hidden z-50"
+                animationStyle="from-right"
+                videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
+                thumbnailSrc="https://startup-template-sage.vercel.app/hero-light.png"
+                thumbnailAlt="Hero Video"
+            />
+            <HeroVideoDialog
+                client:idle
+                className="hidden dark:block z-50"
+                animationStyle="from-left"
+                videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
+                thumbnailSrc="https://startup-template-sage.vercel.app/hero-dark.png"
+                thumbnailAlt="Hero Video"
+            />
+        </div>
+    </div>
+
+    <BlogGrid />
+</Layout>
