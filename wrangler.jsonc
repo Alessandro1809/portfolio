@@ -2,5 +2,12 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "portfolio-alessandro",
   "compatibility_date": "2025-12-17",
-  "pages_build_output_dir": "./dist"
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "pages_build_output_dir": "./dist",
+  "vars": {
+    "TURSO_DB_URL": "libsql://personal-blog-entrys-alessandro1809.aws-us-west-2.turso.io",
+    "TURSO_AUTH_TOKEN": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3NjYwMDI1NDksImlkIjoiZWYwYTgzZjMtNTJjMy00Mzk2LThiMzYtY2JhMDlmZWY5MjIxIiwicmlkIjoiYjY2NjgzMjEtZmMyZS00YjMzLWJjMzMtMmE3ZTcyMGYzMTI1In0.uvPoBLBDNhRTUZs8tLRottb9Dw9yaqtUucywy5YxQrPFOAojQlyCORrYCNQh4EwwI84WKHJMQzXdFngG2ZpiAQ"
+  }
 }
