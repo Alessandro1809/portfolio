@@ -3,7 +3,7 @@ import Layout from "@/layouts/Layout.astro";
 import Hero from "@/components/ui/Hero.astro";
 import FeaturedProjects from "@/components/ui/FeaturedProjects.astro";
 import AboutMe from "@/components/AboutMe.astro";
-// import BlogSection from "@/components/ui/BlogSection.astro";
+import BlogSection from "@/components/ui/BlogSection.astro";
 import ContactSection from "@/components/ui/ContactSecction.astro";
 import WorkTimeline from "@/components/react/TimeLine";
 ---
@@ -20,6 +20,6 @@ import WorkTimeline from "@/components/react/TimeLine";
         <WorkTimeline client:only="react" />
     </div>
     <AboutMe />
-    <!-- <BlogSection /> -->
+    <BlogSection />
     <ContactSection />
 </Layout>

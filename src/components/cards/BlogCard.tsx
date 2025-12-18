@@ -6,10 +6,11 @@ import { useState } from "react"
 interface BlogPost {
   id: number
   title: string
+  slug: string
   excerpt: string
   date: string
-  category: string
-  readTime: string
+  categorie: string
+  read_time: string
   featured: boolean
 }
 
@@ -17,8 +18,9 @@ export function BlogCard({ post }: { post: BlogPost }) {
   const [isHovered, setIsHovered] = useState(false)
 
   return (
-    <article
-      className="group relative overflow-hidden rounded-lg border border-border bg-card transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10"
+    <a 
+      href={`/blog/${post.slug}`}
+      className="group relative block overflow-hidden rounded-lg border border-border bg-card transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 hover:cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -38,8 +40,8 @@ export function BlogCard({ post }: { post: BlogPost }) {
       <div className="relative p-6">
         {/* Category and metadata */}
         <div className="mb-4 flex items-center justify-between">
-          <span className="font-mono text-xs uppercase tracking-wider text-primary">{post.category}</span>
-          <span className="text-xs text-muted-foreground">{post.readTime}</span>
+          <span className="font-mono text-xs uppercase tracking-wider text-primary">{post.categorie}</span>
+          <span className="text-xs text-muted-foreground">{post.read_time} min</span>
         </div>
 
         {/* Title */}
@@ -76,6 +78,6 @@ export function BlogCard({ post }: { post: BlogPost }) {
 
       {/* Grid pattern overlay */}
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#0a3a2a08_1px,transparent_1px),linear-gradient(to_bottom,#0a3a2a08_1px,transparent_1px)] bg-size[2rem_2rem] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-    </article>
+    </a>
   )
 }

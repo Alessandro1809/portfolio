@@ -1,44 +1,82 @@
 ---
 import GoToAll from "./icons/goToAll.astro";
+import { turso } from "@/lib/turso";
+import { ArrowUpRight } from "lucide-react";
+
+const result = await turso.execute({
+    sql: "SELECT * FROM posts WHERE STATUS = 'PUBLISHED' ORDER BY createdAt DESC LIMIT 4",
+    args: [],
+});
+
+const recentPosts = result.rows.map((post: any) => ({
+    title: post.title as string,
+    slug: post.slug as string,
+    date: new Date(post.createdAt).toLocaleDateString("es-ES", {
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+    }),
+}));
 ---
 
 <section
-    class="container mx-auto max-w-12xl relative z-10 pb-[35vh] px-4 sm:px-6 md:px-8"
+    class="container mx-auto max-w-12xl relative z-10 pb-[30vh] px-4 sm:px-6 md:px-8"
     data-aos="fade-up"
     data-aos-duration="800"
     data-aos-once="true"
 >
-    <header class="mb-32">
-        <div class="flex justify-between gap-8">
-            <h2 class="md:text-4xl text-2xl font-bold">
+    <header class="mb-16">
+        <div class="flex justify-between gap-8 items-end">
+            <h2 class="md:text-5xl text-3xl font-bold max-w-2xl">
                 Some Thoughts, Grab a coffee and read along ☕
             </h2>
-            <p
-                class="flex flex-nowrap whitespace-nowrap gap-2 md:text-xl text-lg text-primary-green place-items-end hover:cursor-pointer hover:underline"
+            <a
+                href="/blog"
+                class="flex flex-nowrap items-center gap-2 md:text-xl text-lg text-primary-green hover:underline decoration-primary-green/30 underline-offset-8 transition-all hover:gap-4"
             >
                 View all <GoToAll />
-            </p>
+            </a>
         </div>
         <div
-            class="h-px bg-linear-to-r from-primary-green via-white to-primary-green mt-1"
+            class="h-px bg-linear-to-r from-primary-green/50 via-primary-green to-primary-green/50 mt-4 opacity-30"
         >
         </div>
         <div
-            class="bg-linear-to-br from-primary-green to-purple-500 w-64 h-64 rounded-full absolute right-0 top-0 -z-1 blur-3xl"
+            class="bg-linear-to-br from-primary-green/20 to-purple-500/20 w-96 h-96 rounded-full absolute right-0 top-0 -z-1 blur-[100px]"
         >
         </div>
-        <p class="text-neutral-400 mt-4 text-lg max-w-4xl">
+        <p class="text-neutral-400 mt-8 text-lg max-w-3xl leading-relaxed">
             Welcome to my little corner of thoughts and experiments. Here, I
             share what I learn along the way — from code and design to personal
-            insights and side projects. Grab a coffee, take a scroll, and maybe
-            you’ll find something that sparks an idea.
+            insights and side projects.
         </p>
     </header>
-    <article class="flex items-center justify-center h-44">
-        <p
-            class="text-neutral-400 text-lg bg-primary-green/20 border border-primary-green rounded-xl p-32"
-        >
-            Coming soon...
-        </p>
-    </article>
+
+    <div
+        class="grid gap-px bg-white/5 border border-white/5 rounded-2xl overflow-hidden"
+    >
+        {
+            recentPosts.map((post) => (
+                <a
+                    href={`/blog/${post.slug}`}
+                    class="group flex items-center justify-between p-6 md:p-8 bg-black/50 hover:bg-white/5 relative transition-all duration-300"
+                >
+                    <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-8">
+                        <span class="font-mono text-sm text-neutral-500 min-w-32">
+                            {post.date}
+                        </span>
+                        <h3 class="text-xl md:text-2xl font-medium text-neutral-200 group-hover:text-primary-green transition-colors">
+                            {post.title}
+                        </h3>
+                    </div>
+                    <div class="opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-4 group-hover:translate-x-0">
+                        <ArrowUpRight class="w-6 h-6 text-primary-green" />
+                    </div>
+
+                    {/* Hover line accent */}
+                    <div class="absolute left-0 top-0 h-full w-1 bg-primary-green scale-y-0 group-hover:scale-y-100 transition-transform origin-top duration-300" />
+                </a>
+            ))
+        }
+    </div>
 </section>

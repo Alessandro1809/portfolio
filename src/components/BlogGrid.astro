@@ -1,72 +1,28 @@
 ---
 import { BlogCard } from "./cards/BlogCard";
+import { turso } from "@/lib/turso";
 
-const blogPosts = [
-    {
-        id: 1,
-        title: "El Futuro de la Web 3.0",
-        excerpt:
-            "Explorando las nuevas posibilidades de la web descentralizada y cómo está transformando la manera en que interactuamos online.",
-        date: "2024-03-15",
-        category: "Tecnología",
-        readTime: "5 min",
-        featured: true,
-    },
-    {
-        id: 2,
-        title: "Optimización de Rendimiento en React",
-        excerpt:
-            "Técnicas avanzadas para mejorar el performance de tus aplicaciones React y brindar una mejor experiencia de usuario.",
-        date: "2024-03-10",
-        category: "Desarrollo",
-        readTime: "8 min",
-        featured: false,
-    },
-    {
-        id: 3,
-        title: "Diseño Minimalista y Funcional",
-        excerpt:
-            "Cómo crear interfaces que sean a la vez hermosas y altamente funcionales siguiendo principios de diseño minimalista.",
-        date: "2024-03-05",
-        category: "Diseño",
-        readTime: "6 min",
-        featured: false,
-    },
-    {
-        id: 4,
-        title: "IA Generativa en el Desarrollo",
-        excerpt:
-            "El impacto de la inteligencia artificial en el flujo de trabajo de desarrolladores y diseñadores modernos.",
-        date: "2024-02-28",
-        category: "IA",
-        readTime: "7 min",
-        featured: true,
-    },
-    {
-        id: 5,
-        title: "Arquitectura de Microservicios",
-        excerpt:
-            "Guía completa para implementar una arquitectura escalable usando microservicios y contenedores.",
-        date: "2024-02-20",
-        category: "Backend",
-        readTime: "10 min",
-        featured: false,
-    },
-    {
-        id: 6,
-        title: "CSS Moderno: Grid y Flexbox",
-        excerpt:
-            "Dominando las técnicas de layout más potentes de CSS para crear diseños responsivos y flexibles.",
-        date: "2024-02-15",
-        category: "Frontend",
-        readTime: "6 min",
-        featured: false,
-    },
-];
+const result = await turso.execute({
+    sql: "SELECT * FROM posts WHERE STATUS = 'PUBLISHED' ORDER BY createdAt DESC",
+    args: [],
+});
+
+const blogPosts = result.rows.map((post: any) => ({
+    id: post.id,
+    title: post.title,
+    slug: post.slug,
+    featuredImage: post.featuredImage,
+    excerpt: post.excerpt,
+    date: new Date(post.createdAt).toLocaleDateString().split("T")[0],
+    categorie: post.categorie,
+    tags: post.tags,
+    read_time: post.read_time,
+    featured: Boolean(post.featured),
+}));
 ---
 
 <section class="container mx-auto px-4 py-16 md:py-24">
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {blogPosts.map((post) => <BlogCard client:load post={post} />)}
+        {blogPosts.map((post: any) => <BlogCard client:load post={post} />)}
     </div>
 </section>
