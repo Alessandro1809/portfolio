@@ -26,6 +26,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
             TURSO_DB_URL,
             TURSO_AUTH_TOKEN
         });
+    } else {
+        console.error("[Middleware] TURSO_DB_URL is missing! Blog posts will not load.");
     }
 
     return next();
