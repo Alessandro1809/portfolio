@@ -1,5 +1,5 @@
 /// <reference types="astro/client" />
-import type { Client } from "@libsql/client";
+import type { Client } from "@libsql/client/web";
 
 declare global {
     namespace App {
