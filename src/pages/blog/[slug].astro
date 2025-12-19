@@ -13,33 +13,46 @@ const { slug } = Astro.params;
 let post: any = null;
 let morePosts: any[] = [];
 
-try {
-    // Usamos argumentos posicionados (?) o nombrados (:) para prevenir inyección SQL
-    const { rows } = await turso.execute({
-        sql: "SELECT * FROM posts WHERE slug = ? LIMIT 1",
-        args: [slug as string],
-    });
-    post = rows[0];
-
-    if (post) {
-        // Fetch 3 recent posts excluding current one
-        const { rows: morePostsRows } = await turso.execute({
-            sql: "SELECT * FROM posts WHERE STATUS = 'PUBLISHED' AND slug != ? ORDER BY createdAt DESC LIMIT 3",
+if (!turso) {
+    console.error(
+        `[SlugPage] Turso client missing in Astro.locals for slug: ${slug}`,
+    );
+} else {
+    try {
+        console.log(`[SlugPage] Fetching post: ${slug}`);
+        const { rows } = await turso.execute({
+            sql: "SELECT * FROM posts WHERE slug = ? LIMIT 1",
             args: [slug as string],
         });
+        post = rows[0];
 
-        morePosts = morePostsRows.map((p: any) => ({
-            title: p.title as string,
-            slug: p.slug as string,
-            date: new Date(p.createdAt).toLocaleDateString("es-ES", {
-                month: "short",
-                day: "2-digit",
-                year: "numeric",
-            }),
-        }));
+        if (post) {
+            console.log(`[SlugPage] Post found. Fetching related posts...`);
+            const { rows: morePostsRows } = await turso.execute({
+                sql: "SELECT * FROM posts WHERE STATUS = 'PUBLISHED' AND slug != ? ORDER BY createdAt DESC LIMIT 3",
+                args: [slug as string],
+            });
+
+            morePosts = morePostsRows.map((p: any) => ({
+                title: p.title as string,
+                slug: p.slug as string,
+                date: p.createdAt
+                    ? new Date(p.createdAt).toLocaleDateString("es-ES", {
+                          month: "short",
+                          day: "2-digit",
+                          year: "numeric",
+                      })
+                    : "N/A",
+            }));
+        } else {
+            console.warn(`[SlugPage] Post not found for slug: ${slug}`);
+        }
+    } catch (error) {
+        console.error(
+            `[SlugPage] Error fetching post data from Turso for slug ${slug}:`,
+            error,
+        );
     }
-} catch (error) {
-    console.error("Error fetching post data from Turso:", error);
 }
 
 if (!post) {

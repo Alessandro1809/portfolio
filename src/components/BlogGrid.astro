@@ -1,28 +1,43 @@
 ---
 import { BlogCard } from "./cards/BlogCard";
-export const prerender = false;
-const { turso } = Astro.locals;
-let blogPosts: any[] = [];
-try {
-    const result = await turso.execute({
-        sql: "SELECT * FROM posts WHERE STATUS = 'PUBLISHED' ORDER BY createdAt DESC",
-        args: [],
-    });
 
-    blogPosts = result.rows.map((post: any) => ({
-        id: post.id,
-        title: post.title,
-        slug: post.slug,
-        featuredImage: post.featuredImage,
-        excerpt: post.excerpt,
-        date: new Date(post.createdAt).toLocaleDateString().split("T")[0],
-        categorie: post.categorie,
-        tags: post.tags,
-        read_time: post.read_time,
-        featured: Boolean(post.featured),
-    }));
-} catch (error) {
-    console.error("Error fetching blog posts from Turso:", error);
+const { turso } = Astro.locals;
+
+let blogPosts: any[] = [];
+if (!turso) {
+    console.error("[BlogGrid] Turso client is missing in Astro.locals");
+} else {
+    try {
+        console.log("[BlogGrid] Fetching posts from Turso...");
+        const result = await turso.execute({
+            sql: "SELECT * FROM posts WHERE STATUS = 'PUBLISHED' ORDER BY createdAt DESC",
+            args: [],
+        });
+
+        console.log(
+            `[BlogGrid] Query successful. Found ${result.rows.length} rows.`,
+        );
+
+        blogPosts = result.rows.map((post: any) => ({
+            id: post.id,
+            title: post.title,
+            slug: post.slug,
+            featuredImage: post.featuredImage,
+            excerpt: post.excerpt,
+            date: post.createdAt
+                ? new Date(post.createdAt).toLocaleDateString().split("T")[0]
+                : "N/A",
+            categorie: post.categorie,
+            tags: post.tags,
+            read_time: post.read_time,
+            featured: Boolean(post.featured),
+        }));
+    } catch (error) {
+        console.error(
+            "[BlogGrid] Error fetching blog posts from Turso:",
+            error,
+        );
+    }
 }
 ---
 

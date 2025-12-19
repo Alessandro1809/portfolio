@@ -19,8 +19,12 @@ export const onRequest = defineMiddleware(async (context, next) => {
         (globalThis as any).TURSO_AUTH_TOKEN ||
         import.meta.env.TURSO_AUTH_TOKEN;
 
-    if (!TURSO_DB_URL) {
-        console.warn("[Middleware] TURSO_DB_URL is missing. Check Cloudflare Dashboard > Settings > Variables.");
+    if (TURSO_DB_URL) {
+        if (runtime?.env?.TURSO_DB_URL) console.log("[Middleware] Found TURSO_DB_URL in runtime.env");
+        else if ((context as any).env?.TURSO_DB_URL) console.log("[Middleware] Found TURSO_DB_URL in context.env");
+        else if (import.meta.env.TURSO_DB_URL) console.log("[Middleware] Found TURSO_DB_URL in import.meta.env");
+    } else {
+        console.warn("[Middleware] TURSO_DB_URL is missing. Sources checked: runtime.env, context.env, globalThis, import.meta.env");
         return next();
     }
 
@@ -30,6 +34,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
             TURSO_DB_URL,
             TURSO_AUTH_TOKEN: TURSO_AUTH_TOKEN || "" // Ensure it's at least a string
         });
+        console.log("[Middleware] Turso client initialized successfully");
     } catch (e) {
         console.error("[Middleware] Failed to initialize Turso client:", e);
     }
