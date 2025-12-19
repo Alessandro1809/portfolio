@@ -9,6 +9,11 @@ declare global {
     namespace App {
         interface Locals {
             turso: Client;
+            runtime: {
+                env: Env;
+                cf?: any;
+                ctx?: any;
+            };
         }
     }
 }
