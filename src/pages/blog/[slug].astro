@@ -1,7 +1,7 @@
 ---
 import type { GetStaticPaths } from "astro";
 import Layout from "@/layouts/Layout.astro";
-import { turso } from "@/lib/turso";
+const { turso } = Astro.locals;
 import { BlogContent } from "@/components/react/blog/BlogContent";
 import type { ContentBlocks } from "@/components/react/blog/types";
 import { ShareButtons } from "@/components/react/blog/ShareButtons";

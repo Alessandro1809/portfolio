@@ -1,6 +1,6 @@
 ---
 import GoToAll from "./icons/goToAll.astro";
-import { turso } from "@/lib/turso";
+const { turso } = Astro.locals;
 import { ArrowUpRight } from "lucide-react";
 
 let recentPosts: any[] = [];
@@ -75,7 +75,7 @@ try {
                         </h3>
                     </div>
                     <div class="opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-4 group-hover:translate-x-0">
-                        <ArrowUpRight class="w-6 h-6 text-primary-green" />
+                        <ArrowUpRight className="w-6 h-6 text-primary-green" />
                     </div>
 
                     {/* Hover line accent */}

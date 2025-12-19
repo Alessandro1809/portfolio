@@ -1,6 +1,7 @@
 ---
 import { BlogCard } from "./cards/BlogCard";
-import { turso } from "@/lib/turso";
+
+const { turso } = Astro.locals;
 
 let blogPosts: any[] = [];
 try {
