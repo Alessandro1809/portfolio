@@ -1,11 +1,15 @@
-import { createClient, type Client } from "@libsql/client/web";
+import { createClient } from "@libsql/client/web";
 
-export const getTursoClient = (env: any): Client => {
-    const url = env?.runtime?.env?.TURSO_DB_URL || env?.TURSO_DB_URL || import.meta.env.TURSO_DB_URL;
-    const authToken = env?.runtime?.env?.TURSO_AUTH_TOKEN || env?.TURSO_AUTH_TOKEN || import.meta.env.TURSO_AUTH_TOKEN;
+export default {
+    async fetch(req, env) {
+        const db = createClient({
+            url: env.TURSO_DB_URL,
+            authToken: env.TURSO_AUTH_TOKEN,
+        });
 
-    return createClient({
-        url,
-        authToken,
-    });
+        // test real
+        return db.execute("SELECT 1")
+            .then(() => new Response("OK"))
+            .catch(err => new Response(err.message));
+    }
 };
