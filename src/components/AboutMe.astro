@@ -6,6 +6,7 @@ import SocialApps from "./ui/SocialApps.astro";
 import FeaturedInfo from "./ui/FeaturedInfo.astro";
 import video_presentacion from '@/assets/videos/presentacion_portfolio.webm'
 import CV from '@/assets/docs/CV-Alessandro_Diaz.pdf'
+import cover from '@/assets/cover.webp'
 ---
 
 <section
@@ -33,7 +34,7 @@ import CV from '@/assets/docs/CV-Alessandro_Diaz.pdf'
         </div>
 
        <video  src={video_presentacion} class="rounded-xl w-full h-96 object-cover"
-       poster="./src/assets/cover.webp"
+       poster={cover.src}
 
        controls="true"
        preload="auto"
