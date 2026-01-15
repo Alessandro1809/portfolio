@@ -39,6 +39,21 @@ const getYoutubeEmbedUrl = (url: string): string => {
   return url;
 };
 
+const getAlignClass = (align?: string): string => {
+  switch (align) {
+    case 'center':
+      return 'text-center';
+    case 'right':
+      return 'text-right';
+    case 'justify':
+      return 'text-justify';
+    case 'left':
+      return 'text-left';
+    default:
+      return '';
+  }
+};
+
 export const BlogContent: React.FC<BlogContentProps> = React.memo(({ content }) => {
   if (!content || !content.blocks || content.blocks.length === 0) {
     return (
@@ -50,30 +65,51 @@ export const BlogContent: React.FC<BlogContentProps> = React.memo(({ content }) 
 
 
   return (
-    <article className="prose prose-lg prose-invert">
+    <article className="prose prose-lg prose-invert blog-content">
       {content.blocks.map((block, index) => {
         switch (block.type) {
-          case 'paragraph':
+          case 'paragraph': {
+            const paragraphAlignClass = getAlignClass(block.align);
+            const paragraphClassName = paragraphAlignClass
+              ? `mb-4 text-gray-300 leading-relaxed ${paragraphAlignClass}`
+              : 'mb-4 text-gray-300 leading-relaxed';
             return (
-              <p key={index} className="mb-4 text-gray-300 leading-relaxed">
-                {block.content}
-              </p>
+              block.isHtml ? (
+                <p
+                  key={index}
+                  className={paragraphClassName}
+                  dangerouslySetInnerHTML={{ __html: block.content || '' }}
+                />
+              ) : (
+                <p key={index} className={paragraphClassName}>
+                  {block.content}
+                </p>
+              )
             );
+          }
 
-          case 'heading':
+          case 'heading': {
             const level = block.level || 1;
             const headingClasses = {
               1: 'text-4xl font-bold text-primary mb-6 mt-8',
               2: 'text-3xl font-bold text-primary mb-4 mt-6',
               3: 'text-2xl font-semibold text-primary mb-3 mt-5',
             }[level] || 'text-xl font-semibold text-primary mb-2 mt-4';
+            const headingAlignClass = getAlignClass(block.align);
+            const headingClassName = headingAlignClass
+              ? `${headingClasses} ${headingAlignClass}`
+              : headingClasses;
 
             const Tag = `h${level}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
-            return React.createElement(
-              Tag,
-              { key: index, className: headingClasses },
-              block.content
-            );
+            if (block.isHtml) {
+              return React.createElement(Tag, {
+                key: index,
+                className: headingClassName,
+                dangerouslySetInnerHTML: { __html: block.content || '' },
+              });
+            }
+            return React.createElement(Tag, { key: index, className: headingClassName }, block.content);
+          }
 
           case 'code':
             return (
@@ -88,9 +124,17 @@ export const BlogContent: React.FC<BlogContentProps> = React.memo(({ content }) 
             return (
               <ul key={index} className="list-disc list-inside mb-6 space-y-2 ml-4 text-gray-300">
                 {block.items?.map((item, i) => (
-                  <li key={i} className="leading-relaxed">
-                    {item}
-                  </li>
+                  block.isHtml ? (
+                    <li
+                      key={i}
+                      className="leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: item || '' }}
+                    />
+                  ) : (
+                    <li key={i} className="leading-relaxed">
+                      {item}
+                    </li>
+                  )
                 ))}
               </ul>
             );
@@ -99,22 +143,36 @@ export const BlogContent: React.FC<BlogContentProps> = React.memo(({ content }) 
             return (
               <ol key={index} className="list-decimal list-inside mb-6 space-y-2 ml-4 text-gray-300">
                 {block.items?.map((item, i) => (
-                  <li key={i} className="leading-relaxed">
-                    {item}
-                  </li>
+                  block.isHtml ? (
+                    <li
+                      key={i}
+                      className="leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: item || '' }}
+                    />
+                  ) : (
+                    <li key={i} className="leading-relaxed">
+                      {item}
+                    </li>
+                  )
                 ))}
               </ol>
             );
 
-          case 'blockquote':
+          case 'blockquote': {
+            const blockquoteAlignClass = getAlignClass(block.align);
+            const blockquoteClassName = blockquoteAlignClass
+              ? `border-l-4 border-primary pl-6 py-3 my-6 italic text-gray-400 bg-white/5 rounded-r-lg ${blockquoteAlignClass}`
+              : 'border-l-4 border-primary pl-6 py-3 my-6 italic text-gray-400 bg-white/5 rounded-r-lg';
             return (
               <blockquote
                 key={index}
-                className="border-l-4 border-primary pl-6 py-3 my-6 italic text-gray-400 bg-white/5 rounded-r-lg"
+                className={blockquoteClassName}
+                {...(block.isHtml ? { dangerouslySetInnerHTML: { __html: block.content || '' } } : {})}
               >
-                {block.content}
+                {!block.isHtml ? block.content : null}
               </blockquote>
             );
+          }
 
           case 'image':
             return (
@@ -149,6 +207,15 @@ export const BlogContent: React.FC<BlogContentProps> = React.memo(({ content }) 
                   />
                 </div>
               </div>
+            );
+
+          case 'html':
+            return (
+              <div
+                key={index}
+                className="blog-html mb-6"
+                dangerouslySetInnerHTML={{ __html: block.content || '' }}
+              />
             );
 
           default:

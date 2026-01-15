@@ -5,6 +5,7 @@ import WorkTimeline from "@/components/react/TimeLine";
 import ImageCard from "@/components/cards/ImageCard.astro";
 import SocialApps from "@/components/ui/SocialApps.astro";
 import Button from "@/components/ui/buttons/Button.astro";
+import CV from '@/assets/docs/CV-Alessandro_Diaz.pdf'
 ---
 
 <Layout>
@@ -16,7 +17,7 @@ import Button from "@/components/ui/buttons/Button.astro";
                 <ImageCard />
                 <SocialApps />
                 <div class="mt-6 max-w-4xl mx-auto">
-                    <Button href="/contact" text="Download my CV" />
+                    <Button href={CV} text="Download my CV" downloadAttr={true} downloadAttributeValue="CV-Alessandro_Diaz.pdf" target="_blank" ariaLabel="Download my CV" />
                 </div>
             </div>
 

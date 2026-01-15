@@ -4,6 +4,7 @@ import { Briefcase, Code, Rocket, Award } from 'lucide-react';
 
 const WorkTimeline = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isDesktop, setIsDesktop] = useState(false);
   const timelineRef = useRef<HTMLDivElement>(null);
 
   const experiences = [
@@ -42,6 +43,14 @@ const WorkTimeline = () => {
   ];
 
   useEffect(() => {
+    // Check if desktop on mount and resize
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+    
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+
     const handleScroll = () => {
       if (!timelineRef.current) return;
       
@@ -66,13 +75,22 @@ const WorkTimeline = () => {
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll();
     
-    return () => window.removeEventListener('scroll', handleScroll);
+    // Delay initial scroll calculation to allow layout to stabilize
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        handleScroll();
+      });
+    });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', checkDesktop);
+    };
   }, []);
 
   return (
-    <div className="w-full text-white py-10 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8">
+    <div id="experience" className="w-full text-white py-10 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16 sm:mb-20 md:mb-24">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 text-transparent bg-clip-text bg-linear-to-r from-green-400 to-white">
@@ -145,7 +163,7 @@ const WorkTimeline = () => {
           </svg>
 
           {/* Timeline items */}
-          <div className="space-y-12 sm:space-y-16 lg:space-y-0 lg:relative lg:h-[800px]">
+          <div className="space-y-12 sm:space-y-16 lg:space-y-0 lg:relative lg:h-[800px] min-h-[600px]">
             {experiences.map((exp, index) => {
               const Icon = exp.icon;
               const itemProgress = Math.max(0, Math.min(1, (scrollProgress * experiences.length * 1.5) - index));
@@ -163,11 +181,11 @@ const WorkTimeline = () => {
                   key={exp.id}
                   className="relative lg:absolute"
                   style={{
-                    top: window.innerWidth >= 1024 ? desktopPositions[index].top : 'auto',
-                    left: window.innerWidth >= 1024 ? desktopPositions[index].left : 'auto',
-                    transform: window.innerWidth >= 1024 ? 'translate(-50%, -50%)' : 'none',
-                    opacity: itemProgress,
-                    scale: itemProgress,
+                    top: isDesktop ? desktopPositions[index].top : 'auto',
+                    left: isDesktop ? desktopPositions[index].left : 'auto',
+                    transform: isDesktop ? 'translate(-50%, -50%)' : 'none',
+                    opacity: isDesktop ? itemProgress : 1,
+                    scale: isDesktop ? itemProgress : 1,
                     transition: 'opacity 0.5s, scale 0.5s'
                   }}
                 >

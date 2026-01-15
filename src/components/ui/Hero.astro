@@ -2,6 +2,7 @@
 import Button from "@/components/ui/buttons/Button.astro";
 import SocialLinks from "@/components/ui/SocialLinks.astro";
 import { Particles } from "@/components/react/Particles";
+import CV from '@/assets/docs/CV-Alessandro_Diaz.pdf'
 ---
 
 <section
@@ -55,7 +56,7 @@ import { Particles } from "@/components/react/Particles";
                 data-aos-duration="1000"
                 data-aos-delay="700"
             >
-                Hey, I'm Alessandro, a software developer with over 4+ years of
+                Hey, I'm Alessandro, a software developer with over +3 years of
                 experience.
             </h1>
             <p
@@ -72,7 +73,7 @@ import { Particles } from "@/components/react/Particles";
                 data-aos-duration="1000"
                 data-aos-delay="1000"
             >
-                <Button text="Download CV" variant="primary" href="#" />
+                <Button text="Download CV" variant="primary" downloadAttr={true} downloadAttributeValue="CV-Alessandro_Diaz.pdf" href={CV} target="_blank" ariaLabel="Download my CV" />
             </div>
         </div>
     </div>

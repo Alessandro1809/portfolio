@@ -11,6 +11,7 @@
 html {
     scroll-behavior: smooth;
     color: white;
+    overflow-x: hidden;
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -132,6 +133,9 @@ html {
 
     body {
         @apply bg-background text-foreground;
+        width: 100%;
+        margin: 0;
+        padding: 0;
     }
 
     @keyframes glow {
@@ -148,5 +152,111 @@ html {
 
     .glow-effect {
         animation: glow 3s ease-in-out infinite;
+    }
+}
+
+@layer components {
+    .prose .blog-html :where(h1) {
+        @apply text-4xl md:text-5xl font-bold text-primary mt-10 mb-4;
+    }
+
+    .prose .blog-html :where(h2) {
+        @apply text-3xl md:text-4xl font-bold text-primary mt-8 mb-3;
+    }
+
+    .prose .blog-html :where(h3) {
+        @apply text-2xl md:text-3xl font-semibold text-primary mt-6 mb-3;
+    }
+
+    .prose .blog-html :where(h4) {
+        @apply text-xl font-semibold text-primary mt-6 mb-2;
+    }
+
+    .prose .blog-html :where(p) {
+        @apply text-neutral-300 leading-relaxed mb-4;
+    }
+
+    .prose .blog-html :where(a) {
+        @apply text-primary underline underline-offset-4 decoration-primary/40 hover:decoration-primary;
+    }
+
+    .prose .blog-html :where(strong) {
+        @apply font-semibold text-foreground;
+    }
+
+    .prose .blog-html :where(em) {
+        @apply italic text-neutral-200;
+    }
+
+    .prose .blog-html :where(u) {
+        @apply underline underline-offset-4;
+    }
+
+    .prose .blog-html :where(ul) {
+        @apply list-disc list-inside mb-6 space-y-2 ml-4 text-neutral-300;
+    }
+
+    .prose .blog-html :where(ol) {
+        @apply list-decimal list-inside mb-6 space-y-2 ml-4 text-neutral-300;
+    }
+
+    .prose .blog-html :where(li) {
+        @apply leading-relaxed;
+    }
+
+    .prose .blog-html :where(hr) {
+        @apply my-10 border-white/10;
+    }
+
+    .prose .blog-html :where(pre) {
+        @apply bg-dark-green text-neutral-200 rounded-lg p-4 overflow-x-auto my-6 border border-white/10;
+    }
+
+    .prose .blog-html :where(pre code) {
+        @apply text-sm font-mono;
+    }
+
+    .prose .blog-html :where(code):not(pre code) {
+        @apply bg-white/10 text-neutral-200 px-1.5 py-0.5 rounded font-mono text-sm;
+    }
+
+    .prose .blog-html :where(img) {
+        @apply rounded-xl w-full max-w-4xl mx-auto h-auto shadow-md border border-white/10 my-8;
+    }
+
+    .prose .blog-html :where(blockquote) {
+        @apply border-l-4 border-primary pl-6 py-3 my-6 italic text-neutral-400 bg-white/5 rounded-r-lg;
+    }
+
+    .prose .blog-html .video-embed {
+        @apply relative w-full max-w-4xl mx-auto aspect-video rounded-xl overflow-hidden shadow-md border border-white/10 my-8;
+    }
+
+    .prose .blog-html .video-embed iframe {
+        @apply absolute inset-0 w-full h-full;
+    }
+
+    .blog-content :where(a) {
+        @apply text-primary font-medium underline underline-offset-4 decoration-primary/50 hover:decoration-primary;
+    }
+
+    .blog-content :where(strong, b) {
+        @apply font-semibold text-foreground;
+    }
+
+    .blog-content :where(em, i) {
+        @apply italic text-neutral-200;
+    }
+
+    .blog-content :where(u) {
+        @apply underline underline-offset-4 decoration-primary/60 decoration-2;
+    }
+
+    .blog-content :where(s, del) {
+        @apply line-through text-neutral-400;
+    }
+
+    .blog-content :where(code):not(pre code) {
+        @apply bg-white/10 text-neutral-200 px-1.5 py-0.5 rounded font-mono text-sm;
     }
 }

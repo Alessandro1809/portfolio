@@ -106,11 +106,13 @@ import Button from "../ui/buttons/Button.astro";
         class="flex justify-between items-center pt-4 px-4 sm:px-6 md:px-8"
         id="headerContainer"
     >
+    <a href="/">
         <div
             class="min-w-[58px] bg-linear-to-t from-white/20 via-[#34635C]/20 to-[#34635C]/20 border-2 border-primary-green items-center justify-center flex rounded-full overflow-hidden backdrop-blur-[20px]"
         >
             <Image class="w-auto h-14" src={avatar} alt="Profile avatar" />
         </div>
+    </a>
 
         <!-- Desktop Navigation -->
         <nav class="sm:block md:block hidden lg:block">
@@ -164,7 +166,7 @@ import Button from "../ui/buttons/Button.astro";
     <!-- Mobile Menu -->
     <div
         id="mobileMenu"
-        class="md:hidden sm:hidden lg:hidden fixed top-0 right-0 h-screen w-80 max-w-[85vw] bg-linear-to-b from-[#1a1a1a]/10 via-[#2a2a2a]/10 to-[#1a1a1a]/10 backdrop-blur-xl border-l border-white/10 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out"
+        class="md:hidden sm:hidden lg:hidden fixed top-0 right-0 h-screen w-[85vw] max-w-[320px] bg-linear-to-b from-[#1a1a1a]/10 via-[#2a2a2a]/10 to-[#1a1a1a]/10 backdrop-blur-xl border-l border-white/10 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out"
     >
         <div class="flex flex-col h-full p-6 pt-20">
             <!-- Mobile Navigation -->

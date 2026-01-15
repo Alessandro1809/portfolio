@@ -1,6 +1,7 @@
 export interface ContentBlock {
-    type: 'paragraph' | 'heading' | 'code' | 'bulletList' | 'orderedList' | 'blockquote' | 'image' | 'divider' | 'youtube';
+    type: 'paragraph' | 'heading' | 'code' | 'bulletList' | 'orderedList' | 'blockquote' | 'image' | 'divider' | 'youtube' | 'html';
     content?: string;
+    isHtml?: boolean;
     level?: number;
     language?: string;
     items?: string[];
@@ -9,6 +10,7 @@ export interface ContentBlock {
     title?: string;
     width?: number;
     height?: number;
+    align?: 'left' | 'center' | 'right' | 'justify';
 }
 
 export interface ContentBlocks {

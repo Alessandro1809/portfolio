@@ -4,7 +4,7 @@ import SendIcon from "../icons/SendIcon.astro";
 ---
 
 <section class="container mx-auto max-w-12xl relative z-10">
-    <form class="flex flex-col gap-4 pt-20" action="">
+    <form class="flex flex-col gap-4 pt-20" id="contact-form">
         <div class="grid grid-cols-2 gap-4">
             <div class="flex flex-col gap-2">
                 <label for="name">Name</label>
@@ -13,6 +13,7 @@ import SendIcon from "../icons/SendIcon.astro";
                     type="text"
                     id="name"
                     name="name"
+                    required
                 />
                 <p class="text-primary-green text-xs">Ex: John Doe</p>
             </div>
@@ -23,6 +24,7 @@ import SendIcon from "../icons/SendIcon.astro";
                     type="email"
                     id="email"
                     name="email"
+                    required
                 />
                 <p class="text-primary-green text-xs">Ex: example@domain.com</p>
             </div>
@@ -32,7 +34,9 @@ import SendIcon from "../icons/SendIcon.astro";
             <textarea
                 class="w-full p-2 border border-neutral-400 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-green h-52 backdrop-blur-2xl relative z-50"
                 id="message"
-                name="message"></textarea>
+                name="message"
+                required
+                minlength="10"></textarea>
             <p class="text-primary-green text-xs">Ex: Your message here...</p>
             <div
                 class="absolute -bottom-20 right-2 bg-linear-to-br from-primary-green to-purple-500 h-44 blur-2xl w-44 rounded-full justify-center"
@@ -48,5 +52,70 @@ import SendIcon from "../icons/SendIcon.astro";
                 <SendIcon />
             </button>
         </div>
+        <div id="form-message" class="hidden mt-4 p-4 rounded-md"></div>
     </form>
 </section>
+
+<script>
+    import { actions } from 'astro:actions';
+
+    const form = document.getElementById('contact-form') as HTMLFormElement;
+    const messageDiv = document.getElementById('form-message');
+
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            console.log('[Client] Form submitted');
+            
+            const formData = new FormData(form);
+            const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+            const originalContent = submitButton.innerHTML;
+            
+            // Disable button and show loading state
+            submitButton.disabled = true;
+            submitButton.innerHTML = `
+                <span>Sending...</span>
+                <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            `;
+            
+            try {
+                console.log('[Client] Calling action...');
+                const { data, error } = await actions.sendContactEmail(formData);
+                
+                console.log('[Client] Action response:', { data, error });
+                
+                if (messageDiv) {
+                    messageDiv.classList.remove('hidden');
+                    
+                    if (error) {
+                        messageDiv.className = 'mt-4 p-4 rounded-md bg-red-100 text-red-800';
+                        messageDiv.textContent = `✗ ${error.message}`;
+                        console.error('[Client] Action error:', error);
+                    } else {
+                        messageDiv.className = 'mt-4 p-4 rounded-md bg-green-100 text-green-800';
+                        messageDiv.textContent = '✓ Message sent successfully! I\'ll get back to you soon.';
+                        form.reset();
+                        console.log('[Client] Success!');
+                    }
+                }
+            } catch (error) {
+                console.error('[Client] Unexpected error:', error);
+                if (messageDiv) {
+                    messageDiv.classList.remove('hidden');
+                    messageDiv.className = 'mt-4 p-4 rounded-md bg-red-100 text-red-800';
+                    messageDiv.textContent = '✗ An error occurred. Please try again later.';
+                }
+            } finally {
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalContent;
+                setTimeout(() => {
+                    messageDiv?.classList.add('hidden');
+                }, 5000);
+            }
+        });
+    }
+</script>

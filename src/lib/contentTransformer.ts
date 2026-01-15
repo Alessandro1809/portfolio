@@ -13,8 +13,86 @@ interface TiptapDoc {
     content: TiptapNode[];
 }
 
+const escapeHtml = (value: string): string =>
+    value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+
+const escapeAttr = (value: string): string =>
+    escapeHtml(value).replace(/"/g, "&quot;");
+
+const sanitizeUrl = (value: string): string => {
+    const trimmed = value.trim();
+    if (!trimmed) return "#";
+    if (/^(https?:|mailto:|tel:|#|\/)/i.test(trimmed)) {
+        return escapeAttr(trimmed);
+    }
+    return "#";
+};
+
+const applyMarks = (html: string, marks?: any[]): string => {
+    if (!marks || marks.length === 0) return html;
+
+    return marks.reduce((acc, mark) => {
+        switch (mark.type) {
+            case "bold":
+                return `<strong>${acc}</strong>`;
+            case "italic":
+                return `<em>${acc}</em>`;
+            case "underline":
+                return `<u>${acc}</u>`;
+            case "strike":
+                return `<s>${acc}</s>`;
+            case "code":
+                return `<code>${acc}</code>`;
+            case "link": {
+                const href = sanitizeUrl(mark.attrs?.href || "");
+                const target = mark.attrs?.target
+                    ? ` target="${escapeAttr(mark.attrs.target)}"`
+                    : "";
+                const rel = target ? ' rel="noopener noreferrer"' : "";
+                return `<a href="${href}"${target}${rel}>${acc}</a>`;
+            }
+            default:
+                return acc;
+        }
+    }, html);
+};
+
+const serializeInlineNodes = (nodes?: TiptapNode[]): string => {
+    if (!nodes) return "";
+
+    return nodes
+        .map((node) => {
+            if (node.type === "text") {
+                const base = escapeHtml(node.text || "");
+                return applyMarks(base, node.marks);
+            }
+            if (node.type === "hardBreak") {
+                return "<br />";
+            }
+            if (node.content) {
+                return serializeInlineNodes(node.content);
+            }
+            return "";
+        })
+        .join("");
+};
+
+const getAlign = (value?: string): "left" | "center" | "right" | "justify" | undefined => {
+    if (value === "left" || value === "center" || value === "right" || value === "justify") {
+        return value;
+    }
+    return undefined;
+};
+
 export const transformTiptapToContentBlocks = (data: any): ContentBlocks => {
     if (!data) return { blocks: [] };
+
+    if (typeof data === "string") {
+        return { blocks: [{ type: "html", content: data }] };
+    }
 
     // Si ya tiene la estructura esperada, devolverlo tal cual
     if (data.blocks && Array.isArray(data.blocks)) {
@@ -33,13 +111,13 @@ export const transformTiptapToContentBlocks = (data: any): ContentBlocks => {
         switch (node.type) {
             case 'paragraph':
                 if (node.content) {
-                    const text = node.content
-                        .map(n => n.text || '')
-                        .join('');
-                    if (text.trim()) {
+                    const html = serializeInlineNodes(node.content);
+                    if (html.trim()) {
                         blocks.push({
                             type: 'paragraph',
-                            content: text
+                            content: html,
+                            isHtml: true,
+                            align: getAlign(node.attrs?.textAlign)
                         });
                     }
                 }
@@ -47,13 +125,13 @@ export const transformTiptapToContentBlocks = (data: any): ContentBlocks => {
 
             case 'heading':
                 if (node.content) {
-                    const text = node.content
-                        .map(n => n.text || '')
-                        .join('');
+                    const text = serializeInlineNodes(node.content);
                     blocks.push({
                         type: 'heading',
                         content: text,
-                        level: node.attrs?.level || 1
+                        isHtml: true,
+                        level: node.attrs?.level || 1,
+                        align: getAlign(node.attrs?.textAlign)
                     });
                 }
                 break;
@@ -72,17 +150,24 @@ export const transformTiptapToContentBlocks = (data: any): ContentBlocks => {
             case 'bulletList':
                 if (node.content) {
                     const items = node.content.map(listItem => {
-                        // Asumimos que listItem tiene un paragraph adentro
-                        if (listItem.content && listItem.content[0] && listItem.content[0].content) {
-                            return listItem.content[0].content.map(n => n.text || '').join('');
-                        }
-                        return '';
+                        if (!listItem.content) return "";
+                        const itemHtml = listItem.content
+                            .map((child) => {
+                                if (child.type === "paragraph") {
+                                    return serializeInlineNodes(child.content);
+                                }
+                                return serializeInlineNodes(child.content);
+                            })
+                            .filter((value) => value)
+                            .join("<br />");
+                        return itemHtml;
                     }).filter(t => t);
 
                     if (items.length > 0) {
                         blocks.push({
                             type: 'bulletList',
-                            items
+                            items,
+                            isHtml: true
                         });
                     }
                 }
@@ -91,16 +176,24 @@ export const transformTiptapToContentBlocks = (data: any): ContentBlocks => {
             case 'orderedList':
                 if (node.content) {
                     const items = node.content.map(listItem => {
-                        if (listItem.content && listItem.content[0] && listItem.content[0].content) {
-                            return listItem.content[0].content.map(n => n.text || '').join('');
-                        }
-                        return '';
+                        if (!listItem.content) return "";
+                        const itemHtml = listItem.content
+                            .map((child) => {
+                                if (child.type === "paragraph") {
+                                    return serializeInlineNodes(child.content);
+                                }
+                                return serializeInlineNodes(child.content);
+                            })
+                            .filter((value) => value)
+                            .join("<br />");
+                        return itemHtml;
                     }).filter(t => t);
 
                     if (items.length > 0) {
                         blocks.push({
                             type: 'orderedList',
-                            items
+                            items,
+                            isHtml: true
                         });
                     }
                 }
@@ -124,15 +217,17 @@ export const transformTiptapToContentBlocks = (data: any): ContentBlocks => {
                     // Blockquotes en tiptap suelen tener paragraphs adentro
                     const text = node.content.map(n => {
                         if (n.type === 'paragraph' && n.content) {
-                            return n.content.map(inner => inner.text || '').join('');
+                            return serializeInlineNodes(n.content);
                         }
-                        return n.text || '';
-                    }).join('\n');
+                        return n.text ? escapeHtml(n.text) : '';
+                    }).join('<br />');
 
                     if (text.trim()) {
                         blocks.push({
                             type: 'blockquote',
-                            content: text
+                            content: text,
+                            isHtml: true,
+                            align: getAlign(node.attrs?.textAlign)
                         });
                     }
                 }

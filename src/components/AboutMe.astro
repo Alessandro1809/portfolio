@@ -3,20 +3,22 @@ import ImageCard from "@/components/cards/ImageCard.astro";
 import Button from "./ui/buttons/Button.astro";
 import GoToAll from "./ui/icons/goToAll.astro";
 import SocialApps from "./ui/SocialApps.astro";
-import { TechStack } from "./react/TechStack";
-import { NumberTicker } from "./react/NumberTicker";
 import FeaturedInfo from "./ui/FeaturedInfo.astro";
+import video_presentacion from '@/assets/videos/presentacion_portfolio.webm'
+import CV from '@/assets/docs/CV-Alessandro_Diaz.pdf'
 ---
 
 <section
-    class="container mx-auto max-w-12xl relative z-10 px-4 sm:px-6 md:px-8 lg:pt-52 md:pt-52 sm:pt-52 pt-84"
+    class="container mx-auto max-w-12xl relative z-10 px-4 sm:px-6 md:px-8 lg:pt-52 md:pt-52 sm:pt-52 pt-96"
     data-aos="fade-up"
     data-aos-duration="800"
     data-aos-delay="100"
     data-aos-once="true"
 >
-    <header class="pb-6 md:pb-8 lg:pb-10">
-        <h2
+
+    <header class="pb-6 md:pb-8 lg:pb-10 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="flex flex-col gap-4">
+            <h2
             class="text-2xl sm:text-3xl md:text-4xl font-bold text-white pb-3 sm:pb-4"
         >
             Here's a bit about who I am
@@ -28,7 +30,16 @@ import FeaturedInfo from "./ui/FeaturedInfo.astro";
                 work comes from passion and collaboration.
             </p>
         </div>
+        </div>
+
+       <video  src={video_presentacion} class="rounded-xl w-full h-96 object-cover"
+       poster="./src/assets/cover.webp"
+
+       controls="true"
+       preload="auto"
+       ></video>
     </header>
+    
     <article
         class="flex flex-col lg:flex-row md:gap-20 items-center lg:items-center text-neutral-400"
     >
@@ -60,9 +71,9 @@ import FeaturedInfo from "./ui/FeaturedInfo.astro";
                 <div
                     class="flex flex-row items-start sm:items-center gap-4 place-items-start sm:place-items-end justify-between"
                 >
-                    <Button text="Download my CV" variant="primary" />
+                    <Button text="Download CV" variant="primary" downloadAttr={true} downloadAttributeValue="CV-Alessandro_Diaz.pdf" href={CV} target="_blank" ariaLabel="Download my CV" />
                     <a
-                        href="#"
+                        href="/my-projects"
                         class="flex items-center gap-2 hover:text-white text-base sm:text-lg md:text-xl whitespace-nowrap"
                     >
                         <p class="text-primary-green">Projects</p>

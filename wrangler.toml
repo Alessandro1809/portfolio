@@ -8,8 +8,8 @@ compatibility_flags = [
 ]
 
 [vars]
-TURSO_DB_URL = "https://personal-blog-entrys-alessandro1809.aws-us-west-2.turso.io"
-TURSO_AUTH_TOKEN = "yJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3NjYwMDI1NDksImlkIjoiZWYwYTgzZjMtNTJjMy00Mzk2LThiMzYtY2JhMDlmZWY5MjIxIiwicmlkIjoiYjY2NjgzMjEtZmMyZS00YjMzLWJjMzMtMmE3ZTcyMGYzMTI1In0.uvPoBLBDNhRTUZs8tLRottb9Dw9yaqtUucywy5YxQrPFOAojQlyCORrYCNQh4EwwI84WKHJMQzXdFngG2ZpiAQ"
+TURSO_DB_URL="libsql://personal-blog-entrys-alessandro1809.aws-us-west-2.turso.io"
+TURSO_AUTH_TOKEN="eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3NjYxNTg3MTMsImlkIjoiZWYwYTgzZjMtNTJjMy00Mzk2LThiMzYtY2JhMDlmZWY5MjIxIiwicmlkIjoiYjY2NjgzMjEtZmMyZS00YjMzLWJjMzMtMmE3ZTcyMGYzMTI1In0.wOEo3TWLPJApgKNqTQZcQCORfHyUu_1OeYA1ki4kyIe-m4H-5qr_y30ELTdCqyBWtksmU4JCi65B0_f2oEd0BQ"
 
 [[kv_namespaces]]
 binding = "App"

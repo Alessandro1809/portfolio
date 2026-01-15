@@ -1,5 +1,6 @@
 ---
-import GoToAll from "./icons/goToAll.astro";
+import Coffee from "@/components/ui/icons/Coffee.astro";
+import GoToAll from "@/components/ui/icons/goToAll.astro";
 const { turso } = Astro.locals;
 import { ArrowUpRight } from "lucide-react";
 
@@ -43,13 +44,19 @@ if (!turso) {
     data-aos-once="true"
 >
     <header class="mb-16">
-        <div class="flex justify-between gap-8 items-end">
-            <h2 class="md:text-5xl text-3xl font-bold max-w-2xl">
-                Some Thoughts, Grab a coffee and read along ☕
-            </h2>
+        <div class="flex justify-between md:gap-8 gap-4 items-end">
+            <div class="flex items-center gap-2">
+                <div class="p-2 h-16 w-16 border border-primary-green rounded-full md:block hidden">
+                    <Coffee />
+                </div>
+                <h2 class="md:text-4xl sm:text-3xl text-xl font-bold max-w-2xl">
+                    Some Thoughts, Grab a coffee and read along 
+                </h2>
+            </div>
+            
             <a
                 href="/blog"
-                class="flex flex-nowrap items-center gap-2 md:text-xl text-lg text-primary-green hover:underline decoration-primary-green/30 underline-offset-8 transition-all hover:gap-4"
+                class="flex flex-nowrap items-center gap-2 md:text-xl text-lg text-primary-green hover:underline decoration-primary-green/30 underline-offset-8 transition-all whitespace-nowrap"
             >
                 View all <GoToAll />
             </a>
@@ -62,7 +69,7 @@ if (!turso) {
             class="bg-linear-to-br from-primary-green/20 to-purple-500/20 w-96 h-96 rounded-full absolute right-0 top-0 -z-1 blur-[100px]"
         >
         </div>
-        <p class="text-neutral-400 mt-8 text-lg max-w-3xl leading-relaxed">
+        <p class="text-neutral-400 mt-8 text-sm max-w-3xl leading-relaxed">
             Welcome to my little corner of thoughts and experiments. Here, I
             share what I learn along the way — from code and design to personal
             insights and side projects.
