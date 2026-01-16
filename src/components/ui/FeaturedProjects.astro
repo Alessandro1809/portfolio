@@ -5,6 +5,8 @@ import GoIcon from "@/components/ui/icons/goIcon.astro";
 import nous from "@/assets/videos/nous.webm";
 import erlingnails from "@/assets/videos/erlingnails.webm";
 import cms from "@/assets/videos/cms.webm";
+import apv from "@/assets/apv-api.webp";
+import blogApi from "@/assets/blog-api.webp";
 export interface FeaturedProject {
     title: string;
     description: string;
@@ -13,6 +15,7 @@ export interface FeaturedProject {
     link: string;
     haveRepo: boolean;
     repoLink?: string;
+    isVideo?: boolean;
 }
 
 const projects: FeaturedProject[] = [
@@ -30,7 +33,8 @@ const projects: FeaturedProject[] = [
             "Node.js",
         ],
         link: "https://nous.cr",
-        haveRepo:false
+        haveRepo: false,
+        isVideo: true,
     },
     {
         title: "Content Management System",
@@ -46,8 +50,9 @@ const projects: FeaturedProject[] = [
             "Node.js",
         ],
         link: "https://cms.example.com",
-        haveRepo:true,
-        repoLink:"https://github.com/Alessandro1809/cms-personal-blog"
+        haveRepo: true,
+        repoLink: "https://github.com/Alessandro1809/cms-personal-blog",
+        isVideo: true,
     },
     {
         title: "Erling Nails",
@@ -63,8 +68,40 @@ const projects: FeaturedProject[] = [
             "Node.js",
         ],
         link: "https://www.erlingnails.com/",
-        haveRepo:true,
-        repoLink:"https://github.com/Alessandro1809/erling-nails-v1"
+        haveRepo: true,
+        repoLink: "https://github.com/Alessandro1809/erling-nails-v1",
+        isVideo: true,
+    },
+    {
+        title: "Veterinary patient management API",
+        description:
+            "This project is a robust veterinary patient management API designed to support the core operations of a veterinary clinic in a secure, scalable, and well-structured way. It exposes a complete CRUD for managing patients, medical records, and related entities, along with endpoints for profile creation and editing. The API implements a fully custom authentication and authorization flow built with Express.js, including user registration, login, protected routes, and role-based access control. It integrates EmailJS to handle transactional emails such as account verification and user notifications. The result is a clean, reliable backend service that centralizes veterinary data, enforces security best practices, and serves as a solid foundation for web or mobile client applications.",
+        image: apv.src,
+        tags: ["Express.js", "Javascript", "MongoDB", "Email.js", "Node.js"],
+        link: "https://apv-docs.netlify.app/",
+        haveRepo: true,
+        repoLink: "https://github.com/Alessandro1809/MERN_APV_Backend",
+        isVideo: false,
+    },
+    {
+        title: "Blog API",
+        description:
+            "This project is a fast, strongly-typed Blog API built for real-world delivery, designed to keep the request path lean, predictable, and easy to extend. It follows a clear architecture (routes → controllers → services → database) and uses Fastify with Zod type providers to enforce consistent input/output contracts at every boundary. The API is backed by Turso (libSQL/SQLite) and Drizzle ORM for an edge-friendly, type-safe data layer that remains simple to evolve over time. Authentication is handled in a stateless way via Clerk JWT verification, enabling public read access while protecting all write operations without storing passwords. The result is a clean, production-oriented backend that supports a complete posts workflow (list, fetch by slug/id, create, update, delete), categories, view statistics, and a dedicated health-check endpoint—supported by end-to-end testing with Vitest + Supertest for reliability and confidence in deployments.",
+        image: blogApi.src,
+        tags: [
+            "Fastify",
+            "Typescript",
+            "Drizzle",
+            "Clerk",
+            "Node.js",
+            "SQLite",
+            "Vitest",
+            "Supertest",
+        ],
+        link: "https://blogapidocs.netlify.app/",
+        haveRepo: true,
+        repoLink: "https://github.com/Alessandro1809/blog-api",
+        isVideo: false,
     },
 ];
 ---
@@ -108,9 +145,9 @@ const projects: FeaturedProject[] = [
                     return (
                         <article class="relative">
                             {project.haveRepo && (
-                                <a 
-                                    href={project.repoLink} 
-                                    target="_blank" 
+                                <a
+                                    href={project.repoLink}
+                                    target="_blank"
                                     rel="noopener noreferrer"
                                     class="absolute top-4 right-4 bg-neutral-600/90 backdrop-blur-sm rounded-full p-2 hover:bg-black/70 transition-all z-50 cursor-pointer hover:scale-105 ease-in-out duration-300 border border-white "
                                     aria-label="View GitHub repository"
@@ -119,24 +156,41 @@ const projects: FeaturedProject[] = [
                                     data-aos-delay="350"
                                     data-aos-once="true"
                                 >
-                                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                    <svg
+                                        class="w-5 h-5 text-white"
+                                        fill="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
                                     </svg>
                                 </a>
                             )}
-                            <video
-                                id="project-video"
-                                autoplay="true"
-                                playback-rate="2"
-                                muted
-                                loop
-                                src={project.image}
-                                class="rounded-xl"
-                                data-aos="fade-up"
-                                data-aos-duration="1000"
-                                data-aos-delay="300"
-                                data-aos-once="true"
-                            />
+                            {project.isVideo && (
+                                <video
+                                    id="project-video"
+                                    autoplay="true"
+                                    playback-rate="2"
+                                    muted
+                                    loop
+                                    src={project.image}
+                                    class="rounded-xl"
+                                    data-aos="fade-up"
+                                    data-aos-duration="1000"
+                                    data-aos-delay="300"
+                                    data-aos-once="true"
+                                />
+                            )}
+                            {project.isVideo === false && (
+                                <img
+                                    src={project.image}
+                                    alt={project.title}
+                                    class="rounded-xl"
+                                    data-aos="fade-up"
+                                    data-aos-duration="1000"
+                                    data-aos-delay="300"
+                                    data-aos-once="true"
+                                />
+                            )}
                             <footer class="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-3 sm:mt-4 gap-3 sm:gap-0">
                                 <div class="flex items-center gap-2 flex-nowrap whitespace-nowrap">
                                     <a
