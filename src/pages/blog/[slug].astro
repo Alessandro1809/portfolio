@@ -5,10 +5,15 @@ const { turso } = Astro.locals;
 import { BlogContent } from "@/components/react/blog/BlogContent";
 import type { ContentBlocks } from "@/components/react/blog/types";
 import { ShareButtons } from "@/components/react/blog/ShareButtons";
+import { ViewTracker } from "@/components/ViewTracker";
 import { transformTiptapToContentBlocks } from "@/lib/contentTransformer";
 import { ChevronLeft, ChevronRight, Home } from "lucide-react";
 
 const { slug } = Astro.params;
+
+if (!slug) {
+    return Astro.redirect("/404");
+}
 
 let post: any = null;
 let morePosts: any[] = [];
@@ -78,6 +83,7 @@ try {
 ---
 
 <Layout title={post.title as string}>
+    <ViewTracker slug={slug} client:load />
     <article class="container max-w-5xl mx-auto px-4 pt-44 relative z-32 pb-32">
         {/* Navigation Header */}
         <nav
