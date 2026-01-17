@@ -1,15 +1,20 @@
 
- import {
+import {
   AnimatedSpan,
   Terminal,
   TypingAnimation,
 } from "@/components/react/Terminal"
 
-export const TechStack = () => {
+type TechStackProps = {
+  title: string
+  closing: string
+}
+
+export const TechStack = ({ title, closing }: TechStackProps) => {
   return (
    
 <Terminal>
-  <TypingAnimation>My Tech Stack</TypingAnimation>
+  <TypingAnimation>{title}</TypingAnimation>
   <AnimatedSpan>✔ Typescript</AnimatedSpan>
   <AnimatedSpan>✔ React.</AnimatedSpan>
   <AnimatedSpan>✔ Astro.</AnimatedSpan>
@@ -19,7 +24,7 @@ export const TechStack = () => {
   <AnimatedSpan>✔ MongoDB.</AnimatedSpan>
   <AnimatedSpan>✔ PostgreSQL.</AnimatedSpan>
   <AnimatedSpan>✔ SQLite.</AnimatedSpan>
-  <TypingAnimation>Everything is possible with code!</TypingAnimation>
+  <TypingAnimation>{closing}</TypingAnimation>
 </Terminal>
   )
 }

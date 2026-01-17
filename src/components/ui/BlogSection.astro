@@ -3,6 +3,16 @@ import Coffee from "@/components/ui/icons/Coffee.astro";
 import GoToAll from "@/components/ui/icons/goToAll.astro";
 const { turso } = Astro.locals;
 import { ArrowUpRight } from "lucide-react";
+import {
+    defaultLang,
+    localeByLang,
+    translations,
+    type Language,
+} from "@/lib/i18n";
+
+const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
+const t = translations[lang];
+const locale = localeByLang[lang];
 
 let recentPosts: any[] = [];
 if (!turso) {
@@ -21,7 +31,7 @@ if (!turso) {
             title: post.title as string,
             slug: post.slug as string,
             date: post.createdAt
-                ? new Date(post.createdAt).toLocaleDateString("es-ES", {
+                ? new Date(post.createdAt).toLocaleDateString(locale, {
                       month: "short",
                       day: "2-digit",
                       year: "numeric",
@@ -50,7 +60,7 @@ if (!turso) {
                     <Coffee />
                 </div>
                 <h2 class="md:text-4xl sm:text-3xl text-xl font-bold max-w-2xl">
-                    Some Thoughts, Grab a coffee and read along 
+                    {t.blogSection.heading}
                 </h2>
             </div>
             
@@ -58,7 +68,7 @@ if (!turso) {
                 href="/blog"
                 class="flex flex-nowrap items-center gap-2 md:text-xl text-lg text-primary-green hover:underline decoration-primary-green/30 underline-offset-8 transition-all whitespace-nowrap"
             >
-                View all <GoToAll />
+                {t.blogSection.viewAll} <GoToAll />
             </a>
         </div>
         <div
@@ -70,9 +80,7 @@ if (!turso) {
         >
         </div>
         <p class="text-neutral-400 mt-8 text-sm max-w-3xl leading-relaxed">
-            Welcome to my little corner of thoughts and experiments. Here, I
-            share what I learn along the way — from code and design to personal
-            insights and side projects.
+            {t.blogSection.description}
         </p>
     </header>
 

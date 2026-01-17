@@ -2,45 +2,35 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Briefcase, Code, Rocket, Award } from 'lucide-react';
 
-const WorkTimeline = () => {
+type TimelineExperience = {
+  year: string;
+  title: string;
+  company: string;
+  description: string;
+};
+
+type TimelineCopy = {
+  heading: string;
+  subheading: string;
+  journeyContinues: string;
+  experiences: TimelineExperience[];
+};
+
+type WorkTimelineProps = {
+  timeline: TimelineCopy;
+};
+
+const WorkTimeline = ({ timeline }: WorkTimelineProps) => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isDesktop, setIsDesktop] = useState(false);
   const timelineRef = useRef<HTMLDivElement>(null);
 
-  const experiences = [
-    {
-      id: 1,
-      year: '2023 - 2024',
-      title: 'Fullstack Developer',
-      company: 'Sellside Spa.',
-      description: 'Built responsive web applications using Angular, Node.js, Firebase, G-pay, Flutter, Dart. Collaborated with senior developers on major product features.',
-      icon: Code
-    },
-    {
-      id: 2,
-      year: '2024 - present',
-      title: 'Software Developer',
-      company: 'Global Professional Group S.A.',
-      description: 'Led development of microservices architecture. Implemented CI/CD pipelines and improved application performance by 40%.',
-      icon: Briefcase
-    },
-    {
-      id: 3,
-      year: '2023',
-      title: 'Freelance Developer',
-      company: 'Self-employed',
-      description: 'Architected scalable cloud solutions. Mentored junior developers and established best practices for the engineering team.',
-      icon: Rocket
-    },
-    {
-      id: 4,
-      year: '2025 - present',
-      title: 'CTO & Fullstack Developer',
-      company: 'NOUS',
-      description: 'Leading a team of 8 engineers. Driving technical vision and delivering enterprise-level applications for Fortune 500 clients.',
-      icon: Award
-    }
-  ];
+  const icons = [Code, Briefcase, Rocket, Award];
+  const experiences = timeline.experiences.map((experience, index) => ({
+    id: index + 1,
+    ...experience,
+    icon: icons[index] ?? Code,
+  }));
 
   useEffect(() => {
     // Check if desktop on mount and resize
@@ -94,9 +84,9 @@ const WorkTimeline = () => {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16 sm:mb-20 md:mb-24">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 text-transparent bg-clip-text bg-linear-to-r from-green-400 to-white">
-            Work Experience
+            {timeline.heading}
           </h1>
-          <p className="text-gray-400 text-base sm:text-lg">3 Years of Professional Growth</p>
+          <p className="text-gray-400 text-base sm:text-lg">{timeline.subheading}</p>
         </div>
 
         <div ref={timelineRef} className="relative">
@@ -314,7 +304,7 @@ const WorkTimeline = () => {
             className="inline-block bg-linear-to-r from-green-400 to-cyan-400 rounded-full px-6 sm:px-8 py-2.5 sm:py-3 font-bold text-sm sm:text-base text-black"
             style={{ boxShadow: '0 0 30px #10b981' }}
           >
-            Journey Continues...
+            {timeline.journeyContinues}
           </div>
         </div>
       </div>

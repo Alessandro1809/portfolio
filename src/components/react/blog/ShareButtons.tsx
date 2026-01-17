@@ -3,12 +3,21 @@
 import { useState } from "react"
 import { Share2, Twitter, Linkedin, Link as LinkIcon, Check } from "lucide-react"
 
+type ShareLabels = {
+  label: string
+  shareOnX: string
+  shareOnLinkedIn: string
+  copyLink: string
+  copied: string
+}
+
 interface ShareButtonsProps {
   title: string
   url: string
+  labels: ShareLabels
 }
 
-export function ShareButtons({ title, url }: ShareButtonsProps) {
+export function ShareButtons({ title, url, labels }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false)
 
   const shareLinks = {
@@ -29,7 +38,7 @@ export function ShareButtons({ title, url }: ShareButtonsProps) {
   return (
     <div className="flex items-center gap-3 animate-fade-in">
       <span className="text-xs font-mono text-neutral-500 uppercase tracking-widest mr-2 flex items-center gap-2">
-        <Share2 className="w-3.5 h-3.5" /> Share
+        <Share2 className="w-3.5 h-3.5" /> {labels.label}
       </span>
       
       <div className="flex items-center gap-2">
@@ -38,7 +47,7 @@ export function ShareButtons({ title, url }: ShareButtonsProps) {
           target="_blank"
           rel="noopener noreferrer"
           className="p-2 rounded-full bg-white/5 border border-white/10 text-neutral-400 hover:text-primary-green hover:border-primary-green/30 hover:bg-primary-green/5 transition-all duration-300"
-          title="Share on X (Twitter)"
+          title={labels.shareOnX}
         >
           <Twitter className="w-4 h-4" />
         </a>
@@ -48,7 +57,7 @@ export function ShareButtons({ title, url }: ShareButtonsProps) {
           target="_blank"
           rel="noopener noreferrer"
           className="p-2 rounded-full bg-white/5 border border-white/10 text-neutral-400 hover:text-primary-green hover:border-primary-green/30 hover:bg-primary-green/5 transition-all duration-300"
-          title="Share on LinkedIn"
+          title={labels.shareOnLinkedIn}
         >
           <Linkedin className="w-4 h-4" />
         </a>
@@ -60,7 +69,7 @@ export function ShareButtons({ title, url }: ShareButtonsProps) {
               ? "bg-primary-green/20 border-primary-green text-primary-green" 
               : "bg-white/5 border-white/10 text-neutral-400 hover:text-primary-green hover:border-primary-green/30 hover:bg-primary-green/5"
           }`}
-          title="Copy Link"
+          title={labels.copyLink}
         >
           {copied ? (
             <Check className="w-4 h-4 animate-in zoom-in duration-300" />
@@ -70,7 +79,7 @@ export function ShareButtons({ title, url }: ShareButtonsProps) {
           
           {copied && (
             <span className="absolute -top-10 left-1/2 -translate-x-1/2 px-2 py-1 bg-primary-green text-black text-[10px] font-bold rounded shadow-lg animate-in fade-in slide-in-from-bottom-2 duration-300">
-              COPIED!
+              {labels.copied}
             </span>
           )}
         </button>

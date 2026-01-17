@@ -14,8 +14,29 @@ interface BlogPost {
   featured: boolean
 }
 
-export function BlogCard({ post }: { post: BlogPost }) {
+interface BlogCardLabels {
+  featuredBadge: string
+  minLabel: string
+  readMore: string
+}
+
+export function BlogCard({
+  post,
+  labels,
+  locale,
+}: {
+  post: BlogPost
+  labels: BlogCardLabels
+  locale: string
+}) {
   const [isHovered, setIsHovered] = useState(false)
+  const formattedDate = post.date
+    ? new Date(post.date).toLocaleDateString(locale, {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : ""
 
   return (
     <a 
@@ -32,7 +53,7 @@ export function BlogCard({ post }: { post: BlogPost }) {
         <div className="absolute left-4 top-4 z-10">
           <div className="inline-flex items-center gap-1 rounded-full border border-accent/50 bg-accent/10 px-2.5 py-1 text-xs font-medium text-accent backdrop-blur-sm">
             <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-            Destacado
+            {labels.featuredBadge}
           </div>
         </div>
       )}
@@ -41,7 +62,9 @@ export function BlogCard({ post }: { post: BlogPost }) {
         {/* Category and metadata */}
         <div className="mb-4 flex items-center justify-between">
           <span className="font-mono text-xs uppercase tracking-wider text-primary">{post.categorie}</span>
-          <span className="text-xs text-muted-foreground">{post.read_time} min</span>
+          <span className="text-xs text-muted-foreground">
+            {post.read_time} {labels.minLabel}
+          </span>
         </div>
 
         {/* Title */}
@@ -54,16 +77,10 @@ export function BlogCard({ post }: { post: BlogPost }) {
 
         {/* Footer */}
         <div className="flex items-center justify-between border-t border-border/50 pt-4">
-          <time className="text-xs text-muted-foreground">
-            {new Date(post.date).toLocaleDateString("es-ES", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
-          </time>
+          <time className="text-xs text-muted-foreground">{formattedDate}</time>
 
           <div className="flex items-center gap-1 text-sm font-medium text-primary transition-transform group-hover:translate-x-1">
-            Leer más
+            {labels.readMore}
             <ArrowUpRight
               className={`h-4 w-4 transition-transform duration-300 ${
                 isHovered ? "translate-x-0.5 -translate-y-0.5" : ""

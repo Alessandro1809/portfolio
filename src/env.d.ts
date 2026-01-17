@@ -13,6 +13,7 @@ declare global {
             turso: Client;
             resendApiKey?: string;
             contactEmail?: string;
+            lang?: string;
             runtime: {
                 env: Env;
                 cf?: any;

@@ -22,6 +22,8 @@ interface HeroVideoProps {
   videoSrc: string
   thumbnailSrc: string
   thumbnailAlt?: string
+  playLabel?: string
+  playerTitle?: string
   className?: string
 }
 
@@ -73,6 +75,8 @@ export function HeroVideoDialog({
   videoSrc,
   thumbnailSrc,
   thumbnailAlt = "Video thumbnail",
+  playLabel = "Play video",
+  playerTitle = "Hero video player",
   className,
 }: HeroVideoProps) {
   const [isVideoOpen, setIsVideoOpen] = useState(false)
@@ -82,7 +86,7 @@ export function HeroVideoDialog({
     <div className={cn("relative", className)}>
       <button
         type="button"
-        aria-label="Play video"
+        aria-label={playLabel}
         className="group relative cursor-pointer border-0 bg-transparent p-0"
         onClick={() => setIsVideoOpen(true)}
       >
@@ -136,7 +140,7 @@ export function HeroVideoDialog({
               <div className="relative isolate z-[1] size-full overflow-hidden rounded-2xl border-2 border-white">
                 <iframe
                   src={videoSrc}
-                  title="Hero Video player"
+                  title={playerTitle}
                   className="size-full rounded-2xl"
                   allowFullScreen
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

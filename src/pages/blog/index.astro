@@ -2,6 +2,10 @@
 import Layout from "@/layouts/Layout.astro";
 import { HeroVideoDialog } from "@/components/react/VideoDialog";
 import BlogGrid from "@/components/BlogGrid.astro";
+import { defaultLang, translations, type Language } from "@/lib/i18n";
+
+const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
+const t = translations[lang];
 ---
 
 <Layout>
@@ -12,15 +16,15 @@ import BlogGrid from "@/components/BlogGrid.astro";
             <h2
                 class="text-sm font-medium text-primary-green bg-primary-green/20 border border-primary-green/40 rounded-full px-4 py-2 text center w-fit tracking-wider leading-6"
             >
-                Blog / Articles
+                {t.blogIndex.badge}
             </h2>
         </div>
         <h3
             class="text-4xl md:text-8xl font-bold my-8 flex items-center justify-center flex-col"
         >
-            Exploring the<span
+            {t.blogIndex.titleLeading}<span
                 class="text-primary-green [text-shadow:0_0_60px_#00D47C]"
-                >Digital World</span
+                >{t.blogIndex.titleHighlight}</span
             >
         </h3>
 
@@ -29,14 +33,7 @@ import BlogGrid from "@/components/BlogGrid.astro";
                 <p
                     class="text-neutral-400 text-sm sm:text-base max-w-4xl text-center"
                 >
-                    This blog is a space where I document technical decisions,
-                    architectural trade-offs, and lessons learned while working
-                    on real-world software systems. I focus on practical
-                    problem-solving, performance, and maintainability, sharing
-                    insights gained from building, breaking, and refining
-                    products over time. The goal is not to provide quick tips,
-                    but to reflect on the reasoning behind solutions and the
-                    impact of those decisions in production environments.
+                    {t.blogIndex.description}
                 </p>
             </article>
             <div class="mt-8 flex gap-2">
@@ -53,7 +50,9 @@ import BlogGrid from "@/components/BlogGrid.astro";
                 animationStyle="from-right"
                 videoSrc="https://www.youtube.com/embed/JOfbnXdXRFM"
                 thumbnailSrc="https://res.cloudinary.com/drwd1wtvt/image/upload/v1768491823/cover_r5suhi.jpg"
-                thumbnailAlt="Hero Video"
+                thumbnailAlt={t.blogIndex.thumbnailAlt}
+                playLabel={t.blogIndex.playLabel}
+                playerTitle={t.blogIndex.playerTitle}
             />
             <HeroVideoDialog
                 client:idle
@@ -61,7 +60,9 @@ import BlogGrid from "@/components/BlogGrid.astro";
                 animationStyle="from-left"
                 videoSrc="https://www.youtube.com/embed/JOfbnXdXRFM"
                 thumbnailSrc="https://res.cloudinary.com/drwd1wtvt/image/upload/v1768491823/cover_r5suhi.jpg"
-                thumbnailAlt="Hero Video"
+                thumbnailAlt={t.blogIndex.thumbnailAlt}
+                playLabel={t.blogIndex.playLabel}
+                playerTitle={t.blogIndex.playerTitle}
             />
         </div>
     </div>

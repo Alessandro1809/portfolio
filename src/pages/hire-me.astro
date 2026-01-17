@@ -6,6 +6,10 @@ import ImageCard from "@/components/cards/ImageCard.astro";
 import SocialApps from "@/components/ui/SocialApps.astro";
 import Button from "@/components/ui/buttons/Button.astro";
 import CV from '@/assets/docs/CV-Alessandro_Diaz.pdf'
+import { defaultLang, translations, type Language } from "@/lib/i18n";
+
+const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
+const t = translations[lang];
 ---
 
 <Layout>
@@ -17,7 +21,14 @@ import CV from '@/assets/docs/CV-Alessandro_Diaz.pdf'
                 <ImageCard />
                 <SocialApps />
                 <div class="mt-6 max-w-4xl mx-auto">
-                    <Button href={CV} text="Download my CV" downloadAttr={true} downloadAttributeValue="CV-Alessandro_Diaz.pdf" target="_blank" ariaLabel="Download my CV" />
+                    <Button
+                        href={CV}
+                        text={t.hireMe.downloadMyCv}
+                        downloadAttr={true}
+                        downloadAttributeValue="CV-Alessandro_Diaz.pdf"
+                        target="_blank"
+                        ariaLabel={t.hireMe.downloadMyCv}
+                    />
                 </div>
             </div>
 
@@ -30,7 +41,7 @@ import CV from '@/assets/docs/CV-Alessandro_Diaz.pdf'
             >
             </div>
 
-            <WorkTimeline client:only="react" />
+            <WorkTimeline client:only="react" timeline={t.timeline} />
         </div>
     </div>
 </Layout>

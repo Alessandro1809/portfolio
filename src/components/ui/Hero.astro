@@ -3,6 +3,10 @@ import Button from "@/components/ui/buttons/Button.astro";
 import SocialLinks from "@/components/ui/SocialLinks.astro";
 import { Particles } from "@/components/react/Particles";
 import CV from '@/assets/docs/CV-Alessandro_Diaz.pdf'
+import { defaultLang, translations, type Language } from "@/lib/i18n";
+
+const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
+const t = translations[lang];
 ---
 
 <section
@@ -56,8 +60,7 @@ import CV from '@/assets/docs/CV-Alessandro_Diaz.pdf'
                 data-aos-duration="1000"
                 data-aos-delay="700"
             >
-                Hey, I'm Alessandro, a software developer with over +3 years of
-                experience.
+                {t.hero.title}
             </h1>
             <p
                 class="text-primary-green py-6 sm:py-8 md:py-10 lg:py-12 text-center pointer-events-auto text-sm sm:text-base md:text-lg max-w-3xl px-4"
@@ -65,15 +68,22 @@ import CV from '@/assets/docs/CV-Alessandro_Diaz.pdf'
                 data-aos-duration="1000"
                 data-aos-delay="900"
             >
-                Continuously creating, improving, and solving new challenges
-                through innovation and curiosity.
+                {t.hero.subtitle}
             </p>
             <div
                 data-aos="fade-up"
                 data-aos-duration="1000"
                 data-aos-delay="1000"
             >
-                <Button text="Download CV" variant="primary" downloadAttr={true} downloadAttributeValue="CV-Alessandro_Diaz.pdf" href={CV} target="_blank" ariaLabel="Download my CV" />
+                <Button
+                    text={t.hero.downloadCv}
+                    variant="primary"
+                    downloadAttr={true}
+                    downloadAttributeValue="CV-Alessandro_Diaz.pdf"
+                    href={CV}
+                    target="_blank"
+                    ariaLabel={t.hero.downloadCvAria}
+                />
             </div>
         </div>
     </div>

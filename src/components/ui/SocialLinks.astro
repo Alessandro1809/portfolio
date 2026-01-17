@@ -1,6 +1,10 @@
 ---
 import Button from "@/components/ui/buttons/Button.astro";
 import SocialApps from "./SocialApps.astro";
+import { defaultLang, translations, type Language } from "@/lib/i18n";
+
+const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
+const t = translations[lang];
 ---
 
 <section class="relative z-50">
@@ -11,10 +15,10 @@ import SocialApps from "./SocialApps.astro";
 
     <div class="flex gap-2 mt-4">
         <Button
-            text="Schedule a 15 minutes meeting"
+            text={t.socialLinks.scheduleMeeting}
             variant="secondary"
             href="/hire-me"
-            ariaLabel="Schedule a meeting with me"
+            ariaLabel={t.socialLinks.scheduleMeetingAria}
         />
 
         <SocialApps />

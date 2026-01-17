@@ -8,6 +8,7 @@ import cms from "@/assets/videos/cms.webm";
 import apv from "@/assets/apv-api.webp";
 import apv_front from "@/assets/videos/apv-mern.webm";
 import blogApi from "@/assets/blog-api.webp";
+import { defaultLang, translations, type Language } from "@/lib/i18n";
 export interface FeaturedProject {
     title: string;
     description: string;
@@ -19,11 +20,21 @@ export interface FeaturedProject {
     isVideo?: boolean;
 }
 
+const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
+const t = translations[lang];
+
+const {
+    limit,
+    showAllLink = true,
+    heading = t.featuredProjects.heading,
+    description = t.featuredProjects.description,
+    viewAllLabel = t.featuredProjects.viewAll,
+} = Astro.props;
+
 const projects: FeaturedProject[] = [
     {
         title: "NOUS",
-        description:
-            "This project is a modern, high-performance web platform built with a fully customized CMS designed specifically around the company’s operational needs. It includes integrated AI modules that deliver real-time analytics, actionable insights, and intelligent automation to improve decision-making across the business. Beyond its technical execution, this project also represents the foundation of my entrepreneurial initiative — a scalable, client-focused solution built to demonstrate how tailored software and AI can transform everyday workflows.",
+        description: t.projects.nous.description,
         image: nous,
         tags: [
             "Astro",
@@ -39,8 +50,7 @@ const projects: FeaturedProject[] = [
     },
     {
         title: "Content Management System",
-        description:
-            "This project is a custom headless CMS built from scratch, focused on flexible content management and a decoupled architecture. It provides a complete editorial workflow for creating and publishing blog content, along with content monitoring and seamless integration with Astro-based websites, prioritizing performance, SEO, and full control over the data. The system is designed to serve as a content backend for multiple projects, adapting to different deployments through environment configuration rather than code duplication. This makes it a solid solution for portfolios, corporate websites, and digital products that require speed, scalability, and long-term maintainability.",
+        description: t.projects.cms.description,
         image: cms,
         tags: [
             "Astro",
@@ -57,8 +67,7 @@ const projects: FeaturedProject[] = [
     },
     {
         title: "Veterinary Patient Management",
-        description:
-            "This project is a responsive MERN-based veterinary patient manager that streamlines appointment tracking, patient records, and clinical workflows in a clean, intuitive interface. It delivers fast CRUD operations, secure authentication flows, and a focused dashboard that keeps veterinarians organized while highlighting efficiency and usability for real-world practice.",
+        description: t.projects.apvFrontend.description,
         image: apv_front,
         tags: ["React.js", "Javascript", "Axios", "Tailwind CSS"],
         link: "https://cms-only-test.vercel.app/",
@@ -68,8 +77,7 @@ const projects: FeaturedProject[] = [
     },
     {
         title: "Erling Nails",
-        description:
-            "This project is a modern, elegant website designed for a professional manicurist, featuring a fast and seamless gallery experience optimized for high-quality images. It includes an integrated content management service that allows effortless uploading, organizing, and updating of work samples, ensuring the portfolio stays fresh and visually engaging. The result is a refined, user-friendly platform that highlights the artist’s craft while providing a smooth, high-performance browsing experience.",
+        description: t.projects.erlingNails.description,
         image: erlingnails,
         tags: [
             "Astro",
@@ -86,8 +94,7 @@ const projects: FeaturedProject[] = [
     },
     {
         title: "Veterinary patient management API",
-        description:
-            "This project is a robust veterinary patient management API designed to support the core operations of a veterinary clinic in a secure, scalable, and well-structured way. It exposes a complete CRUD for managing patients, medical records, and related entities, along with endpoints for profile creation and editing. The API implements a fully custom authentication and authorization flow built with Express.js, including user registration, login, protected routes, and role-based access control. It integrates EmailJS to handle transactional emails such as account verification and user notifications. The result is a clean, reliable backend service that centralizes veterinary data, enforces security best practices, and serves as a solid foundation for web or mobile client applications.",
+        description: t.projects.apvApi.description,
         image: apv.src,
         tags: ["Express.js", "Javascript", "MongoDB", "Email.js", "Node.js"],
         link: "https://apv-docs.netlify.app/",
@@ -97,8 +104,7 @@ const projects: FeaturedProject[] = [
     },
     {
         title: "Blog API",
-        description:
-            "This project is a fast, strongly-typed Blog API built for real-world delivery, designed to keep the request path lean, predictable, and easy to extend. It follows a clear architecture (routes → controllers → services → database) and uses Fastify with Zod type providers to enforce consistent input/output contracts at every boundary. The API is backed by Turso (libSQL/SQLite) and Drizzle ORM for an edge-friendly, type-safe data layer that remains simple to evolve over time. Authentication is handled in a stateless way via Clerk JWT verification, enabling public read access while protecting all write operations without storing passwords. The result is a clean, production-oriented backend that supports a complete posts workflow (list, fetch by slug/id, create, update, delete), categories, view statistics, and a dedicated health-check endpoint—supported by end-to-end testing with Vitest + Supertest for reliability and confidence in deployments.",
+        description: t.projects.blogApi.description,
         image: blogApi.src,
         tags: [
             "Fastify",
@@ -116,6 +122,9 @@ const projects: FeaturedProject[] = [
         isVideo: false,
     },
 ];
+
+const displayedProjects =
+    typeof limit === "number" ? projects.slice(0, limit) : projects;
 ---
 
 <section
@@ -131,29 +140,30 @@ const projects: FeaturedProject[] = [
         <h2
             class="text-2xl sm:text-3xl md:text-4xl font-bold text-white pb-3 sm:pb-4"
         >
-            Some Projects that I'm proud of
+            {heading}
         </h2>
         <div
             class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-6"
         >
             <p class="text-neutral-400 text-sm sm:text-base max-w-2xl">
-                A collection of things I’ve built, broken, and rebuilt — always
-                learning along the way.
+                {description}
             </p>
 
-            <a
-                href="#"
-                class="flex items-center gap-2 text-neutral-200 hover:underline text-base sm:text-lg md:text-xl whitespace-nowrap"
-            >
-                <p class="text-primary-green">View All</p>
-                <GoToAll />
-            </a>
+            {showAllLink && (
+                <a
+                    href="/my-projects"
+                    class="flex items-center gap-2 text-neutral-200 hover:underline text-base sm:text-lg md:text-xl whitespace-nowrap"
+                >
+                    <p class="text-primary-green">{viewAllLabel}</p>
+                    <GoToAll />
+                </a>
+            )}
         </div>
     </header>
     <article>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
             {
-                projects.map((project) => {
+                displayedProjects.map((project) => {
                     return (
                         <article class="relative">
                             {project.haveRepo && (
@@ -162,7 +172,7 @@ const projects: FeaturedProject[] = [
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="absolute top-4 right-4 bg-neutral-600/90 backdrop-blur-sm rounded-full p-2 hover:bg-black/70 transition-all z-50 cursor-pointer hover:scale-105 ease-in-out duration-300 border border-white "
-                                    aria-label="View GitHub repository"
+                                    aria-label={t.featuredProjects.repoAria}
                                     data-aos="fade-up"
                                     data-aos-duration="1000"
                                     data-aos-delay="350"

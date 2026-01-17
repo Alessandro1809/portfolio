@@ -1,8 +1,14 @@
 // src/middleware.ts
 import { defineMiddleware } from "astro:middleware";
 import { createDbClient } from "./lib/turso";
+import { resolveLanguage } from "./lib/i18n";
 
 export const onRequest = defineMiddleware(async (context, next) => {
+    context.locals.lang = resolveLanguage(
+        context.cookies,
+        context.request.headers.get("accept-language"),
+    );
+
     // Cloudflare Pages stores variables in slightly different places depending on version/config
     const runtime = context.locals.runtime;
 

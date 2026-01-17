@@ -3,6 +3,11 @@ import Button from "@/components/ui/buttons/Button.astro";
 import Flag from "@/components/ui/icons/Flag.astro";
 import SocialApps from "@/components/ui/SocialApps.astro";
 import footerImage from "@/assets/FooterAvatar.png";
+import { defaultLang, translations, type Language } from "@/lib/i18n";
+
+const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
+const t = translations[lang];
+const year = new Date().getFullYear();
 ---
 
 <footer
@@ -19,41 +24,53 @@ import footerImage from "@/assets/FooterAvatar.png";
             class="flex flex-col sm:flex-row gap-6 sm:gap-8 md:col-span-2 lg:col-span-2 mt-6 sm:mt-8 md:mt-10"
         >
             <div class="flex flex-col gap-4 sm:gap-6 md:gap-8">
-                <h3 class="text-2xl sm:text-3xl font-bold">Get in touch</h3>
+                <h3 class="text-2xl sm:text-3xl font-bold">
+                    {t.footer.getInTouch}
+                </h3>
                 <Button
-                    text="Schedule a 15 minutes meeting"
+                    text={t.socialLinks.scheduleMeeting}
                     variant="tertiary"
+                    ariaLabel={t.socialLinks.scheduleMeetingAria}
                 />
 
                 <SocialApps />
             </div>
             <div class="flex flex-col gap-4 sm:gap-6 md:gap-8">
-                <h3 class="text-2xl sm:text-3xl font-bold">Interest links</h3>
+                <h3 class="text-2xl sm:text-3xl font-bold">
+                    {t.footer.interestLinks}
+                </h3>
                 <ul class="flex flex-col gap-3 sm:gap-4">
                     <li>
                         <a
                             class="text-neutral-400 hover:text-primary-green transition-colors"
-                            href="/my-projects">Projects</a
+                            href="/my-projects"
+                            >{t.footer.projects}</a
                         >
                     </li>
                     <li>
                         <a
                             class="text-neutral-400 hover:text-primary-green transition-colors"
-                            href="/blog">Blog</a
+                            href="/blog"
+                            >{t.footer.blog}</a
                         >
                     </li>
                     <li>
                         <a
                             class="text-neutral-400 hover:text-primary-green transition-colors"
-                            href="https://nous.cr" target="_blank" rel="noopener noreferrer" aria-label="Visit Nous.cr website"
+                            href="https://nous.cr"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={t.footer.visitNousAria}
                         >
-                            Know my iniciative
+                            {t.footer.knowInitiative}
                         </a>
                     </li>
                     <li>
                         <a
                             class="text-neutral-400 hover:text-primary-green transition-colors"
-                            href="/hire-me" aria-label="Go to hire page">Contact me</a
+                            href="/hire-me"
+                            aria-label={t.footer.contactAria}
+                            >{t.footer.contactMe}</a
                         >
                     </li>
                 </ul>
@@ -73,18 +90,16 @@ import footerImage from "@/assets/FooterAvatar.png";
                 <p
                     class="text-neutral-400 mt-3 sm:mt-4 text-base sm:text-lg max-w-4xl flex gap-2"
                 >
-                    Made in <Flag />
+                    {t.footer.madeIn} <Flag />
                 </p>
                 <p class="text-neutral-400 mt-3 sm:mt-4 text-sm max-w-4xl">
-                    Evolving through code, bring freedom through innovation.
+                    {t.footer.tagline}
                 </p>
                 <p class="text-neutral-400 mt-3 sm:mt-4 text-xs max-w-4xl">
-                    Copyright © {new Date().getFullYear()} Alessandro Diaz. All
-                    rights reserved.
+                    {t.footer.copyright.replace("{year}", String(year))}
                 </p>
                 <p class="text-neutral-400 mt-3 sm:mt-4 text-xs max-w-4xl">
-                    This web was designed in figma, an developed with Astro,
-                    React, Tailwindcss v.4, Typescript and love 🤍
+                    {t.footer.builtWith}
                 </p>
             </div>
         </div>

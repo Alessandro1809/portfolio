@@ -3,10 +3,18 @@ import "../styles/global.css";
 import ClientRouter from "astro/components/ClientRouter.astro";
 import Header from "../components/layoutComponents/Header.astro";
 import Footer from "../components/layoutComponents/Footer.astro";
+import { defaultLang, translations, type Language } from "@/lib/i18n";
+
+const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
+const t = translations[lang];
+const nextLang: Language = lang === "en" ? "es" : "en";
+const toggleLabel = nextLang.toUpperCase();
+const toggleAriaLabel =
+    nextLang === "es" ? t.languageToggle.switchToEs : t.languageToggle.switchToEn;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
 	<head>
 		<ClientRouter />
 		<meta charset="UTF-8" />
@@ -33,6 +41,15 @@ import Footer from "../components/layoutComponents/Footer.astro";
 			>
 			</div>
 			<Header />
+			<button
+				id="lang-toggle"
+				type="button"
+				class="fixed top-4 right-4 z-[60] rounded-full border border-white/20 bg-black/60 px-3 py-2 text-xs font-semibold uppercase tracking-widest text-white backdrop-blur-sm transition-all duration-300 hover:border-primary-green/60 hover:text-primary-green"
+				aria-label={toggleAriaLabel}
+				data-next-lang={nextLang}
+			>
+				{toggleLabel}
+			</button>
 			<slot />
 			<Footer />
 		</div>
@@ -47,3 +64,23 @@ import Footer from "../components/layoutComponents/Footer.astro";
 		height: 100%;
 	}
 </style>
+
+<script is:inline>
+	const setupLangToggle = () => {
+		const button = document.getElementById("lang-toggle");
+		if (!button || button.dataset.listenerAttached) return;
+
+		button.addEventListener("click", () => {
+			const nextLang = button.dataset.nextLang;
+			if (!nextLang) return;
+
+			document.cookie = `lang=${nextLang}; Path=/; Max-Age=31536000; SameSite=Lax`;
+			window.location.reload();
+		});
+
+		button.dataset.listenerAttached = "true";
+	};
+
+	setupLangToggle();
+	document.addEventListener("astro:after-swap", setupLangToggle);
+</script>

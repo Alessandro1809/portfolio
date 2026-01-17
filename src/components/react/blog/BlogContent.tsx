@@ -3,6 +3,7 @@ import type { ContentBlocks } from '@/components/react/blog/types';
 
 interface BlogContentProps {
   content: ContentBlocks;
+  noContentLabel: string;
 }
 
 const getYoutubeEmbedUrl = (url: string): string => {
@@ -54,11 +55,11 @@ const getAlignClass = (align?: string): string => {
   }
 };
 
-export const BlogContent: React.FC<BlogContentProps> = React.memo(({ content }) => {
+export const BlogContent: React.FC<BlogContentProps> = React.memo(({ content, noContentLabel }) => {
   if (!content || !content.blocks || content.blocks.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-gray-500">No hay contenido disponible</p>
+        <p className="text-gray-500">{noContentLabel}</p>
       </div>
     );
   }

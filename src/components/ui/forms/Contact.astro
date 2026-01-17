@@ -1,13 +1,25 @@
 ---
 import Button from "../buttons/Button.astro";
 import SendIcon from "../icons/SendIcon.astro";
+import { defaultLang, translations, type Language } from "@/lib/i18n";
+
+const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
+const t = translations[lang];
 ---
 
 <section class="container mx-auto max-w-12xl relative z-10">
-    <form class="flex flex-col gap-4 pt-20" id="contact-form">
+    <form
+        class="flex flex-col gap-4 pt-20"
+        id="contact-form"
+        data-sending-text={t.contactForm.sending}
+        data-success-text={t.contactForm.success}
+        data-error-text={t.contactForm.errorGeneric}
+        data-error-prefix={t.contactForm.errorPrefix}
+        data-success-prefix={t.contactForm.successPrefix}
+    >
         <div class="grid grid-cols-2 gap-4">
             <div class="flex flex-col gap-2">
-                <label for="name">Name</label>
+                <label for="name">{t.contactForm.nameLabel}</label>
                 <input
                     class="w-auto p-2 border border-neutral-400 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-green"
                     type="text"
@@ -15,10 +27,12 @@ import SendIcon from "../icons/SendIcon.astro";
                     name="name"
                     required
                 />
-                <p class="text-primary-green text-xs">Ex: John Doe</p>
+                <p class="text-primary-green text-xs">
+                    {t.contactForm.nameExample}
+                </p>
             </div>
             <div class="flex flex-col gap-2">
-                <label for="email">Email</label>
+                <label for="email">{t.contactForm.emailLabel}</label>
                 <input
                     class="w-full p-2 border border-neutral-400 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-green"
                     type="email"
@@ -26,18 +40,22 @@ import SendIcon from "../icons/SendIcon.astro";
                     name="email"
                     required
                 />
-                <p class="text-primary-green text-xs">Ex: example@domain.com</p>
+                <p class="text-primary-green text-xs">
+                    {t.contactForm.emailExample}
+                </p>
             </div>
         </div>
         <div class="flex flex-col gap-2 pt-12 relative">
-            <label for="message">Message</label>
+            <label for="message">{t.contactForm.messageLabel}</label>
             <textarea
                 class="w-full p-2 border border-neutral-400 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-green h-52 backdrop-blur-2xl relative z-50"
                 id="message"
                 name="message"
                 required
                 minlength="10"></textarea>
-            <p class="text-primary-green text-xs">Ex: Your message here...</p>
+            <p class="text-primary-green text-xs">
+                {t.contactForm.messageExample}
+            </p>
             <div
                 class="absolute -bottom-20 right-2 bg-linear-to-br from-primary-green to-purple-500 h-44 blur-2xl w-44 rounded-full justify-center"
             >
@@ -48,7 +66,7 @@ import SendIcon from "../icons/SendIcon.astro";
                 class="w-fit p-2 px-12 border border-neutral-400 rounded-full focus:outline-none focus:ring-2 focus:ring-primary-green flex items-center gap-2 hover:cursor-pointer hover:scale-105 transition-all duration-300 hover:bg-primary-green hover:text-dark-green"
                 type="submit"
             >
-                Send
+                {t.contactForm.send}
                 <SendIcon />
             </button>
         </div>
@@ -71,11 +89,16 @@ import SendIcon from "../icons/SendIcon.astro";
             const formData = new FormData(form);
             const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
             const originalContent = submitButton.innerHTML;
+            const sendingText = form.dataset.sendingText ?? 'Sending...';
+            const successText = form.dataset.successText ?? 'Message sent successfully!';
+            const errorText = form.dataset.errorText ?? 'An error occurred. Please try again later.';
+            const errorPrefix = form.dataset.errorPrefix ?? '✗';
+            const successPrefix = form.dataset.successPrefix ?? '✓';
             
             // Disable button and show loading state
             submitButton.disabled = true;
             submitButton.innerHTML = `
-                <span>Sending...</span>
+                <span>${sendingText}</span>
                 <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -93,11 +116,11 @@ import SendIcon from "../icons/SendIcon.astro";
                     
                     if (error) {
                         messageDiv.className = 'mt-4 p-4 rounded-md bg-red-100 text-red-800';
-                        messageDiv.textContent = `✗ ${error.message}`;
+                        messageDiv.textContent = `${errorPrefix} ${error.message}`;
                         console.error('[Client] Action error:', error);
                     } else {
                         messageDiv.className = 'mt-4 p-4 rounded-md bg-green-100 text-green-800';
-                        messageDiv.textContent = '✓ Message sent successfully! I\'ll get back to you soon.';
+                        messageDiv.textContent = `${successPrefix} ${successText}`;
                         form.reset();
                         console.log('[Client] Success!');
                     }
@@ -107,7 +130,7 @@ import SendIcon from "../icons/SendIcon.astro";
                 if (messageDiv) {
                     messageDiv.classList.remove('hidden');
                     messageDiv.className = 'mt-4 p-4 rounded-md bg-red-100 text-red-800';
-                    messageDiv.textContent = '✗ An error occurred. Please try again later.';
+                    messageDiv.textContent = `${errorPrefix} ${errorText}`;
                 }
             } finally {
                 submitButton.disabled = false;

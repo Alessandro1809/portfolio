@@ -1,5 +1,9 @@
 ---
 import Contact from "@/components/ui/forms/Contact.astro";
+import { defaultLang, translations, type Language } from "@/lib/i18n";
+
+const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
+const t = translations[lang];
 ---
 
 <section
@@ -12,11 +16,10 @@ import Contact from "@/components/ui/forms/Contact.astro";
         data-aos-once="true"
     >
         <h2 class="md:text-4xl sm:text-3xl text-2xl font-bold">
-            I’m always open to new collaborations — say hi!
+            {t.contactSection.heading}
         </h2>
         <p class="text-neutral-400 mt-4 text-lg max-w-4xl">
-            Always excited to meet new people, share ideas, and create something
-            meaningful. Don’t hesitate to reach out!
+            {t.contactSection.description}
         </p>
     </header>
     <article

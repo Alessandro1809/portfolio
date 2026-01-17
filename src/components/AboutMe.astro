@@ -7,6 +7,10 @@ import FeaturedInfo from "./ui/FeaturedInfo.astro";
 import video_presentacion from '@/assets/videos/presentacion_portfolio.webm'
 import CV from '@/assets/docs/CV-Alessandro_Diaz.pdf'
 import cover from '@/assets/cover.webp'
+import { defaultLang, translations, type Language } from "@/lib/i18n";
+
+const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
+const t = translations[lang];
 ---
 
 <section
@@ -22,13 +26,11 @@ import cover from '@/assets/cover.webp'
             <h2
             class="text-2xl sm:text-3xl md:text-4xl font-bold text-white pb-3 sm:pb-4"
         >
-            Here's a bit about who I am
+            {t.about.heading}
         </h2>
         <div class="flex items-center">
             <p class="text-neutral-400 text-sm sm:text-base max-w-3xl">
-                I see coding as both art and problem-solving — a way to turn
-                ideas into something people can use and enjoy. I believe good
-                work comes from passion and collaboration.
+                {t.about.intro}
             </p>
         </div>
         </div>
@@ -47,23 +49,14 @@ import cover from '@/assets/cover.webp'
         <ImageCard />
         <div class="flex flex-col gap-4 w-full">
             <p class="text-pretty leading-relaxed text-sm sm:text-base">
-                I’m a Full-Stack Developer with over three years of experience
-                building management systems, custom CMS platforms, end-to-end
-                web applications, and AI-powered modules. I specialize in
-                creating scalable backends, clean and modular frontends, and
-                automation solutions that simplify complex business processes.
+                {t.about.paragraph1}
             </p>
             <p class="text-pretty leading-relaxed text-sm sm:text-base">
-                My main stack includes TypeScript, React, Astro, Tailwind CSS,
-                Next.js, Node.js, MongoDB, PostgreSQL, and SQLite. Whether it’s
-                architecting a flexible system, integrating external services,
-                optimizing performance, or designing efficient data flows, I aim
-                to deliver solutions that are both robust and elegant.
+                {t.about.paragraph2}
             </p>
 
             <p>
-                Every project I take on is an opportunity to learn, refine my
-                craft, and build something that truly makes a difference.
+                {t.about.paragraph3}
             </p>
 
             <footer
@@ -72,12 +65,20 @@ import cover from '@/assets/cover.webp'
                 <div
                     class="flex flex-row items-start sm:items-center gap-4 place-items-start sm:place-items-end justify-between"
                 >
-                    <Button text="Download CV" variant="primary" downloadAttr={true} downloadAttributeValue="CV-Alessandro_Diaz.pdf" href={CV} target="_blank" ariaLabel="Download my CV" />
+                    <Button
+                        text={t.about.downloadCv}
+                        variant="primary"
+                        downloadAttr={true}
+                        downloadAttributeValue="CV-Alessandro_Diaz.pdf"
+                        href={CV}
+                        target="_blank"
+                        ariaLabel={t.about.downloadCvAria}
+                    />
                     <a
                         href="/my-projects"
                         class="flex items-center gap-2 hover:text-white text-base sm:text-lg md:text-xl whitespace-nowrap"
                     >
-                        <p class="text-primary-green">Projects</p>
+                        <p class="text-primary-green">{t.about.projectsLink}</p>
                         <GoToAll />
                     </a>
                 </div>
