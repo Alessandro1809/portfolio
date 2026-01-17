@@ -22,7 +22,10 @@ type WorkTimelineProps = {
 
 const WorkTimeline = ({ timeline }: WorkTimelineProps) => {
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [isDesktop, setIsDesktop] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth >= 1024;
+  });
   const timelineRef = useRef<HTMLDivElement>(null);
 
   const icons = [Code, Briefcase, Rocket, Award];
@@ -35,7 +38,8 @@ const WorkTimeline = ({ timeline }: WorkTimelineProps) => {
   useEffect(() => {
     // Check if desktop on mount and resize
     const checkDesktop = () => {
-      setIsDesktop(window.innerWidth >= 1024);
+      const next = window.innerWidth >= 1024;
+      setIsDesktop((prev) => (prev === next ? prev : next));
     };
     
     checkDesktop();

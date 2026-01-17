@@ -6,6 +6,10 @@ import { defaultLang, translations, type Language } from "@/lib/i18n";
 
 const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
 const t = translations[lang];
+const nextLang: Language = lang === "en" ? "es" : "en";
+const toggleLabel = nextLang.toUpperCase();
+const toggleAriaLabel =
+    nextLang === "es" ? t.languageToggle.switchToEs : t.languageToggle.switchToEn;
 ---
 
 <script>
@@ -145,31 +149,42 @@ const t = translations[lang];
             </ul>
         </nav>
 
-        <div class="hidden sm:block md:block lg:block">
-            <Button
-                text={t.nav.hireMe}
-                variant="primary"
-                href="/hire-me"
-                ariaLabel={t.nav.hireMe}
-            />
-        </div>
+        <div class="flex items-center gap-2">
+            <button
+                id="lang-toggle"
+                type="button"
+                class="rounded-full border border-white/20 bg-black/60 px-3 py-2 text-xs font-semibold uppercase tracking-widest text-white backdrop-blur-sm transition-all duration-300 hover:border-primary-green/60 hover:text-primary-green"
+                aria-label={toggleAriaLabel}
+                data-next-lang={nextLang}
+            >
+                {toggleLabel}
+            </button>
+            <div class="hidden sm:block md:block lg:block">
+                <Button
+                    text={t.nav.hireMe}
+                    variant="primary"
+                    href="/hire-me"
+                    ariaLabel={t.nav.hireMe}
+                />
+            </div>
 
-        <!-- Mobile Hamburger Button -->
-        <button
-            id="hamburger"
-            class="sm:hidden md:hidden lg:hidden relative w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-lg bg-linear-to-b from-white/10 to-white/5 border border-white/20 backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:bg-white/10"
-            aria-label={t.nav.toggleMenu}
-        >
-            <span
-                class="block w-6 h-0.5 bg-white rounded-full transition-all duration-300"
-            ></span>
-            <span
-                class="block w-6 h-0.5 bg-white rounded-full transition-all duration-300"
-            ></span>
-            <span
-                class="block w-6 h-0.5 bg-white rounded-full transition-all duration-300"
-            ></span>
-        </button>
+            <!-- Mobile Hamburger Button -->
+            <button
+                id="hamburger"
+                class="sm:hidden md:hidden lg:hidden relative w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-lg bg-linear-to-b from-white/10 to-white/5 border border-white/20 backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:bg-white/10"
+                aria-label={t.nav.toggleMenu}
+            >
+                <span
+                    class="block w-6 h-0.5 bg-white rounded-full transition-all duration-300"
+                ></span>
+                <span
+                    class="block w-6 h-0.5 bg-white rounded-full transition-all duration-300"
+                ></span>
+                <span
+                    class="block w-6 h-0.5 bg-white rounded-full transition-all duration-300"
+                ></span>
+            </button>
+        </div>
     </div>
 
     <!-- Mobile Menu -->
