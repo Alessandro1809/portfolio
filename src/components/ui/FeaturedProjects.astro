@@ -6,6 +6,7 @@ import nous from "@/assets/videos/nous.webm";
 import erlingnails from "@/assets/videos/erlingnails.webm";
 import cms from "@/assets/videos/cms.webm";
 import apv from "@/assets/apv-api.webp";
+import apv_front from "@/assets/videos/apv-mern.webm";
 import blogApi from "@/assets/blog-api.webp";
 export interface FeaturedProject {
     title: string;
@@ -49,9 +50,20 @@ const projects: FeaturedProject[] = [
             "React.js",
             "Node.js",
         ],
-        link: "https://cms.example.com",
+        link: "https://cms-only-test.vercel.app",
         haveRepo: true,
         repoLink: "https://github.com/Alessandro1809/cms-personal-blog",
+        isVideo: true,
+    },
+    {
+        title: "Veterinary Patient Management",
+        description:
+            "This project is a responsive MERN-based veterinary patient manager that streamlines appointment tracking, patient records, and clinical workflows in a clean, intuitive interface. It delivers fast CRUD operations, secure authentication flows, and a focused dashboard that keeps veterinarians organized while highlighting efficiency and usability for real-world practice.",
+        image: apv_front,
+        tags: ["React.js", "Javascript", "Axios", "Tailwind CSS"],
+        link: "https://cms-only-test.vercel.app/",
+        haveRepo: true,
+        repoLink: "https://github.com/Alessandro1809/Frontend_APV_MERN",
         isVideo: true,
     },
     {

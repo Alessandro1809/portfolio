@@ -59,6 +59,8 @@ if (!post) {
     return Astro.redirect("/404");
 }
 
+const isFeatured = Boolean(post.featured);
+
 let content: ContentBlocks = { blocks: [] };
 try {
     let parsedContent: unknown = post.content;
@@ -121,7 +123,7 @@ try {
         </nav>
 
         <header class="mb-12">
-            {post.featured && (
+            {isFeatured && (
                 <div class="mb-4 inline-flex items-center gap-1 rounded-full border border-accent/50 bg-accent/10 px-3 py-1 text-xs font-medium text-accent backdrop-blur-sm">
                     <span class="h-1.5 w-1.5 rounded-full bg-accent"></span>
                     Destacado
