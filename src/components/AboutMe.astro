@@ -1,0 +1,92 @@
+---
+import ImageCard from "@/components/cards/ImageCard.astro";
+import Button from "./ui/buttons/Button.astro";
+import GoToAll from "./ui/icons/goToAll.astro";
+import SocialApps from "./ui/SocialApps.astro";
+import FeaturedInfo from "./ui/FeaturedInfo.astro";
+import video_presentacion from "@/assets/videos/presentacion_portfolio.webm";
+import CV from "@/assets/docs/CV-Alessandro_Diaz.pdf";
+import cover from "@/assets/cover.webp";
+import { defaultLang, translations, type Language } from "@/lib/i18n";
+
+const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
+const t = translations[lang];
+---
+
+<section
+    class="container mx-auto max-w-12xl relative z-10 px-4 sm:px-6 md:px-8 pt-44"
+    data-aos="fade-up"
+    data-aos-duration="800"
+    data-aos-delay="100"
+    data-aos-once="true"
+>
+    <header class="pb-6 md:pb-8 lg:pb-10 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="flex flex-col gap-4">
+            <h2
+                class="text-2xl sm:text-3xl md:text-4xl font-bold text-white pb-3 sm:pb-4"
+            >
+                {t.about.heading}
+            </h2>
+            <div class="flex items-center">
+                <p class="text-neutral-400 text-sm sm:text-base max-w-3xl">
+                    {t.about.intro}
+                </p>
+            </div>
+        </div>
+
+        <video
+            src={video_presentacion}
+            class="rounded-xl w-full h-96 object-cover"
+            poster={cover.src}
+            controls="true"
+            playsinline
+            preload="metadata"></video>
+    </header>
+
+    <article
+        class="flex flex-col lg:flex-row md:gap-20 items-center lg:items-center text-neutral-400"
+    >
+        <ImageCard />
+        <div class="flex flex-col gap-4 w-full">
+            <p class="text-pretty leading-relaxed text-sm sm:text-base">
+                {t.about.paragraph1}
+            </p>
+            <p class="text-pretty leading-relaxed text-sm sm:text-base">
+                {t.about.paragraph2}
+            </p>
+
+            <p>
+                {t.about.paragraph3}
+            </p>
+
+            <footer
+                class="flex flex-col sm:flex-row justify-between mt-12 sm:mt-24 md:mt-32 lg:mt-44 gap-6 sm:gap-4"
+            >
+                <div
+                    class="flex flex-row items-start sm:items-center gap-4 place-items-start sm:place-items-end justify-between"
+                >
+                    <Button
+                        text={t.about.downloadCv}
+                        variant="primary"
+                        downloadAttr={true}
+                        downloadAttributeValue="CV-Alessandro_Diaz.pdf"
+                        href={CV}
+                        target="_blank"
+                        ariaLabel={t.about.downloadCvAria}
+                    />
+                    <a
+                        href="/my-projects"
+                        class="flex items-center gap-2 hover:text-white text-base sm:text-lg md:text-xl whitespace-nowrap"
+                    >
+                        <p class="text-primary-green">{t.about.projectsLink}</p>
+                        <GoToAll />
+                    </a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <SocialApps />
+                </div>
+            </footer>
+        </div>
+    </article>
+    <FeaturedInfo />
+</section>

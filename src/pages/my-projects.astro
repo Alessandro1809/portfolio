@@ -1,0 +1,26 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import ContactSection from "@/components/ui/ContactSecction.astro";
+import FallingTechBackground from "@/components/react/FallingTechBackgound";
+import FeaturedProjects from "@/components/ui/FeaturedProjects.astro";
+import { defaultLang, translations, type Language } from "@/lib/i18n";
+
+const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
+const t = translations[lang];
+---
+
+<Layout
+    title={t.seo.pages.projectsTitle}
+    description={t.seo.pages.projectsDescription}
+>
+    <div class="pt-44">
+        <FallingTechBackground client:load />
+        <FeaturedProjects
+            showAllLink={false}
+            headingLevel={1}
+            heading={t.projectsPage.heading}
+            description={t.projectsPage.description}
+        />
+        <ContactSection />
+    </div>
+</Layout>

@@ -1,0 +1,47 @@
+---
+import Github from "@/components/ui/icons/gitHub.astro";
+import LinkedIn from "@/components/ui/icons/LinkedIn.astro";
+import Twitter from "@/components/ui/icons/Twitter.astro";
+
+export interface SocialLink {
+    href: string;
+    icon: any;
+}
+
+const links: SocialLink[] = [
+    {
+        href: "https://github.com/Alessandro1809",
+        icon: Github,
+    },
+    {
+        href: "https://www.linkedin.com/in/alessandrodg/",
+        icon: LinkedIn,
+    },
+    {
+        href: "https://x.com/ddiaz_ale",
+        icon: Twitter,
+    },
+];
+---
+
+<div class="flex gap-2">
+    {
+        links.map((link, index) => {
+            const Icon = link.icon;
+            return (
+                <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="p-1 rounded-md border border-primary-green/30 hover:bg-primary-green/10 hover:border-primary-green h-fit group hover:scale-105 hover:cursor-pointer transition-all duration-500"
+                    data-aos="fade-up"
+                    data-aos-duration="1000"
+                    data-aos-delay={index * 100}
+                    data-aos-once="true"
+                >
+                    <Icon class="w-6 h-6 text-white group-hover:text-primary-green transition-colors" />
+                </a>
+            );
+        })
+    }
+</div>

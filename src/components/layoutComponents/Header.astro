@@ -1,0 +1,256 @@
+---
+import avatar from "@/assets/avatar1.png";
+import { Image } from "astro:assets";
+import Button from "../ui/buttons/Button.astro";
+import { defaultLang, translations, type Language } from "@/lib/i18n";
+
+const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
+const t = translations[lang];
+const nextLang: Language = lang === "en" ? "es" : "en";
+const toggleLabel = nextLang.toUpperCase();
+const toggleAriaLabel =
+    nextLang === "es"
+        ? t.languageToggle.switchToEs
+        : t.languageToggle.switchToEn;
+---
+
+<script>
+    const setupEventListeners = () => {
+        const hamburger = document.getElementById("hamburger");
+        const mobileMenu = document.getElementById("mobileMenu");
+        const navLinks = document.querySelectorAll("nav ul li a");
+        const mobileNavLinks = document.querySelectorAll(
+            "#mobileMenu nav ul li a",
+        );
+
+        // ONLY attach listeners if they haven't been attached yet
+        if (!hamburger || !mobileMenu || (hamburger as any)._listenersAttached)
+            return;
+
+        // Hamburger menu toggle
+        hamburger.addEventListener("click", (e) => {
+            e.stopPropagation();
+            hamburger.classList.toggle("open");
+            mobileMenu.classList.toggle("translate-x-full");
+        });
+
+        // Close mobile menu after link selection
+        mobileNavLinks.forEach((link) => {
+            link.addEventListener("click", () => {
+                mobileMenu.classList.add("translate-x-full");
+                hamburger.classList.remove("open");
+            });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener("click", (e) => {
+            const target = e.target as HTMLElement;
+            if (
+                mobileMenu &&
+                hamburger &&
+                !mobileMenu.contains(target) &&
+                !hamburger.contains(target) &&
+                !mobileMenu.classList.contains("translate-x-full")
+            ) {
+                mobileMenu.classList.add("translate-x-full");
+                hamburger.classList.remove("open");
+            }
+        });
+
+        (hamburger as any)._listenersAttached = true;
+    };
+
+    const updateActiveState = () => {
+        const currentPath = window.location.pathname;
+        const activeClasses =
+            "bg-linear-to-b from-white/10 to-white/5 border-white/20 backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_4px_6px_rgba(0,0,0,0.05)]".split(
+                " ",
+            );
+        const inactiveClasses = "hover:bg-white/5 border-transparent".split(
+            " ",
+        );
+
+        const allLinks = document.querySelectorAll(
+            "nav ul li a, #mobileMenu nav ul li a",
+        );
+
+        allLinks.forEach((link) => {
+            const href = link.getAttribute("href");
+            link.classList.remove(...activeClasses);
+            link.classList.add(...inactiveClasses);
+
+            if (href === currentPath || (currentPath === "/" && href === "/")) {
+                link.classList.remove(...inactiveClasses);
+                link.classList.add(...activeClasses);
+            }
+        });
+
+        // Ensure menu is closed on navigation
+        const hamburger = document.getElementById("hamburger");
+        const mobileMenu = document.getElementById("mobileMenu");
+        if (hamburger && mobileMenu) {
+            hamburger.classList.remove("open");
+            mobileMenu.classList.add("translate-x-full");
+        }
+    };
+
+    // Run on initial load
+    setupEventListeners();
+    updateActiveState();
+
+    // Run on view transition updates
+    document.addEventListener("astro:after-swap", () => {
+        setupEventListeners();
+        updateActiveState();
+    });
+</script>
+
+<header
+    transition:persist="true"
+    class="container mx-auto max-w-12xl fixed top-0 left-0 right-0 z-50"
+    data-aos="fade-down"
+    data-aos-duration="1000"
+    data-aos-delay="800"
+>
+    <div
+        class="flex justify-between items-center pt-4 px-4 sm:px-6 md:px-8"
+        id="headerContainer"
+    >
+        <a href="/">
+            <div
+                class="min-w-[58px] bg-linear-to-t from-white/20 via-[#34635C]/20 to-[#34635C]/20 border-2 border-primary-green items-center justify-center flex rounded-full overflow-hidden backdrop-blur-[20px]"
+            >
+                <Image
+                    class="w-auto h-14"
+                    src={avatar}
+                    alt={t.nav.profileAlt}
+                />
+            </div>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav class="sm:block md:block hidden lg:block">
+            <ul class="flex gap-2 text-white items-center">
+                <li>
+                    <a
+                        href="/"
+                        class="px-5 py-2 rounded-full bg-linear-to-b from-white/10 to-white/5 border border-white/20 backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300"
+                        >{t.nav.home}</a
+                    >
+                </li>
+                <li>
+                    <a
+                        href="/my-projects"
+                        class="px-5 py-2 rounded-full hover:bg-white/5 transition-all duration-300 border border-transparent"
+                        >{t.nav.projects}</a
+                    >
+                </li>
+                <li>
+                    <a
+                        href="/blog"
+                        class="px-5 py-2 rounded-full hover:bg-white/5 transition-all duration-300 border border-transparent"
+                        >{t.nav.blog}</a
+                    >
+                </li>
+            </ul>
+        </nav>
+
+        <div class="flex items-center gap-2">
+            <button
+                id="lang-toggle"
+                type="button"
+                class="rounded-full border border-white/20 bg-black/60 px-3 py-2 text-xs font-semibold uppercase tracking-widest text-white backdrop-blur-sm transition-all duration-300 hover:border-primary-green/60 hover:text-primary-green hover:cursor-pointer"
+                aria-label={toggleAriaLabel}
+                data-next-lang={nextLang}
+            >
+                {toggleLabel}
+            </button>
+            <div class="hidden sm:block md:block lg:block">
+                <Button
+                    text={t.nav.hireMe}
+                    variant="primary"
+                    href="/hire-me"
+                    ariaLabel={t.nav.hireMe}
+                />
+            </div>
+
+            <!-- Mobile Hamburger Button -->
+            <button
+                id="hamburger"
+                class="sm:hidden md:hidden lg:hidden relative w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-lg bg-linear-to-b from-white/10 to-white/5 border border-white/20 backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:bg-white/10"
+                aria-label={t.nav.toggleMenu}
+            >
+                <span
+                    class="block w-6 h-0.5 bg-white rounded-full transition-all duration-300"
+                ></span>
+                <span
+                    class="block w-6 h-0.5 bg-white rounded-full transition-all duration-300"
+                ></span>
+                <span
+                    class="block w-6 h-0.5 bg-white rounded-full transition-all duration-300"
+                ></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div
+        id="mobileMenu"
+        class="md:hidden sm:hidden lg:hidden fixed top-0 right-0 h-screen w-[85vw] max-w-[320px] bg-linear-to-b from-[#1a1a1a]/10 via-[#2a2a2a]/10 to-[#1a1a1a]/10 backdrop-blur-xl border-l border-white/10 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out"
+    >
+        <div class="flex flex-col h-full p-6 pt-20">
+            <!-- Mobile Navigation -->
+            <nav class="flex-1">
+                <ul class="flex flex-col gap-3 text-white">
+                    <li>
+                        <a
+                            href="/"
+                            class="block px-6 py-3 rounded-xl bg-linear-to-b from-white/10 to-white/5 border border-white/20 backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 text-center font-medium"
+                            >{t.nav.home}</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            href="/my-projects"
+                            class="block px-6 py-3 rounded-xl hover:bg-white/5 transition-all duration-300 border border-transparent text-center font-medium"
+                            >{t.nav.projects}</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            href="/blog"
+                            class="block px-6 py-3 rounded-xl hover:bg-white/5 transition-all duration-300 border border-transparent text-center font-medium"
+                            >{t.nav.blog}</a
+                        >
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Mobile CTA Button -->
+            <div class="mt-6 flex justify-center">
+                <Button
+                    text={t.nav.hireMe}
+                    variant="primary"
+                    href="/hire-me"
+                    ariaLabel={t.nav.hireMe}
+                    className="w-full md:w-auto"
+                />
+            </div>
+        </div>
+    </div>
+</header>
+
+<style>
+    /* Hamburger animation */
+    #hamburger.open span:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+
+    #hamburger.open span:nth-child(2) {
+        opacity: 0;
+    }
+
+    #hamburger.open span:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+</style>

@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /unsubscribe
+
+Sitemap: https://alessandrodiaz.dev/sitemap-index.xml

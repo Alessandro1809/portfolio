@@ -1,0 +1,175 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { defaultLang, translations, type Language } from "@/lib/i18n";
+
+const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
+const t = translations[lang];
+const email = Astro.url.searchParams.get("email") ?? "";
+const hasEmail = Boolean(email);
+---
+
+<Layout
+    title={t.seo.pages.unsubscribeTitle}
+    description={t.seo.pages.unsubscribeDescription}
+    noindex={true}
+>
+    <section class="container mx-auto px-4 pt-44 pb-32 relative z-10">
+        <div class="max-w-2xl mx-auto text-center">
+            <p class="text-sm uppercase tracking-[0.2em] text-primary-green">
+                {t.unsubscribe.kicker}
+            </p>
+            <h1 class="mt-3 text-3xl md:text-5xl font-semibold">
+                {t.unsubscribe.title}
+            </h1>
+            <p class="mt-4 text-sm md:text-base text-neutral-400">
+                {t.unsubscribe.description}
+            </p>
+        </div>
+
+        <div class="max-w-md mx-auto mt-10">
+            <div
+                id="unsubscribe-message"
+                data-email={email}
+                data-sending-text={t.unsubscribe.sending}
+                data-success-text={t.unsubscribe.success}
+                data-already-text={t.unsubscribe.already}
+                data-not-found-text={t.unsubscribe.notFound}
+                data-error-text={t.unsubscribe.errorGeneric}
+                data-error-prefix={t.unsubscribe.errorPrefix}
+                data-success-prefix={t.unsubscribe.successPrefix}
+                class:list={[
+                    "mt-4 p-4 rounded-md text-sm",
+                    hasEmail ? "bg-amber-100 text-amber-800" : "hidden",
+                ]}
+            >
+                {hasEmail ? t.unsubscribe.sending : ""}
+            </div>
+
+            <form
+                id="unsubscribe-form"
+                class:list={["flex flex-col gap-4", hasEmail ? "hidden" : ""]}
+                data-sending-text={t.unsubscribe.sending}
+            >
+                <div class="flex flex-col gap-2">
+                    <label for="unsubscribe-email">{t.unsubscribe.emailLabel}</label>
+                    <input
+                        id="unsubscribe-email"
+                        name="email"
+                        type="email"
+                        required
+                        placeholder={t.unsubscribe.emailPlaceholder}
+                        class="w-full p-3 border border-white/10 rounded-xl bg-black/40 focus:outline-none focus:ring-2 focus:ring-primary-green"
+                    />
+                </div>
+                <button
+                    type="submit"
+                    class="w-full py-3 rounded-full border border-primary-green/60 text-primary-green font-semibold tracking-wide hover:bg-primary-green hover:text-dark-green transition-all duration-300"
+                >
+                    {t.unsubscribe.submit}
+                </button>
+            </form>
+        </div>
+    </section>
+</Layout>
+
+<script>
+    import { actions } from 'astro:actions';
+
+    const setupUnsubscribe = () => {
+        const messageDiv = document.getElementById('unsubscribe-message');
+        const form = document.getElementById('unsubscribe-form') as HTMLFormElement | null;
+
+        if (!messageDiv || messageDiv.dataset.listenerAttached) return;
+        messageDiv.dataset.listenerAttached = 'true';
+
+        const emailParam = (messageDiv?.dataset.email ?? '').trim();
+        const urlEmail =
+            new URLSearchParams(window.location.search)
+                .get('email')
+                ?.trim() ?? '';
+        const resolvedEmail = urlEmail || emailParam;
+        const sendingText = messageDiv?.dataset.sendingText ?? 'Processing...';
+        const successText = messageDiv?.dataset.successText ?? 'You have been unsubscribed.';
+        const alreadyText = messageDiv?.dataset.alreadyText ?? 'You are already unsubscribed.';
+        const notFoundText = messageDiv?.dataset.notFoundText ?? 'If the address was subscribed, it has been removed.';
+        const errorText = messageDiv?.dataset.errorText ?? 'Unable to process your request.';
+        const errorPrefix = messageDiv?.dataset.errorPrefix ?? '✗';
+        const successPrefix = messageDiv?.dataset.successPrefix ?? '✓';
+
+        const showMessage = (variant: 'success' | 'error' | 'info', text: string) => {
+            if (!messageDiv) return;
+            messageDiv.classList.remove('hidden');
+
+            if (variant === 'success') {
+                messageDiv.className = 'mt-4 p-4 rounded-md text-sm bg-green-100 text-green-800';
+            } else if (variant === 'info') {
+                messageDiv.className = 'mt-4 p-4 rounded-md text-sm bg-amber-100 text-amber-800';
+            } else {
+                messageDiv.className = 'mt-4 p-4 rounded-md text-sm bg-red-100 text-red-800';
+            }
+
+            messageDiv.textContent = text;
+        };
+
+        const runUnsubscribe = async (formData: FormData, button?: HTMLButtonElement) => {
+            let originalContent: string | null = null;
+            if (button) {
+                originalContent = button.innerHTML;
+                button.disabled = true;
+                button.innerHTML = sendingText;
+            } else {
+                showMessage('info', sendingText);
+            }
+
+            try {
+                const { data, error } = await actions.unsubscribeFromBlog(formData);
+
+                if (error) {
+                    showMessage('error', `${errorPrefix} ${error.message}`);
+                    return;
+                }
+
+                if (data?.status === 'already') {
+                    showMessage('info', `${successPrefix} ${alreadyText}`);
+                } else if (data?.status === 'not_found') {
+                    showMessage('info', `${successPrefix} ${notFoundText}`);
+                } else {
+                    showMessage('success', `${successPrefix} ${successText}`);
+                }
+            } catch (err) {
+                showMessage('error', `${errorPrefix} ${errorText}`);
+            } finally {
+                if (button) {
+                    button.disabled = false;
+                    if (originalContent !== null) {
+                        button.innerHTML = originalContent;
+                    }
+                }
+                setTimeout(() => {
+                    messageDiv?.classList.add('hidden');
+                }, 6000);
+            }
+        };
+
+        if (resolvedEmail) {
+            const formData = new FormData();
+            formData.set('email', resolvedEmail);
+            if (form) {
+                form.classList.add('hidden');
+            }
+            runUnsubscribe(formData);
+        } else if (form) {
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const button = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+                const formData = new FormData(form);
+                await runUnsubscribe(formData, button ?? undefined);
+                form.reset();
+            });
+        }
+    };
+
+    setupUnsubscribe();
+    document.addEventListener('astro:page-load', setupUnsubscribe);
+    document.addEventListener('astro:after-swap', setupUnsubscribe);
+</script>

@@ -1,0 +1,52 @@
+---
+interface Props {
+    href?: string;
+    text?: string;
+    variant?: "primary" | "secondary" | "tertiary";
+    className?: string;
+    strokeColor?: string;
+    width?: string;
+    target?: "_blank" | "_self" | "_parent" | "_top";
+    ariaLabel?: string;
+    rounded?: string;
+    justify?: string;
+    downloadAttr?: boolean;
+    downloadAttributeValue?: string;
+}
+
+const {
+    target = "_self",
+    width = "auto",
+    href = "/hire-me",
+    text,
+    variant = "primary",
+    className = "",
+    downloadAttr = false,
+    strokeColor = "#8458FF",
+    ariaLabel = "Button",
+    rounded = "full",
+    justify = "center",
+    downloadAttr: downloadAttributeValue = false,
+} = Astro.props;
+
+const baseStyles = `px-5 py-2 md:py-1 font-medium rounded-${rounded} transition-all duration-300 group flex justify-${justify} items-center gap-2 w-auto md:w-${width} cursor-pointer whitespace-nowrap text-xs md:text-lg font-semibold`;
+
+const variants = {
+    primary:
+        "text-white min-w-[150px] py-2 rounded-full backdrop-blur-[20px] border border-primary-green hover:cursor-pointer inline-block text-center shadow-[0_0_4px_#FFF] hover:border-primary-green/50",
+    secondary:
+        "text-white min-w-auto rounded-md backdrop-blur-[2px] border border-primary-green hover:cursor-pointer text-center shadow-[0_0_4px_#FFF] items-center justify-center hover:border-primary-green/50",
+    tertiary:
+        "text-dark-green min-w-[150px] py-3 rounded-md bg-[#84FFD8] hover:cursor-pointer inline-block text-center shadow-[0_0_4px_#FFF] hover:border-primary-green/50 ",
+};
+---
+
+<a
+    href={href}
+    aria-label={ariaLabel}
+    target={target}
+    download={downloadAttributeValue ? "" : undefined}
+    class:list={[baseStyles, variants[variant], className]}
+>
+    {text}
+</a>

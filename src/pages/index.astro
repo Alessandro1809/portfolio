@@ -1,0 +1,32 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Hero from "@/components/ui/Hero.astro";
+import FeaturedProjects from "@/components/ui/FeaturedProjects.astro";
+import AboutMe from "@/components/AboutMe.astro";
+import BlogSection from "@/components/ui/BlogSection.astro";
+import ContactSection from "@/components/ui/ContactSecction.astro";
+import WorkTimeline from "@/components/react/TimeLine";
+import { defaultLang, translations, type Language } from "@/lib/i18n";
+
+const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
+const t = translations[lang];
+---
+
+<Layout
+    title={t.seo.pages.homeTitle}
+    description={t.seo.pages.homeDescription}
+>
+    <Hero />
+    <FeaturedProjects limit={2} />
+    <div class="relative min-h-screen mx-4">
+        <div
+            class="absolute h-full w-full bg-[radial-gradient(#00D47C_.5px,transparent_1px)] bg-size-[32px_32px] mask-[radial-gradient(ellipse_40%_50%_at_50%_50%,#000_70%,transparent_100%)]"
+        >
+        </div>
+
+        <WorkTimeline client:only="react" timeline={t.timeline} />
+    </div>
+    <AboutMe />
+    <BlogSection />
+    <ContactSection />
+</Layout>

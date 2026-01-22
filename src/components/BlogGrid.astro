@@ -1,0 +1,62 @@
+---
+import { BlogCard } from "./cards/BlogCard";
+import {
+    defaultLang,
+    localeByLang,
+    translations,
+    type Language,
+} from "@/lib/i18n";
+
+const { turso } = Astro.locals;
+const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
+const t = translations[lang];
+const locale = localeByLang[lang];
+const blogCardLabels = {
+    featuredBadge: t.blog.featuredBadge,
+    minLabel: t.blog.minLabel,
+    readMore: t.blog.readMore,
+};
+
+let blogPosts: any[] = [];
+if (!turso) {
+    console.error("[BlogGrid] Turso client is missing in Astro.locals");
+} else {
+    try {
+        console.log("[BlogGrid] Fetching posts from Turso...");
+        const result = await turso.execute({
+            sql: "SELECT * FROM posts WHERE STATUS = 'PUBLISHED' ORDER BY createdAt DESC",
+            args: [],
+        });
+
+        console.log(
+            `[BlogGrid] Query successful. Found ${result.rows.length} rows.`,
+        );
+
+        blogPosts = result.rows.map((post: any) => ({
+            id: post.id,
+            title: post.title,
+            slug: post.slug,
+            featuredImage: post.featuredImage,
+            excerpt: post.excerpt,
+            date: post.createdAt ?? "",
+            categorie: post.categorie,
+            tags: post.tags,
+            read_time: post.read_time ?? post.readTime ?? "",
+            featured: Boolean(post.featured),
+        }));
+    } catch (error) {
+        console.error(
+            "[BlogGrid] Error fetching blog posts from Turso DB:",
+            error,
+        );
+    }
+}
+---
+
+<section class="container mx-auto px-4 py-16 md:py-24">
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {blogPosts.map((post: any) => (
+            <BlogCard post={post} labels={blogCardLabels} locale={locale} />
+        ))}
+    </div>
+</section>

@@ -1,0 +1,98 @@
+---
+import { TechStack } from "../react/TechStack";
+import { NumberTicker } from "../react/NumberTicker";
+import { defaultLang, translations, type Language } from "@/lib/i18n";
+
+const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
+const t = translations[lang];
+---
+
+<div class="min-h-screen w-full bg-transparent relative overflow-hidden">
+    {/* Diagonal Fade Grid Background - Top Right */}
+    <div
+        class="absolute -inset-2 z-0 opacity-60"
+        style={{
+            backgroundImage: `
+        linear-gradient(to right, #FBBC8630 1px, transparent .5px),
+        linear-gradient(to bottom, #FBBC8630 1px, transparent .5px)
+      `,
+            backgroundSize: "50px 50px",
+            WebkitMaskImage:
+                "radial-gradient(ellipse 80% 80% at 120% 100%, #000 70%, transparent 100%)",
+            maskImage:
+                "radial-gradient(ellipse 80% 80% at 120% 50%, #000 2%, transparent 100%)",
+        }}
+    >
+    </div>
+
+    <article
+        class="flex py-20 md:py-32 lg:py-44"
+        data-aos="fade-up"
+        data-aos-duration="1000"
+        data-aos-delay="600"
+        data-aos-once="true"
+    >
+        <div
+            class="min-h-[50vh] grid grid-cols-1 lg:grid-cols-2 place-items-center gap-16 relative z-50 w-full"
+        >
+            <TechStack
+                client:visible
+                title={t.techStack.title}
+                closing={t.techStack.closing}
+            />
+
+            <div class="w-full">
+                <h2
+                    class="text-2xl sm:text-3xl md:text-4xl font-bold text-white pb-10 sm:pb-12"
+                >
+                    {t.featuredInfo.heading}
+                </h2>
+                <div
+                    class="flex flex-row flex-nowrap items-center justify-center gap-8 sm:gap-12 md:gap-16 lg:gap-20"
+                >
+                    <p
+                        class="text-pretty
+                    
+                text-sm sm:text-base md:text-lg
+                grid
+                
+                text-center"
+                    >
+                        <span
+                            class="text-5xl sm:text-4xl md:text-5xl lg:text-6xl inline-flex items-center justify-center whitespace-nowrap"
+                            >+<NumberTicker
+                                client:visible
+                                value={8}
+                                className="drop-shadow-[0_0_10px_rgba(255,255,255,0.5)] font-black"
+                            />
+                        </span>{t.featuredInfo.finishedProjects}
+                    </p>
+                    <p
+                        class="text-pretty text-sm sm:text-base md:text-lg grid text-center"
+                    >
+                        <span
+                            class="text-5xl sm:text-4xl md:text-5xl lg:text-6xl inline-flex items-center justify-center whitespace-nowrap"
+                            >+<NumberTicker
+                                client:visible
+                                value={3}
+                                className="drop-shadow-[0_0_10px_rgba(255,255,255,0.5)] font-black"
+                            />
+                        </span>{t.featuredInfo.yearsExperience}
+                    </p>
+                    <p
+                        class="text-pretty text-sm sm:text-base md:text-lg grid text-center"
+                    >
+                        <span
+                            class="text-5xl sm:text-4xl md:text-5xl lg:text-6xl inline-flex items-center justify-center whitespace-nowrap"
+                            >+<NumberTicker
+                                client:visible
+                                value={6}
+                                className="drop-shadow-[0_0_10px_rgba(255,255,255,0.5)] font-black"
+                            />
+                        </span>{t.featuredInfo.happyClients}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </article>
+</div>
