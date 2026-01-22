@@ -7,10 +7,6 @@ compatibility_flags = [
   "disable_nodejs_process_v2"
 ]
 
-[vars]
-TURSO_DB_URL="libsql://personal-blog-entrys-alessandro1809.aws-us-west-2.turso.io"
-TURSO_AUTH_TOKEN="eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3NjYxNTg3MTMsImlkIjoiZWYwYTgzZjMtNTJjMy00Mzk2LThiMzYtY2JhMDlmZWY5MjIxIiwicmlkIjoiYjY2NjgzMjEtZmMyZS00YjMzLWJjMzMtMmE3ZTcyMGYzMTI1In0.wOEo3TWLPJApgKNqTQZcQCORfHyUu_1OeYA1ki4kyIe-m4H-5qr_y30ELTdCqyBWtksmU4JCi65B0_f2oEd0BQ"
-PUBLIC_BLOG_API_URL="https://blog-api-v1.fly.dev/api/v1"
 [[kv_namespaces]]
 binding = "App"
 id = "14f671e9bfab4ca9af8a49dfa48bef4e"
