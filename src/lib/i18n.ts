@@ -249,7 +249,7 @@ export const translations = {
                     title: "Software Developer",
                     company: "Global Professional Group S.A.",
                     description:
-                        "Led development of microservices architecture. Implemented CI/CD pipelines and improved application performance by 40%.",
+                        "Led development of microservices architecture. Implemented CI/CD pipelines and developed enterprise automation systems.",
                 },
                 {
                     year: "2023",
@@ -263,7 +263,7 @@ export const translations = {
                     title: "CTO & Fullstack Developer",
                     company: "NOUS",
                     description:
-                        "Leading a team of 8 engineers. Driving technical vision and delivering enterprise-level applications for Fortune 500 clients.",
+                        "Driving technical vision, making decisions and delivering enterprise-level applications for clients.",
                 },
             ],
         },
@@ -511,7 +511,7 @@ export const translations = {
                     title: "Desarrollador de software",
                     company: "Global Professional Group S.A.",
                     description:
-                        "Lideré el desarrollo de una arquitectura de microservicios. Implementé pipelines CI/CD y mejoré el rendimiento de la aplicación en un 40%.",
+                        "Lideré el desarrollo de una arquitectura de microservicios. Implementé pipelines de CI/CD y desarrollé sistemas de automatización empresarial.",
                 },
                 {
                     year: "2023",
@@ -525,7 +525,7 @@ export const translations = {
                     title: "CTO y Desarrollador Fullstack",
                     company: "NOUS",
                     description:
-                        "Lidero un equipo de 8 ingenieros. Impulso la visión técnica y entrego aplicaciones empresariales para clientes Fortune 500.",
+                        "Impulso la visión técnica, tomo decisiones y entrego aplicaciones empresariales para clientes.",
                 },
             ],
         },
