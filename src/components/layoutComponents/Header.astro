@@ -226,19 +226,17 @@ const toggleAriaLabel =
                             >{t.nav.blog}</a
                         >
                     </li>
+                    <li>
+                        <Button
+                            text={t.nav.hireMe}
+                            variant="primary"
+                            href="/hire-me"
+                            ariaLabel={t.nav.hireMe}
+                            className="w-full px-6 py-3 rounded-xl bg-black/60 border border-white/20 backdrop-blur-sm text-center shadow-none hover:border-primary-green/60 hover:text-primary-green !text-base !font-medium"
+                        />
+                    </li>
                 </ul>
             </nav>
-
-            <!-- Mobile CTA Button -->
-            <div class="mt-6 flex justify-center">
-                <Button
-                    text={t.nav.hireMe}
-                    variant="primary"
-                    href="/hire-me"
-                    ariaLabel={t.nav.hireMe}
-                    className="w-full md:w-auto"
-                />
-            </div>
         </div>
     </div>
 </header>
