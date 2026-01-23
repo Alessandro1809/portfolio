@@ -48,7 +48,7 @@ const t = translations[lang];
         <div class="flex flex-col gap-2 pt-12 relative">
             <label for="message">{t.contactForm.messageLabel}</label>
             <textarea
-                class="w-full p-2 border border-neutral-400 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-green h-52 backdrop-blur-2xl relative z-50"
+                class="w-full p-2 border border-neutral-400 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-green h-52 relative z-50"
                 id="message"
                 name="message"
                 required
@@ -56,10 +56,6 @@ const t = translations[lang];
             <p class="text-primary-green text-xs">
                 {t.contactForm.messageExample}
             </p>
-            <div
-                class="absolute -bottom-20 right-2 bg-linear-to-br from-primary-green to-purple-500 h-44 blur-2xl w-44 rounded-full justify-center"
-            >
-            </div>
         </div>
         <div class="flex justify-center">
             <button

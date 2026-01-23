@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "aos/dist/aos.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -137,6 +138,11 @@ html {
         margin: 0;
         padding: 0;
     }
+
+    [class*="backdrop-blur"] {
+        will-change: backdrop-filter, transform;
+    }
+
 
     @keyframes glow {
 
