@@ -3,6 +3,7 @@ import avatar from "@/assets/avatar1.png";
 import { Image } from "astro:assets";
 import Button from "../ui/buttons/Button.astro";
 import { defaultLang, translations, type Language } from "@/lib/i18n";
+import Globe from "@/components/ui/icons/Globe.astro";
 
 const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
 const t = translations[lang];
@@ -66,9 +67,10 @@ const toggleAriaLabel =
             "bg-linear-to-b from-white/10 to-white/5 border-white/20 backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_4px_6px_rgba(0,0,0,0.05)]".split(
                 " ",
             );
-        const inactiveClasses = "hover:bg-white/5 border-transparent".split(
-            " ",
-        );
+        const inactiveClasses =
+            "bg-black/60 border border-white/20 backdrop-blur-sm text-white hover:border-primary-green/60 hover:text-primary-green".split(
+                " ",
+            );
 
         const allLinks = document.querySelectorAll(
             "nav ul li a, #mobileMenu nav ul li a",
@@ -134,21 +136,21 @@ const toggleAriaLabel =
                 <li>
                     <a
                         href="/"
-                        class="px-5 py-2 rounded-full bg-linear-to-b from-white/10 to-white/5 border border-white/20 backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300"
+                        class="px-5 py-2 rounded-full transition-all duration-300"
                         >{t.nav.home}</a
                     >
                 </li>
                 <li>
                     <a
                         href="/my-projects"
-                        class="px-5 py-2 rounded-full hover:bg-white/5 transition-all duration-300 border border-transparent"
+                        class="px-5 py-2 rounded-full transition-all duration-300"
                         >{t.nav.projects}</a
                     >
                 </li>
                 <li>
                     <a
                         href="/blog"
-                        class="px-5 py-2 rounded-full hover:bg-white/5 transition-all duration-300 border border-transparent"
+                        class="px-5 py-2 rounded-full transition-all duration-300"
                         >{t.nav.blog}</a
                     >
                 </li>
@@ -159,11 +161,12 @@ const toggleAriaLabel =
             <button
                 id="lang-toggle"
                 type="button"
-                class="rounded-full border border-white/20 bg-black/60 px-3 py-2 text-xs font-semibold uppercase tracking-widest text-white backdrop-blur-sm transition-all duration-300 hover:border-primary-green/60 hover:text-primary-green hover:cursor-pointer"
+                class="inline-flex items-center justify-center rounded-full border border-white/20 bg-black/60 p-2 text-white backdrop-blur-sm transition-all duration-300 hover:border-primary-green/60 hover:text-primary-green hover:cursor-pointer"
                 aria-label={toggleAriaLabel}
                 data-next-lang={nextLang}
             >
-                {toggleLabel}
+                <Globe class="h-5 w-5" aria-hidden="true" />
+                <span class="sr-only">{toggleLabel}</span>
             </button>
             <div class="hidden sm:block md:block lg:block">
                 <Button
@@ -196,7 +199,7 @@ const toggleAriaLabel =
     <!-- Mobile Menu -->
     <div
         id="mobileMenu"
-        class="md:hidden sm:hidden lg:hidden fixed top-0 right-0 h-screen w-[85vw] max-w-[320px] bg-linear-to-b from-[#1a1a1a]/10 via-[#2a2a2a]/10 to-[#1a1a1a]/10 backdrop-blur-xl border-l border-white/10 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out"
+        class="md:hidden sm:hidden lg:hidden fixed top-0 right-0 h-screen h-[100dvh] min-h-[100svh] w-[clamp(16rem,88vw,24rem)] bg-linear-to-b from-[#1a1a1a]/10 via-[#2a2a2a]/10 to-[#1a1a1a]/10 backdrop-blur-xl border-l border-white/10 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out"
     >
         <div class="flex flex-col h-full p-6 pt-20">
             <!-- Mobile Navigation -->
@@ -205,21 +208,21 @@ const toggleAriaLabel =
                     <li>
                         <a
                             href="/"
-                            class="block px-6 py-3 rounded-xl bg-linear-to-b from-white/10 to-white/5 border border-white/20 backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 text-center font-medium"
+                            class="block px-6 py-3 rounded-xl transition-all duration-300 text-center font-medium"
                             >{t.nav.home}</a
                         >
                     </li>
                     <li>
                         <a
                             href="/my-projects"
-                            class="block px-6 py-3 rounded-xl hover:bg-white/5 transition-all duration-300 border border-transparent text-center font-medium"
+                            class="block px-6 py-3 rounded-xl transition-all duration-300 text-center font-medium"
                             >{t.nav.projects}</a
                         >
                     </li>
                     <li>
                         <a
                             href="/blog"
-                            class="block px-6 py-3 rounded-xl hover:bg-white/5 transition-all duration-300 border border-transparent text-center font-medium"
+                            class="block px-6 py-3 rounded-xl transition-all duration-300 text-center font-medium"
                             >{t.nav.blog}</a
                         >
                     </li>
