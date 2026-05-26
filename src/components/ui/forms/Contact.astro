@@ -5,6 +5,9 @@ import { defaultLang, translations, type Language } from "@/lib/i18n";
 
 const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
 const t = translations[lang];
+const [emailExamplePrefix, emailExampleDomain = ""] =
+    t.contactForm.emailExample.split("@");
+const emailExampleFallback = `${emailExamplePrefix} [at] ${emailExampleDomain}`;
 ---
 
 <section class="relative z-10">
@@ -40,8 +43,13 @@ const t = translations[lang];
                     name="email"
                     required
                 />
-                <p class="font-mono text-xs text-primary-green/80">
-                    {t.contactForm.emailExample}
+                <p
+                    class="font-mono text-xs text-primary-green/80"
+                    data-email-example
+                    data-email-prefix={emailExamplePrefix}
+                    data-email-domain={emailExampleDomain}
+                >
+                    {emailExampleFallback}
                 </p>
             </div>
         </div>
@@ -76,6 +84,15 @@ const t = translations[lang];
     const setupContactForm = () => {
         const form = document.getElementById('contact-form') as HTMLFormElement | null;
         const messageDiv = document.getElementById('form-message');
+
+        document.querySelectorAll<HTMLElement>('[data-email-example]').forEach((example) => {
+            const prefix = example.dataset.emailPrefix;
+            const domain = example.dataset.emailDomain;
+
+            if (prefix && domain) {
+                example.textContent = `${prefix}@${domain}`;
+            }
+        });
 
         if (!form || form.dataset.listenerAttached) return;
         form.dataset.listenerAttached = 'true';
