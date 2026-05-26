@@ -7,18 +7,22 @@ const t = translations[lang];
 ---
 
 <section
-    class="container mx-auto max-w-12xl relative z-10 pb-20 px-4 sm:px-6 md:px-8"
+    class="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8"
 >
     <header
+        class="grid gap-5 lg:grid-cols-[0.9fr_1fr] lg:items-end"
         data-aos="fade-up"
         data-aos-duration="1000"
         data-aos-delay="100"
         data-aos-once="true"
     >
-        <h2 class="md:text-4xl sm:text-3xl text-2xl font-bold">
-            {t.contactSection.heading}
-        </h2>
-        <p class="text-neutral-400 mt-4 text-lg max-w-4xl">
+        <div>
+            <p class="section-kicker">{t.footer.getInTouch}</p>
+            <h2 class="mt-4 text-3xl font-semibold text-white sm:text-5xl">
+                {t.contactSection.heading}
+            </h2>
+        </div>
+        <p class="max-w-3xl text-base leading-8 text-neutral-300 lg:justify-self-end lg:text-right">
             {t.contactSection.description}
         </p>
     </header>

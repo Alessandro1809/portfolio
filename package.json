@@ -17,6 +17,7 @@
     "@tailwindcss/vite": "^4.1.17",
     "@types/react": "^19.2.6",
     "@types/react-dom": "^19.2.3",
+    "animejs": "^4.4.1",
     "aos": "^2.3.4",
     "astro": "^5.15.8",
     "class-variance-authority": "^0.7.1",

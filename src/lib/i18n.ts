@@ -238,20 +238,6 @@ export const translations = {
             journeyContinues: "Journey Continues...",
             experiences: [
                 {
-                    year: "2023 - 2024",
-                    title: "Fullstack Developer",
-                    company: "Sellside Spa.",
-                    description:
-                        "Built responsive web applications using Angular, Node.js, Firebase, G-pay, Flutter, and Dart. Collaborated with senior developers on major product features.",
-                },
-                {
-                    year: "2024 - present",
-                    title: "Software Developer",
-                    company: "Global Professional Group S.A.",
-                    description:
-                        "Led development of microservices architecture. Implemented CI/CD pipelines and developed enterprise automation systems.",
-                },
-                {
                     year: "2023",
                     title: "Freelance Developer",
                     company: "Self-employed",
@@ -259,11 +245,32 @@ export const translations = {
                         "Architected scalable cloud solutions. Mentored junior developers and established best practices for the engineering team.",
                 },
                 {
+                    year: "2023 - 2024",
+                    title: "Fullstack Developer",
+                    company: "Sellside Spa.",
+                    description:
+                        "Built responsive web applications using Angular, Node.js, Firebase, G-pay, Flutter, and Dart. Collaborated with senior developers on major product features.",
+                },
+                {
+                    year: "2024 - 2026",
+                    title: "Software Developer",
+                    company: "Global Professional Group S.A.",
+                    description:
+                        "Led development of microservices architecture. Implemented CI/CD pipelines and developed enterprise automation systems.",
+                },
+                {
                     year: "2025 - present",
                     title: "CTO & Fullstack Developer",
                     company: "NOUS",
                     description:
                         "Driving technical vision, making decisions and delivering enterprise-level applications for clients.",
+                },
+                {
+                    year: "2026 - present",
+                    title: "Technical Consultant | AI & Process Automation",
+                    company: "AuraQuantic",
+                    description:
+                        "Technical consultant focused on the analysis, design, and implementation of process automation solutions. Responsible for translating business needs into technology solutions through process modeling, platform configuration, integrations with corporate systems, and technical support, ensuring efficiency and continuous process improvement.",
                 },
             ],
         },
@@ -500,20 +507,6 @@ export const translations = {
             journeyContinues: "El viaje continúa...",
             experiences: [
                 {
-                    year: "2023 - 2024",
-                    title: "Desarrollador Fullstack",
-                    company: "Sellside Spa.",
-                    description:
-                        "Construí aplicaciones web responsivas usando Angular, Node.js, Firebase, G-pay, Flutter y Dart. Colaboré con desarrolladores senior en funciones clave del producto.",
-                },
-                {
-                    year: "2024 - presente",
-                    title: "Desarrollador de software",
-                    company: "Global Professional Group S.A.",
-                    description:
-                        "Lideré el desarrollo de una arquitectura de microservicios. Implementé pipelines de CI/CD y desarrollé sistemas de automatización empresarial.",
-                },
-                {
                     year: "2023",
                     title: "Desarrollador freelance",
                     company: "Autónomo",
@@ -521,11 +514,32 @@ export const translations = {
                         "Diseñé soluciones cloud escalables. Mentoré a desarrolladores junior y establecí buenas prácticas para el equipo de ingeniería.",
                 },
                 {
+                    year: "2023 - 2024",
+                    title: "Desarrollador Fullstack",
+                    company: "Sellside Spa.",
+                    description:
+                        "Construí aplicaciones web responsivas usando Angular, Node.js, Firebase, G-pay, Flutter y Dart. Colaboré con desarrolladores senior en funciones clave del producto.",
+                },
+                {
+                    year: "2024 - 2026",
+                    title: "Desarrollador de software",
+                    company: "Global Professional Group S.A.",
+                    description:
+                        "Lideré el desarrollo de una arquitectura de microservicios. Implementé pipelines de CI/CD y desarrollé sistemas de automatización empresarial.",
+                },
+                {
                     year: "2025 - presente",
                     title: "CTO y Desarrollador Fullstack",
                     company: "NOUS",
                     description:
                         "Impulso la visión técnica, tomo decisiones y entrego aplicaciones empresariales para clientes.",
+                },
+                {
+                    year: "2026 - presente",
+                    title: "Technical Consultant | AI & Process Automation",
+                    company: "AuraQuantic",
+                    description:
+                        "Consultor técnico enfocado en el análisis, diseño e implementación de soluciones de automatización de procesos. Responsable de traducir necesidades de negocio en soluciones tecnológicas mediante modelado de procesos, configuración de plataformas, integraciones con sistemas corporativos y soporte técnico, asegurando la eficiencia y mejora continua de los procesos.",
                 },
             ],
         },

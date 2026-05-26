@@ -1,8 +1,8 @@
 ---
 import Button from "@/components/ui/buttons/Button.astro";
 import SocialLinks from "@/components/ui/SocialLinks.astro";
-import { Particles } from "@/components/react/Particles";
-import CV from '@/assets/docs/CV-Alessandro_Diaz.pdf'
+import { AsciiStudioPanel } from "@/components/react/AsciiStudioPanel";
+import CV from "@/assets/docs/CV-Alessandro_Diaz.pdf";
 import { defaultLang, translations, type Language } from "@/lib/i18n";
 
 const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
@@ -11,83 +11,59 @@ const t = translations[lang];
 
 <section
     id="hero-section"
-    class="container mx-auto max-w-12xl relative mb-20 md:mb-32 lg:mb-40 px-4"
+    class="relative mx-auto grid min-h-screen max-w-7xl items-center gap-10 px-4 pb-20 pt-32 sm:px-6 lg:grid-cols-[minmax(0,1.18fr)_minmax(0,0.82fr)] lg:gap-6 lg:px-8 lg:pt-28"
 >
-    <div
-        class="absolute top-130 left-4 sm:left-6 md:left-10 rounded-full bg-linear-to-tr from-primary-green to-purple-500 h-[120px] w-[120px] sm:h-[150px] sm:w-[150px] md:h-[200px] md:w-[200px] blur-xl md:blur-2xl z-0"
-    >
-    </div>
-    <div
-        id="glass-container"
-        class="bg-primary-green/20 backdrop-blur-xl rounded-b-[60px] sm:rounded-b-[80px] md:rounded-b-[100px] border-b border-l border-r border-primary-green h-[400px] sm:h-[500px] md:h-[600px] p-2 relative mask-[linear-gradient(to_top,black_10%,transparent_80%,transparent)]"
-        data-aos="zoom-out-down"
-        data-aos-duration="500"
-        data-aos-delay="500"
-    >
-        <div
-            class="absolute bottom-0 w-full"
-            style={{
-                background: `
-          radial-gradient(ellipse 120% 80% at 70% 20%, rgba(0, 0, 0, 0.5), transparent 20%),
-          #0000
-        `,
-            }}
-        >
+    <div class="relative z-10 min-w-0">
+        <div class="mb-8 inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.035] px-4 py-2 font-mono text-xs uppercase tracking-[0.24em] text-neutral-300 backdrop-blur-xl">
+            <span class="h-2 w-2 rounded-full bg-primary-green shadow-[0_0_16px_rgba(0,212,124,0.8)]"></span>
+            {t.profile.title}
         </div>
-        <div
-            class="bg-[#030F0F]/80 h-full rounded-b-[56px] sm:rounded-b-[76px] md:rounded-b-[96px] relative z-50 overflow-hidden"
-            data-aos="zoom-out-down"
-            data-aos-duration="600"
-            data-aos-delay="300"
+
+        <h1
+            class="glitch-title max-w-5xl text-4xl font-semibold leading-[0.98] text-white sm:text-6xl lg:text-6xl xl:text-7xl"
+            data-text={t.hero.title}
         >
-            <Particles
-                size={3}
-                staticity={60}
-                color="#00DF82"
-                ease={80}
-                client:load
+            {t.hero.title}
+        </h1>
+
+        <p
+            class="mt-8 max-w-2xl text-pretty text-base leading-8 text-neutral-300 sm:text-lg"
+        >
+            {t.hero.subtitle}
+        </p>
+
+        <div
+            class="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center"
+        >
+            <Button
+                text={t.hero.downloadCv}
+                variant="primary"
+                downloadAttr={true}
+                downloadAttributeValue="CV-Alessandro_Diaz.pdf"
+                href={CV}
+                target="_blank"
+                ariaLabel={t.hero.downloadCvAria}
             />
+            <Button
+                text={t.nav.hireMe}
+                variant="secondary"
+                href="/hire-me"
+                ariaLabel={t.nav.hireMe}
+            />
+        </div>
+
+        <div>
+            <SocialLinks />
         </div>
     </div>
 
-    <div class="absolute inset-0 p-2">
-        <div
-            class="h-full rounded-b-[56px] sm:rounded-b-[76px] md:rounded-b-[96px] flex flex-col items-center px-4 sm:px-6 md:px-8"
-        >
-            <h1
-                class="text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-center z-40 flex items-center justify-center h-auto pt-[80px] sm:pt-[120px] md:pt-[160px] lg:pt-[150px] pointer-events-auto max-w-8xl"
-                data-aos="fade-up"
-                data-aos-duration="1000"
-                data-aos-delay="700"
-            >
-                {t.hero.title}
-            </h1>
-            <p
-                class="text-primary-green py-6 sm:py-8 md:py-10 lg:py-12 text-center pointer-events-auto text-sm sm:text-base md:text-lg max-w-3xl px-4"
-                data-aos="fade-up"
-                data-aos-duration="1000"
-                data-aos-delay="900"
-            >
-                {t.hero.subtitle}
-            </p>
-            <div
-                data-aos="fade-up"
-                data-aos-duration="1000"
-                data-aos-delay="1000"
-            >
-                <Button
-                    text={t.hero.downloadCv}
-                    variant="primary"
-                    downloadAttr={true}
-                    downloadAttributeValue="CV-Alessandro_Diaz.pdf"
-                    href={CV}
-                    target="_blank"
-                    ariaLabel={t.hero.downloadCvAria}
-                />
-            </div>
-        </div>
-    </div>
-    <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="600">
-        <SocialLinks />
+    <div class="relative z-10 min-w-0">
+        <AsciiStudioPanel
+            client:load
+            name={t.seo.siteName}
+            title={t.profile.title}
+            subtitle={t.hero.subtitle}
+            className="lg:justify-items-start"
+        />
     </div>
 </section>

@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "aos/dist/aos.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -13,6 +12,7 @@ html {
     scroll-behavior: smooth;
     color: white;
     overflow-x: hidden;
+    background: #050806;
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -137,6 +137,12 @@ html {
         width: 100%;
         margin: 0;
         padding: 0;
+        min-height: 100vh;
+    }
+
+    ::selection {
+        background: rgba(0, 212, 124, 0.28);
+        color: #ffffff;
     }
 
     [class*="backdrop-blur"] {
@@ -158,6 +164,108 @@ html {
 
     .glow-effect {
         animation: glow 3s ease-in-out infinite;
+    }
+
+    [data-aos] {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+}
+
+@layer utilities {
+    .portfolio-shell {
+        background:
+            radial-gradient(circle at 18% 12%, rgba(0, 212, 124, 0.18), transparent 24rem),
+            radial-gradient(circle at 78% 8%, rgba(132, 88, 255, 0.12), transparent 22rem),
+            radial-gradient(circle at 70% 70%, rgba(20, 184, 166, 0.1), transparent 30rem),
+            linear-gradient(180deg, #050806 0%, #070b09 45%, #030403 100%);
+    }
+
+    .precision-grid {
+        background-image:
+            linear-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
+        background-size: 72px 72px;
+        mask-image: linear-gradient(to bottom, #000 0%, #000 58%, transparent 100%);
+    }
+
+    .section-kicker {
+        @apply font-mono text-xs uppercase tracking-[0.32em] text-primary-green/80;
+    }
+
+    .surface-panel {
+        @apply rounded-lg border border-white/10 bg-white/[0.035] shadow-[0_24px_80px_rgba(0,0,0,0.32)] backdrop-blur-xl;
+    }
+
+    .hairline {
+        @apply h-px bg-linear-to-r from-transparent via-primary-green/50 to-transparent;
+    }
+
+    .ascii-glitch {
+        text-shadow:
+            0 0 18px rgba(0, 212, 124, 0.36),
+            1px 0 rgba(132, 88, 255, 0.28),
+            -1px 0 rgba(87, 240, 255, 0.2);
+    }
+
+    .glitch-title {
+        position: relative;
+        text-shadow:
+            0 0 32px rgba(0, 212, 124, 0.18),
+            1px 0 rgba(132, 88, 255, 0.28),
+            -1px 0 rgba(87, 240, 255, 0.18);
+    }
+
+    .glitch-title::before,
+    .glitch-title::after {
+        content: attr(data-text);
+        inset: 0;
+        opacity: 0.38;
+        overflow: hidden;
+        pointer-events: none;
+        position: absolute;
+    }
+
+    .glitch-title::before {
+        animation: glitch-slice 4.8s infinite steps(1);
+        color: #57f0ff;
+        transform: translate(1px, 0);
+    }
+
+    .glitch-title::after {
+        animation: glitch-slice 5.6s infinite steps(1) reverse;
+        color: #8458ff;
+        transform: translate(-1px, 0);
+    }
+
+    @keyframes glitch-slice {
+        0%, 92%, 100% {
+            clip-path: inset(0 0 0 0);
+            opacity: 0;
+        }
+        93% {
+            clip-path: inset(12% 0 72% 0);
+            opacity: 0.35;
+        }
+        95% {
+            clip-path: inset(58% 0 22% 0);
+            opacity: 0.3;
+        }
+        97% {
+            clip-path: inset(34% 0 48% 0);
+            opacity: 0.24;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            scroll-behavior: auto !important;
+            transition-duration: 0.01ms !important;
+        }
     }
 }
 

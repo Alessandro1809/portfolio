@@ -8,119 +8,101 @@ import { defaultLang, translations, type Language } from "@/lib/i18n";
 const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
 const t = translations[lang];
 const year = new Date().getFullYear();
+const footerLinkClass =
+    "inline-flex rounded-md border border-transparent px-2 py-1 -mx-2 text-neutral-300 transition-all duration-300 hover:border-primary-green/20 hover:bg-primary-green/8 hover:text-primary-green focus-visible:border-primary-green/35 focus-visible:bg-primary-green/10 focus-visible:text-primary-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-green/15";
 ---
 
-<footer
-    class="container mx-auto max-w-12xl relative z-10 pt-20 sm:pt-32 md:pt-44 px-4 sm:px-6 md:px-8 overflow-hidden"
->
-    <div
-        class="h-px bg-linear-to-r from-primary-green via-white to-primary-green mt-1"
-    >
-    </div>
-    <article
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-6 pb-6 sm:pb-8 md:pb-10"
-    >
-        <div
-            class="flex flex-col sm:flex-row gap-6 sm:gap-8 md:col-span-2 lg:col-span-2 mt-6 sm:mt-8 md:mt-10"
-        >
-            <div class="flex flex-col gap-4 sm:gap-6 md:gap-8">
-                <h3
-                    class="text-2xl sm:text-3xl md:text-2xl lg:text-3xl font-bold text-nowrap"
-                >
-                    {t.footer.getInTouch}
-                </h3>
+<footer class="relative z-10 mx-auto max-w-7xl px-4 pb-10 pt-16 sm:px-6 lg:px-8">
+    <div class="hairline mb-10"></div>
+
+    <article class="grid gap-8 lg:grid-cols-[1fr_0.7fr_0.9fr]">
+        <div class="surface-panel p-6">
+            <p class="section-kicker">{t.footer.getInTouch}</p>
+            <h3 class="mt-4 text-3xl font-semibold text-white">
+                Alessandro Diaz
+            </h3>
+            <p class="mt-4 max-w-xl text-sm leading-7 text-neutral-400">
+                {t.footer.tagline}
+            </p>
+            <div class="mt-6 flex flex-wrap items-center gap-3">
                 <Button
                     text={t.socialLinks.scheduleMeeting}
-                    variant="tertiary"
+                    variant="secondary"
+                    href="/hire-me"
                     ariaLabel={t.socialLinks.scheduleMeetingAria}
                 />
-
                 <SocialApps />
             </div>
-            <div class="flex flex-col gap-4 sm:gap-6 md:gap-8">
-                <h3
-                    class="text-2xl sm:text-3xl md:text-2xl lg:text-3xl text-nowrap font-bold"
-                >
-                    {t.footer.interestLinks}
-                </h3>
-                <ul class="flex flex-col gap-3 sm:gap-4">
-                    <li>
-                        <a
-                            class="text-neutral-400 hover:text-primary-green transition-colors"
-                            href="/my-projects">{t.footer.projects}</a
-                        >
-                    </li>
-                    <li>
-                        <a
-                            class="text-neutral-400 hover:text-primary-green transition-colors"
-                            href="/blog">{t.footer.blog}</a
-                        >
-                    </li>
-                    <li>
-                        <a
-                            class="text-neutral-400 hover:text-primary-green transition-colors"
-                            href="https://nous.cr"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label={t.footer.visitNousAria}
-                        >
-                            {t.footer.knowInitiative}
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            class="text-neutral-400 hover:text-primary-green transition-colors"
-                            href="/hire-me"
-                            aria-label={t.footer.contactAria}
-                            >{t.footer.contactMe}</a
-                        >
-                    </li>
-                </ul>
-            </div>
         </div>
-        <div class="hidden lg:block lg:col-span-1">
+
+        <nav class="surface-panel p-6">
+            <p class="section-kicker">{t.footer.interestLinks}</p>
+            <ul class="mt-5 grid gap-3 text-sm text-neutral-400">
+                <li>
+                    <a class={footerLinkClass} href="/my-projects">
+                        {t.footer.projects}
+                    </a>
+                </li>
+                <li>
+                    <a class={footerLinkClass} href="/blog">
+                        {t.footer.blog}
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class={footerLinkClass}
+                        href="https://nous.cr"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={t.footer.visitNousAria}
+                    >
+                        {t.footer.knowInitiative}
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class={footerLinkClass}
+                        href="/hire-me"
+                        aria-label={t.footer.contactAria}
+                    >
+                        {t.footer.contactMe}
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="surface-panel relative min-h-72 overflow-hidden p-6">
             <img
-                class="max-h-48 lg:max-h-64 translate-y-8 lg:translate-y-12"
+                class="absolute -bottom-2 -right-4 max-h-64 opacity-25"
                 src={footerImage.src}
                 alt=""
                 loading="lazy"
                 decoding="async"
                 style={{
                     WebkitMaskImage:
-                        "linear-gradient(to top, transparent 0%, #000 35%, #000 100%)",
+                        "linear-gradient(to top, transparent 0%, #000 28%, #000 100%)",
                     maskImage:
-                        "linear-gradient(to top, transparent 0%, #000 35%, #000 100%)",
+                        "linear-gradient(to top, transparent 0%, #000 28%, #000 100%)",
                     WebkitMaskRepeat: "no-repeat",
                     maskRepeat: "no-repeat",
                     WebkitMaskSize: "100% 100%",
                     maskSize: "100% 100%",
                 }}
             />
-        </div>
-
-        <div class="md:col-span-2 lg:col-span-1 mt-6 sm:mt-8 md:mt-10">
-            <div class="flex flex-col place-items-start lg:place-items-end">
-                <h3
-                    class="text-2xl sm:text-3xl md:text-2xl lg:text-3xl font-bold text-nowrap"
-                >
-                    Alessandro Diaz
-                </h3>
-                <p
-                    class="text-neutral-400 mt-3 sm:mt-4 text-base sm:text-lg max-w-4xl flex gap-2"
-                >
+            <div class="relative z-20 max-w-[14rem]">
+                <p class="section-kicker">{t.seo.siteName}</p>
+                <div class="mt-4 inline-flex items-center gap-2 text-lg font-medium text-white">
                     {t.footer.madeIn}
                     <Flag />
-                </p>
-                <p class="text-neutral-400 mt-3 sm:mt-4 text-sm max-w-4xl">
-                    {t.footer.tagline}
-                </p>
-                <p class="text-neutral-400 mt-3 sm:mt-4 text-xs max-w-4xl">
-                    {t.footer.copyright.replace("{year}", String(year))}
-                </p>
-                <p class="text-neutral-400 mt-3 sm:mt-4 text-xs max-w-4xl">
+                </div>
+                <p class="mt-6 text-sm font-medium leading-7 text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
                     {t.footer.builtWith}
                 </p>
             </div>
         </div>
     </article>
+
+    <p class="mt-8 text-xs text-neutral-600">
+        {t.footer.copyright.replace("{year}", String(year))}
+    </p>
 </footer>

@@ -22,22 +22,21 @@ const {
     variant = "primary",
     className = "",
     downloadAttr = false,
-    strokeColor = "#8458FF",
     ariaLabel = "Button",
     rounded = "full",
     justify = "center",
-    downloadAttr: downloadAttributeValue = false,
+    downloadAttributeValue,
 } = Astro.props;
 
-const baseStyles = `px-5 py-2 md:py-1 font-medium rounded-${rounded} transition-all duration-300 group flex justify-${justify} items-center gap-2 w-auto md:w-${width} cursor-pointer whitespace-nowrap text-xs md:text-lg font-semibold`;
+const baseStyles = `px-5 py-2.5 font-medium rounded-${rounded} transition-all duration-300 group inline-flex justify-${justify} items-center gap-2 w-auto md:w-${width} cursor-pointer whitespace-nowrap text-sm md:text-base font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-green/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black`;
 
 const variants = {
     primary:
-        "text-white min-w-[150px] py-2 rounded-full backdrop-blur-[20px] border border-primary-green hover:cursor-pointer inline-block text-center shadow-[0_0_4px_#FFF] hover:border-primary-green/50",
+        "text-black min-w-[150px] rounded-full bg-primary-green border border-primary-green text-center shadow-[0_0_28px_rgba(0,212,124,0.18)] hover:bg-white hover:border-white",
     secondary:
-        "text-white min-w-auto rounded-md backdrop-blur-[2px] border border-primary-green hover:cursor-pointer text-center shadow-[0_0_4px_#FFF] items-center justify-center hover:border-primary-green/50",
+        "text-white min-w-auto rounded-full bg-white/[0.03] border border-white/15 backdrop-blur-xl text-center hover:border-primary-green/70 hover:text-primary-green",
     tertiary:
-        "text-dark-green min-w-[150px] py-3 rounded-md bg-[#84FFD8] hover:cursor-pointer inline-block text-center shadow-[0_0_4px_#FFF] hover:border-primary-green/50 ",
+        "text-black min-w-[150px] rounded-md bg-[#84FFD8] border border-[#84FFD8] text-center hover:bg-white hover:border-white",
 };
 ---
 
@@ -45,7 +44,7 @@ const variants = {
     href={href}
     aria-label={ariaLabel}
     target={target}
-    download={downloadAttributeValue ? "" : undefined}
+    download={downloadAttr ? downloadAttributeValue : undefined}
     class:list={[baseStyles, variants[variant], className]}
 >
     {text}

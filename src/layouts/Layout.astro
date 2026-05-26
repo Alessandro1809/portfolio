@@ -146,7 +146,6 @@ const structuredData = [
 		<link rel="canonical" href={canonicalUrl} />
 		<link rel="icon" type="image/x-icon" href="/favicon.ico" />
 		<link rel="icon" type="image/png" href="/favicon.png" />
-		<script src="../lib/aos.js"></script>
 		<meta name="generator" content={Astro.generator} />
 		<title>{resolvedTitle}</title>
 		<meta property="og:site_name" content={siteName} />
@@ -180,23 +179,14 @@ const structuredData = [
 		</script>
 	</head>
 	<body>
-		<div class="min-h-screen w-full relative bg-black overflow-hidden">
-			{/* Prismatic Aurora Burst - Multi-layered Gradient */}
-			<div
-				class="absolute inset-0 z-0"
-				style={{
-					background: `
-          radial-gradient(ellipse 120% 20% at 70% 20%, rgba(0, 209, 53, 0.12), transparent 50%),
-          radial-gradient(ellipse 100% 20% at 30% 10%, rgba(173, 130, 255, 0.15), transparent 60%),
-          radial-gradient(ellipse 90% 20% at 50% 0%, rgba(38, 255, 108, 0.10), transparent 65%),
-          radial-gradient(ellipse 110% 20% at 80% 30%, rgba(51, 102, 51, 0.08), transparent 40%),
-          #0B100E
-        `,
-				}}
-			>
-			</div>
+		<div class="portfolio-shell min-h-screen w-full relative overflow-hidden">
+			<div class="precision-grid pointer-events-none absolute inset-0 z-0 opacity-70"></div>
+			<div class="pointer-events-none absolute inset-x-0 top-0 z-0 h-px bg-linear-to-r from-transparent via-primary-green/70 to-transparent"></div>
+			<div class="pointer-events-none absolute left-1/2 top-0 z-0 h-[34rem] w-[34rem] -translate-x-1/2 rounded-full bg-primary-green/10 blur-[120px]"></div>
 			<Header />
-			<slot />
+			<main class="relative z-10">
+				<slot />
+			</main>
 			<Footer />
 		</div>
 	</body>

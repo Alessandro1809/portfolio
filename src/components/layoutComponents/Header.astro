@@ -19,7 +19,6 @@ const toggleAriaLabel =
     const setupEventListeners = () => {
         const hamburger = document.getElementById("hamburger");
         const mobileMenu = document.getElementById("mobileMenu");
-        const navLinks = document.querySelectorAll("nav ul li a");
         const mobileNavLinks = document.querySelectorAll(
             "#mobileMenu nav ul li a",
         );
@@ -64,16 +63,16 @@ const toggleAriaLabel =
     const updateActiveState = () => {
         const currentPath = window.location.pathname;
         const activeClasses =
-            "bg-linear-to-b from-white/10 to-white/5 border-white/20 backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_4px_6px_rgba(0,0,0,0.05)]".split(
+            "bg-primary-green text-black border-primary-green shadow-[0_0_24px_rgba(0,212,124,0.22)]".split(
                 " ",
             );
         const inactiveClasses =
-            "bg-black/60 border border-white/20 backdrop-blur-sm text-white hover:border-primary-green/60 hover:text-primary-green".split(
+            "border border-white/10 bg-black/45 text-neutral-300 hover:border-primary-green/60 hover:text-white".split(
                 " ",
             );
 
         const allLinks = document.querySelectorAll(
-            "nav ul li a, #mobileMenu nav ul li a",
+            "#headerContainer nav ul li a, #mobileMenu nav ul li a",
         );
 
         allLinks.forEach((link) => {
@@ -96,61 +95,73 @@ const toggleAriaLabel =
         }
     };
 
-    // Run on initial load
-    setupEventListeners();
-    updateActiveState();
-
-    // Run on view transition updates
-    document.addEventListener("astro:after-swap", () => {
+    const runHeaderSetup = () => {
         setupEventListeners();
         updateActiveState();
+    };
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", runHeaderSetup, {
+            once: true,
+        });
+    } else {
+        runHeaderSetup();
+    }
+
+    // Run on view transition updates
+    document.addEventListener("astro:page-load", runHeaderSetup);
+    document.addEventListener("astro:after-swap", () => {
+        runHeaderSetup();
     });
 </script>
 
 <header
     transition:persist="true"
-    class="container mx-auto max-w-12xl fixed top-0 left-0 right-0 z-50"
+    class="fixed top-0 left-0 right-0 z-50"
     data-aos="fade-down"
     data-aos-duration="1000"
-    data-aos-delay="800"
+    data-aos-delay="120"
 >
     <div
-        class="flex justify-between items-center pt-4 px-4 sm:px-6 md:px-8"
+        class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8"
         id="headerContainer"
     >
-        <a href="/">
+        <a href="/" class="group flex items-center gap-3 rounded-full border border-white/10 bg-black/50 p-1.5 pr-4 backdrop-blur-xl transition-colors hover:border-primary-green/60">
             <div
-                class="min-w-[58px] bg-linear-to-t from-white/20 via-[#34635C]/20 to-[#34635C]/20 border-2 border-primary-green items-center justify-center flex rounded-full overflow-hidden backdrop-blur-[20px]"
+                class="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-primary-green/60 bg-primary-green/10"
             >
                 <Image
-                    class="w-auto h-14"
+                    class="h-12 w-auto"
                     src={avatar}
                     alt={t.nav.profileAlt}
                 />
             </div>
+            <span class="hidden font-mono text-xs uppercase tracking-[0.22em] text-neutral-300 transition-colors group-hover:text-primary-green sm:inline">
+                Alessandro Diaz
+            </span>
         </a>
 
         <!-- Desktop Navigation -->
-        <nav class="sm:block md:block hidden lg:block">
-            <ul class="flex gap-2 text-white items-center">
+        <nav class="hidden md:block">
+            <ul class="flex items-center gap-2.5 text-sm">
                 <li>
                     <a
                         href="/"
-                        class="px-5 py-2 rounded-full transition-all duration-300"
+                        class="rounded-full px-6 py-2.5 transition-all duration-300"
                         >{t.nav.home}</a
                     >
                 </li>
                 <li>
                     <a
                         href="/my-projects"
-                        class="px-5 py-2 rounded-full transition-all duration-300"
+                        class="rounded-full px-6 py-2.5 transition-all duration-300"
                         >{t.nav.projects}</a
                     >
                 </li>
                 <li>
                     <a
                         href="/blog"
-                        class="px-5 py-2 rounded-full transition-all duration-300"
+                        class="rounded-full px-6 py-2.5 transition-all duration-300"
                         >{t.nav.blog}</a
                     >
                 </li>
@@ -161,14 +172,14 @@ const toggleAriaLabel =
             <button
                 id="lang-toggle"
                 type="button"
-                class="inline-flex items-center justify-center rounded-full border border-white/20 bg-black/60 p-2 text-white backdrop-blur-sm transition-all duration-300 hover:border-primary-green/60 hover:text-primary-green hover:cursor-pointer"
+                class="inline-flex items-center justify-center rounded-full border border-white/10 bg-black/50 p-2.5 text-white backdrop-blur-xl transition-all duration-300 hover:cursor-pointer hover:border-primary-green/60 hover:text-primary-green"
                 aria-label={toggleAriaLabel}
                 data-next-lang={nextLang}
             >
                 <Globe class="h-5 w-5" aria-hidden="true" />
                 <span class="sr-only">{toggleLabel}</span>
             </button>
-            <div class="hidden sm:block md:block lg:block">
+            <div class="hidden sm:block">
                 <Button
                     text={t.nav.hireMe}
                     variant="primary"
@@ -180,7 +191,7 @@ const toggleAriaLabel =
             <!-- Mobile Hamburger Button -->
             <button
                 id="hamburger"
-                class="sm:hidden md:hidden lg:hidden relative w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-lg bg-linear-to-b from-white/10 to-white/5 border border-white/20 backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_4px_6px_rgba(0,0,0,0.05)] transition-all duration-300 hover:bg-white/10"
+                class="relative flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-black/50 backdrop-blur-xl transition-all duration-300 hover:bg-white/10 sm:hidden"
                 aria-label={t.nav.toggleMenu}
             >
                 <span
@@ -199,7 +210,7 @@ const toggleAriaLabel =
     <!-- Mobile Menu -->
     <div
         id="mobileMenu"
-        class="md:hidden sm:hidden lg:hidden fixed top-0 right-0 h-screen h-[100dvh] min-h-[100svh] w-[clamp(16rem,88vw,24rem)] bg-linear-to-b from-[#1a1a1a]/10 via-[#2a2a2a]/10 to-[#1a1a1a]/10 backdrop-blur-xl border-l border-white/10 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out"
+        class="fixed top-0 right-0 h-screen h-[100dvh] min-h-[100svh] w-[clamp(16rem,88vw,24rem)] transform border-l border-white/10 bg-black/85 shadow-2xl backdrop-blur-2xl transition-transform duration-300 ease-in-out translate-x-full md:hidden"
     >
         <div class="flex flex-col h-full p-6 pt-20">
             <!-- Mobile Navigation -->
@@ -208,21 +219,21 @@ const toggleAriaLabel =
                     <li>
                         <a
                             href="/"
-                            class="block px-6 py-3 rounded-xl transition-all duration-300 text-center font-medium"
+                            class="block rounded-xl px-6 py-3 text-center font-medium transition-all duration-300"
                             >{t.nav.home}</a
                         >
                     </li>
                     <li>
                         <a
                             href="/my-projects"
-                            class="block px-6 py-3 rounded-xl transition-all duration-300 text-center font-medium"
+                            class="block rounded-xl px-6 py-3 text-center font-medium transition-all duration-300"
                             >{t.nav.projects}</a
                         >
                     </li>
                     <li>
                         <a
                             href="/blog"
-                            class="block px-6 py-3 rounded-xl transition-all duration-300 text-center font-medium"
+                            class="block rounded-xl px-6 py-3 text-center font-medium transition-all duration-300"
                             >{t.nav.blog}</a
                         >
                     </li>
@@ -232,7 +243,7 @@ const toggleAriaLabel =
                             variant="primary"
                             href="/hire-me"
                             ariaLabel={t.nav.hireMe}
-                            className="w-full px-6 py-3 rounded-xl bg-black/60 border border-white/20 backdrop-blur-sm text-center shadow-none hover:border-primary-green/60 hover:text-primary-green !text-base !font-medium"
+                            className="w-full px-6 py-3 rounded-xl text-center shadow-none !text-base !font-medium"
                         />
                     </li>
                 </ul>

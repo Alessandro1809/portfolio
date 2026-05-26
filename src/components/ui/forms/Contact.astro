@@ -7,9 +7,9 @@ const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
 const t = translations[lang];
 ---
 
-<section class="container mx-auto max-w-12xl relative z-10">
+<section class="relative z-10">
     <form
-        class="flex flex-col gap-4 pt-20"
+        class="surface-panel mt-10 flex flex-col gap-5 p-5 sm:p-7"
         id="contact-form"
         data-sending-text={t.contactForm.sending}
         data-success-text={t.contactForm.success}
@@ -17,56 +17,56 @@ const t = translations[lang];
         data-error-prefix={t.contactForm.errorPrefix}
         data-success-prefix={t.contactForm.successPrefix}
     >
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid gap-5 md:grid-cols-2">
             <div class="flex flex-col gap-2">
-                <label for="name">{t.contactForm.nameLabel}</label>
+                <label class="font-mono text-xs uppercase tracking-[0.18em] text-neutral-400" for="name">{t.contactForm.nameLabel}</label>
                 <input
-                    class="w-auto p-2 border border-neutral-400 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-green"
+                    class="w-full rounded-md border border-white/10 bg-black/50 p-3 text-white outline-none transition placeholder:text-neutral-600 focus:border-primary-green/70 focus:ring-2 focus:ring-primary-green/20"
                     type="text"
                     id="name"
                     name="name"
                     required
                 />
-                <p class="text-primary-green text-xs">
+                <p class="font-mono text-xs text-primary-green/80">
                     {t.contactForm.nameExample}
                 </p>
             </div>
             <div class="flex flex-col gap-2">
-                <label for="email">{t.contactForm.emailLabel}</label>
+                <label class="font-mono text-xs uppercase tracking-[0.18em] text-neutral-400" for="email">{t.contactForm.emailLabel}</label>
                 <input
-                    class="w-full p-2 border border-neutral-400 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-green"
+                    class="w-full rounded-md border border-white/10 bg-black/50 p-3 text-white outline-none transition placeholder:text-neutral-600 focus:border-primary-green/70 focus:ring-2 focus:ring-primary-green/20"
                     type="email"
                     id="email"
                     name="email"
                     required
                 />
-                <p class="text-primary-green text-xs">
+                <p class="font-mono text-xs text-primary-green/80">
                     {t.contactForm.emailExample}
                 </p>
             </div>
         </div>
-        <div class="flex flex-col gap-2 pt-12 relative">
-            <label for="message">{t.contactForm.messageLabel}</label>
+        <div class="relative flex flex-col gap-2 pt-4">
+            <label class="font-mono text-xs uppercase tracking-[0.18em] text-neutral-400" for="message">{t.contactForm.messageLabel}</label>
             <textarea
-                class="w-full p-2 border border-neutral-400 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-green h-52 relative z-50"
+                class="relative z-10 h-52 w-full rounded-md border border-white/10 bg-black/50 p-3 text-white outline-none transition placeholder:text-neutral-600 focus:border-primary-green/70 focus:ring-2 focus:ring-primary-green/20"
                 id="message"
                 name="message"
                 required
                 minlength="10"></textarea>
-            <p class="text-primary-green text-xs">
+            <p class="font-mono text-xs text-primary-green/80">
                 {t.contactForm.messageExample}
             </p>
         </div>
-        <div class="flex justify-center">
+        <div class="flex justify-end">
             <button
-                class="w-fit p-2 px-12 border border-neutral-400 rounded-full focus:outline-none focus:ring-2 focus:ring-primary-green flex items-center gap-2 hover:cursor-pointer hover:scale-105 transition-all duration-300 hover:bg-primary-green hover:text-dark-green"
+                class="inline-flex w-fit items-center gap-2 rounded-full border border-primary-green bg-primary-green px-8 py-3 font-semibold text-black transition-all duration-300 hover:cursor-pointer hover:bg-white focus:outline-none focus:ring-2 focus:ring-primary-green/60 focus:ring-offset-2 focus:ring-offset-black disabled:cursor-not-allowed disabled:opacity-70"
                 type="submit"
             >
                 {t.contactForm.send}
                 <SendIcon />
             </button>
         </div>
-        <div id="form-message" class="hidden mt-4 p-4 rounded-md"></div>
+        <div id="form-message" class="mt-4 hidden rounded-md p-4"></div>
     </form>
 </section>
 
