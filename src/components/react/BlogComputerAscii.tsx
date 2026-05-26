@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
     BLOG_COMPUTER_ASCII_COLOR,
     BLOG_COMPUTER_ASCII_ENCODED_FRAMES,
+    BLOG_COMPUTER_ASCII_FRAME_HEIGHT,
+    BLOG_COMPUTER_ASCII_FRAME_WIDTH,
     BLOG_COMPUTER_ASCII_FPS,
 } from "./blogComputerFrames";
 
@@ -28,12 +30,18 @@ const decodeFrame = (encodedFrame: string) =>
         })
         .join("\n");
 
+const MONO_CHARACTER_WIDTH = 4.82;
+const MONO_LINE_HEIGHT = 8 * 0.78;
+
 export const BlogComputerAscii = ({ className = "" }: BlogComputerAsciiProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLPreElement>(null);
     const [currentFrame, setCurrentFrame] = useState(0);
-    const [scale, setScale] = useState(1);
-    const [contentSize, setContentSize] = useState({ width: 0, height: 0 });
+    const [scale, setScale] = useState(0.42);
+    const [contentSize, setContentSize] = useState({
+        width: BLOG_COMPUTER_ASCII_FRAME_WIDTH * MONO_CHARACTER_WIDTH,
+        height: BLOG_COMPUTER_ASCII_FRAME_HEIGHT * MONO_LINE_HEIGHT,
+    });
     const frames = useMemo(
         () => BLOG_COMPUTER_ASCII_ENCODED_FRAMES.map(decodeFrame),
         [],
@@ -88,8 +96,10 @@ export const BlogComputerAscii = ({ className = "" }: BlogComputerAsciiProps) =>
                 availableHeight / naturalHeight,
             );
 
+            const scaleBoost = availableWidth >= 560 ? 1.28 : 1.12;
+
             setContentSize({ width: naturalWidth, height: naturalHeight });
-            setScale(Math.min(fitScale * 1.28, 1.7));
+            setScale(Math.min(fitScale * scaleBoost, 1.7));
         };
 
         measure();

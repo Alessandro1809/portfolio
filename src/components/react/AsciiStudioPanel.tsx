@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
     PROGRAMMING_WEBSITE_ENCODED_FRAMES,
+    PROGRAMMING_WEBSITE_FRAME_HEIGHT,
+    PROGRAMMING_WEBSITE_FRAME_WIDTH,
     PROGRAMMING_WEBSITE_FPS,
 } from "./programmingWebsiteFrames";
 
@@ -30,10 +32,16 @@ const decodeFrame = (encodedFrame: string) =>
         })
         .join("\n");
 
+const MONO_CHARACTER_WIDTH = 4.82;
+const MONO_LINE_HEIGHT = 8 * 0.78;
+
 export const AsciiStudioPanel = ({ className = "" }: AsciiStudioPanelProps) => {
     const [currentFrame, setCurrentFrame] = useState(0);
-    const [scale, setScale] = useState(1);
-    const [contentSize, setContentSize] = useState({ width: 0, height: 0 });
+    const [scale, setScale] = useState(0.4);
+    const [contentSize, setContentSize] = useState({
+        width: PROGRAMMING_WEBSITE_FRAME_WIDTH * MONO_CHARACTER_WIDTH,
+        height: PROGRAMMING_WEBSITE_FRAME_HEIGHT * MONO_LINE_HEIGHT,
+    });
     const containerRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLPreElement>(null);
     const frames = useMemo(
@@ -88,7 +96,7 @@ export const AsciiStudioPanel = ({ className = "" }: AsciiStudioPanelProps) => {
                 return;
             }
 
-            const scaleBoost = availableWidth >= 560 ? 2.178 : 1.782;
+            const scaleBoost = availableWidth >= 560 ? 2.178 : 1.45;
             const nextScale = Math.min(availableWidth / naturalWidth, availableHeight / naturalHeight, 1) * scaleBoost;
 
             setContentSize({ width: naturalWidth, height: naturalHeight });
