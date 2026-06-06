@@ -3,7 +3,6 @@ import avatar from "@/assets/avatar2.png";
 import { Image } from "astro:assets";
 import Button from "../ui/buttons/Button.astro";
 import { defaultLang, translations, type Language } from "@/lib/i18n";
-import Globe from "@/components/ui/icons/Globe.astro";
 
 const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
 const t = translations[lang];
@@ -19,22 +18,18 @@ const toggleAriaLabel =
     const setupEventListeners = () => {
         const hamburger = document.getElementById("hamburger");
         const mobileMenu = document.getElementById("mobileMenu");
-        const mobileNavLinks = document.querySelectorAll(
-            "#mobileMenu nav ul li a",
-        );
+        const mobileNavLinks = document.querySelectorAll("#mobileMenu nav ul li a");
 
-        // ONLY attach listeners if they haven't been attached yet
-        if (!hamburger || !mobileMenu || (hamburger as any)._listenersAttached)
-            return;
+        if (!hamburger || !mobileMenu || (hamburger as any)._listenersAttached) return;
 
-        // Hamburger menu toggle
         hamburger.addEventListener("click", (e) => {
             e.stopPropagation();
             hamburger.classList.toggle("open");
             mobileMenu.classList.toggle("translate-x-full");
+            const isOpen = !mobileMenu.classList.contains("translate-x-full");
+            hamburger.setAttribute("aria-expanded", String(isOpen));
         });
 
-        // Close mobile menu after link selection
         mobileNavLinks.forEach((link) => {
             link.addEventListener("click", () => {
                 mobileMenu.classList.add("translate-x-full");
@@ -42,12 +37,10 @@ const toggleAriaLabel =
             });
         });
 
-        // Close menu when clicking outside
         document.addEventListener("click", (e) => {
             const target = e.target as HTMLElement;
             if (
-                mobileMenu &&
-                hamburger &&
+                mobileMenu && hamburger &&
                 !mobileMenu.contains(target) &&
                 !hamburger.contains(target) &&
                 !mobileMenu.classList.contains("translate-x-full")
@@ -62,31 +55,35 @@ const toggleAriaLabel =
 
     const updateActiveState = () => {
         const currentPath = window.location.pathname;
-        const activeClasses =
-            "bg-primary-green text-black border-primary-green shadow-[0_0_24px_rgba(0,212,124,0.22)]".split(
-                " ",
-            );
-        const inactiveClasses =
-            "border border-white/10 bg-black/45 text-neutral-300 hover:border-primary-green/60 hover:text-white".split(
-                " ",
-            );
 
-        const allLinks = document.querySelectorAll(
-            "#headerContainer nav ul li a, #mobileMenu nav ul li a",
-        );
+        /* Desktop nav */
+        const desktopLinks = document.querySelectorAll("#headerContainer nav ul li a.nav-link");
+        desktopLinks.forEach((link) => {
+            const href = link.getAttribute("href");
+            link.classList.remove("active", "text-foreground", "font-semibold");
+            link.classList.add("text-neutral-400", "font-medium");
 
-        allLinks.forEach((link) => {
+            if (href === currentPath || (currentPath === "/" && href === "/")) {
+                link.classList.remove("text-neutral-400", "font-medium");
+                link.classList.add("active", "text-foreground", "font-semibold");
+            }
+        });
+
+        /* Mobile nav */
+        const activeClasses = "bg-primary-green text-black border-primary-green".split(" ");
+        const inactiveClasses = "border border-white/10 bg-black/40 text-neutral-300 hover:border-primary-green/50 hover:text-white".split(" ");
+        const mobileLinks = document.querySelectorAll("#mobileMenu nav ul li a");
+        mobileLinks.forEach((link) => {
             const href = link.getAttribute("href");
             link.classList.remove(...activeClasses);
             link.classList.add(...inactiveClasses);
-
             if (href === currentPath || (currentPath === "/" && href === "/")) {
                 link.classList.remove(...inactiveClasses);
                 link.classList.add(...activeClasses);
             }
         });
 
-        // Ensure menu is closed on navigation
+        /* Close mobile on navigate */
         const hamburger = document.getElementById("hamburger");
         const mobileMenu = document.getElementById("mobileMenu");
         if (hamburger && mobileMenu) {
@@ -101,84 +98,65 @@ const toggleAriaLabel =
     };
 
     if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", runHeaderSetup, {
-            once: true,
-        });
+        document.addEventListener("DOMContentLoaded", runHeaderSetup, { once: true });
     } else {
         runHeaderSetup();
     }
 
-    // Run on view transition updates
     document.addEventListener("astro:page-load", runHeaderSetup);
-    document.addEventListener("astro:after-swap", () => {
-        runHeaderSetup();
-    });
+    document.addEventListener("astro:after-swap", runHeaderSetup);
 </script>
 
+<!-- Floating header — logo pill left, clean text nav center, actions right -->
 <header
     transition:persist="true"
-    class="fixed top-0 left-0 right-0 z-50"
-    data-aos="fade-down"
-    data-aos-duration="1000"
-    data-aos-delay="120"
+    class="fixed top-0 left-0 right-0 z-50 pt-5"
 >
     <div
-        class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8"
+        class="mx-auto flex max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-12"
         id="headerContainer"
     >
-        <a href="/" class="group flex items-center rounded-full border border-white/10 bg-black/50 p-1.5 backdrop-blur-xl transition-colors hover:border-primary-green/60 sm:gap-3 sm:pr-4">
-            <div
-                class="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-primary-green/60 bg-primary-green/10"
-            >
-                <Image
-                    class="h-12 w-auto"
-                    src={avatar}
-                    alt={t.nav.profileAlt}
-                />
+        <!-- Logo pill -->
+        <a
+            href="/"
+            class="group flex items-center gap-2.5 rounded-full border border-white/10 bg-black/60 py-1.5 pl-1.5 pr-4 backdrop-blur-2xl transition-all duration-300 hover:border-primary-green/45"
+            aria-label="Alessandro Diaz, Home"
+        >
+            <div class="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border border-primary-green/45 bg-primary-green/8">
+                <Image class="h-10 w-auto" src={avatar} alt={t.nav.profileAlt} />
             </div>
-            <span class="hidden font-mono text-xs uppercase tracking-[0.22em] text-neutral-300 transition-colors group-hover:text-primary-green sm:inline">
+            <span class="hidden font-mono text-[0.62rem] uppercase tracking-[0.22em] text-neutral-400 transition-colors group-hover:text-primary-green sm:inline">
                 Alessandro Diaz
             </span>
         </a>
 
-        <!-- Desktop Navigation -->
-        <nav class="hidden md:block">
-            <ul class="flex items-center gap-2.5 text-sm">
+        <!-- Desktop nav — clean text links, no container background -->
+        <nav class="hidden md:block" aria-label="Main navigation">
+            <ul class="flex items-center gap-8 text-sm">
                 <li>
-                    <a
-                        href="/"
-                        class="rounded-full px-6 py-2.5 transition-all duration-300"
-                        >{t.nav.home}</a
-                    >
+                    <a href="/" class="nav-link text-neutral-400 font-medium py-2">{t.nav.home}</a>
                 </li>
                 <li>
-                    <a
-                        href="/my-projects"
-                        class="rounded-full px-6 py-2.5 transition-all duration-300"
-                        >{t.nav.projects}</a
-                    >
+                    <a href="/my-projects" class="nav-link text-neutral-400 font-medium py-2">{t.nav.projects}</a>
                 </li>
                 <li>
-                    <a
-                        href="/blog"
-                        class="rounded-full px-6 py-2.5 transition-all duration-300"
-                        >{t.nav.blog}</a
-                    >
+                    <a href="/blog" class="nav-link text-neutral-400 font-medium py-2">{t.nav.blog}</a>
                 </li>
             </ul>
         </nav>
 
-        <div class="flex items-center gap-2">
+        <!-- Right: lang toggle + hire me + hamburger -->
+        <div class="flex items-center gap-2.5">
             <button
                 id="lang-toggle"
                 type="button"
-                class="inline-flex items-center justify-center rounded-full border border-white/10 bg-black/50 p-2.5 text-white backdrop-blur-xl transition-all duration-300 hover:cursor-pointer hover:border-primary-green/60 hover:text-primary-green"
+                class="inline-flex h-10 min-w-10 items-center justify-center rounded-full border border-white/10 bg-black/60 px-3 font-mono text-[0.62rem] tracking-[0.14em] text-neutral-400 backdrop-blur-2xl transition-all duration-250 hover:cursor-pointer hover:border-primary-green/45 hover:text-primary-green"
                 aria-label={toggleAriaLabel}
                 data-next-lang={nextLang}
             >
-                <Globe class="h-5 w-5" aria-hidden="true" />
-                <span class="sr-only">{toggleLabel}</span>
+                {toggleLabel}
             </button>
+
             <div class="hidden sm:block">
                 <Button
                     text={t.nav.hireMe}
@@ -188,81 +166,108 @@ const toggleAriaLabel =
                 />
             </div>
 
-            <!-- Mobile Hamburger Button -->
+            <!-- Mobile hamburger -->
             <button
                 id="hamburger"
-                class="relative flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-black/50 backdrop-blur-xl transition-all duration-300 hover:bg-white/10 sm:hidden"
+                class="relative flex h-9 w-9 flex-col items-center justify-center gap-[5px] rounded-full border border-white/10 bg-black/60 backdrop-blur-2xl transition-all duration-300 hover:bg-white/10 md:hidden"
                 aria-label={t.nav.toggleMenu}
+                aria-expanded="false"
             >
-                <span
-                    class="block w-6 h-0.5 bg-white rounded-full transition-all duration-300"
-                ></span>
-                <span
-                    class="block w-6 h-0.5 bg-white rounded-full transition-all duration-300"
-                ></span>
-                <span
-                    class="block w-6 h-0.5 bg-white rounded-full transition-all duration-300"
-                ></span>
+                <span class="block w-[17px] h-[1.5px] bg-neutral-400 rounded-full transition-all duration-280"></span>
+                <span class="block w-[17px] h-[1.5px] bg-neutral-400 rounded-full transition-all duration-280"></span>
+                <span class="block w-[12px] h-[1.5px] bg-neutral-400 rounded-full transition-all duration-280 self-start ml-[2.5px]"></span>
             </button>
         </div>
     </div>
 
-    <!-- Mobile Menu -->
+    <!-- Mobile drawer -->
     <div
         id="mobileMenu"
-        class="fixed top-0 right-0 h-screen h-[100dvh] min-h-[100svh] w-[clamp(16rem,88vw,24rem)] transform border-l border-white/10 bg-black/85 shadow-2xl backdrop-blur-2xl transition-transform duration-300 ease-in-out translate-x-full md:hidden"
+        class="fixed top-0 right-0 h-[100dvh] w-[clamp(15rem,82vw,21rem)] transform border-l border-white/8 bg-[#090909]/92 shadow-2xl backdrop-blur-3xl transition-transform duration-300 ease-in-out translate-x-full md:hidden"
     >
-        <div class="flex flex-col h-full p-6 pt-20">
-            <!-- Mobile Navigation -->
-            <nav class="flex-1">
-                <ul class="flex flex-col gap-3 text-white">
+        <div class="flex flex-col h-full p-6 pt-24 gap-4">
+            <nav class="flex-1" aria-label="Mobile navigation">
+                <ul class="flex flex-col gap-2 text-white">
                     <li>
-                        <a
-                            href="/"
-                            class="block rounded-xl px-6 py-3 text-center font-medium transition-all duration-300"
-                            >{t.nav.home}</a
-                        >
+                        <a href="/" class="block rounded-xl px-5 py-3.5 text-center text-sm font-medium transition-all duration-250">{t.nav.home}</a>
                     </li>
                     <li>
-                        <a
-                            href="/my-projects"
-                            class="block rounded-xl px-6 py-3 text-center font-medium transition-all duration-300"
-                            >{t.nav.projects}</a
-                        >
+                        <a href="/my-projects" class="block rounded-xl px-5 py-3.5 text-center text-sm font-medium transition-all duration-250">{t.nav.projects}</a>
                     </li>
                     <li>
-                        <a
-                            href="/blog"
-                            class="block rounded-xl px-6 py-3 text-center font-medium transition-all duration-300"
-                            >{t.nav.blog}</a
-                        >
+                        <a href="/blog" class="block rounded-xl px-5 py-3.5 text-center text-sm font-medium transition-all duration-250">{t.nav.blog}</a>
                     </li>
-                    <li>
+                    <li class="mt-2">
                         <Button
                             text={t.nav.hireMe}
                             variant="primary"
                             href="/hire-me"
                             ariaLabel={t.nav.hireMe}
-                            className="w-full px-6 py-3 rounded-xl text-center shadow-none !text-base !font-medium"
+                            className="w-full px-5 py-3.5 rounded-xl text-center !text-sm !font-semibold"
                         />
                     </li>
                 </ul>
             </nav>
+
+            <div class="mt-auto pt-5 border-t border-white/7">
+                <p class="font-mono text-[0.58rem] uppercase tracking-[0.24em] text-neutral-500">
+                    Alessandro Diaz / {t.profile.title}
+                </p>
+            </div>
         </div>
     </div>
 </header>
 
 <style>
-    /* Hamburger animation */
-    #hamburger.open span:nth-child(1) {
-        transform: translateY(8px) rotate(45deg);
+    /* Clean text nav — underline slides in on hover and stays on active */
+    .nav-link {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        transition: color 0.2s ease;
     }
 
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        height: 1.5px;
+        background: #E8A830;
+        border-radius: 2px;
+        transform: scaleX(0);
+        transform-origin: right center;
+        transition: transform 0.24s ease;
+    }
+
+    /* Hover: underline slides from right to left */
+    @media (hover: hover) and (pointer: fine) {
+        .nav-link:hover::after {
+            transform: scaleX(1);
+            transform-origin: left center;
+        }
+        .nav-link:hover {
+            color: #F2F0EB;
+        }
+    }
+
+    /* Active: underline always visible */
+    .nav-link.active::after {
+        transform: scaleX(1);
+    }
+
+    /* Hamburger → X morph */
+    #hamburger.open span:nth-child(1) {
+        transform: translateY(6.5px) rotate(45deg);
+        width: 17px;
+    }
     #hamburger.open span:nth-child(2) {
         opacity: 0;
+        transform: scaleX(0);
     }
-
     #hamburger.open span:nth-child(3) {
-        transform: translateY(-8px) rotate(-45deg);
+        transform: translateY(-6.5px) rotate(-45deg) translateX(-2.5px);
+        width: 17px;
     }
 </style>

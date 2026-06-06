@@ -1,5 +1,4 @@
 ---
-import GoToAll from "@/components/ui/icons/goToAll.astro";
 import nous from "@/assets/videos/nous.webm";
 import erlingnails from "@/assets/videos/erlingnails.webm";
 import cms from "@/assets/videos/cms.webm";
@@ -17,6 +16,9 @@ export interface FeaturedProject {
     haveRepo: boolean;
     repoLink?: string;
     isVideo?: boolean;
+    signal: string;
+    decision: string;
+    result: string;
 }
 
 const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
@@ -32,222 +34,259 @@ const {
 } = Astro.props;
 
 const HeadingTag = headingLevel === 1 ? "h1" : "h2";
+const labels = {
+    signal: lang === "es" ? "Señal" : "Signal",
+    decision: lang === "es" ? "Decisión" : "Decision",
+    result: lang === "es" ? "Resultado" : "Result",
+    open: lang === "es" ? "Abrir proyecto" : "Open project",
+    repo: lang === "es" ? "Ver repo" : "View repo",
+    video: lang === "es" ? "Video" : "Video",
+    image: lang === "es" ? "Imagen" : "Image",
+};
 
 const projects: FeaturedProject[] = [
     {
         title: "NOUS",
         description: t.projects.nous.description,
         image: nous,
-        tags: [
-            "Astro",
-            "Typescrypt",
-            "PostgreSQL",
-            "Tailwind CSS",
-            "React.js",
-            "Node.js",
-        ],
+        tags: ["Astro", "TypeScript", "PostgreSQL", "Tailwind", "React", "Node"],
         link: "https://nous.cr",
         haveRepo: false,
         isVideo: true,
+        signal: lang === "es" ? "Producto propio con CMS, IA y operación real." : "Owned product with CMS, AI, and real operations.",
+        decision: lang === "es" ? "Construir la plataforma alrededor del flujo del negocio, no de una plantilla." : "Build the platform around the business workflow, not a template.",
+        result: lang === "es" ? "Base escalable para clientes, contenido y automatización." : "A scalable base for clients, content, and automation.",
     },
     {
         title: "Content Management System",
         description: t.projects.cms.description,
         image: cms,
-        tags: [
-            "Astro",
-            "Typescrypt",
-            "PostgreSQL",
-            "Tailwind CSS",
-            "React.js",
-            "Node.js",
-        ],
+        tags: ["Astro", "TypeScript", "PostgreSQL", "React", "Node"],
         link: "https://cms-only-test.vercel.app",
         haveRepo: true,
         repoLink: "https://github.com/Alessandro1809/cms-personal-blog",
         isVideo: true,
+        signal: lang === "es" ? "Backend editorial desacoplado para publicar sin fricción." : "Decoupled editorial backend for low-friction publishing.",
+        decision: lang === "es" ? "Separar contenido, presentación y despliegue para evitar deuda temprana." : "Separate content, presentation, and deployment to avoid early debt.",
+        result: lang === "es" ? "Flujo reutilizable para sitios rápidos con control de datos." : "Reusable workflow for fast sites with data control.",
     },
     {
         title: "Veterinary Patient Management",
         description: t.projects.apvFrontend.description,
         image: apv_front,
-        tags: ["React.js", "Javascript", "Axios", "Tailwind CSS"],
+        tags: ["React", "JavaScript", "Axios", "Tailwind"],
         link: "https://frontend-apv-mern.vercel.app/",
         haveRepo: true,
         repoLink: "https://github.com/Alessandro1809/Frontend_APV_MERN",
         isVideo: true,
+        signal: lang === "es" ? "Interfaz clínica para pacientes, citas y seguimiento." : "Clinical interface for patients, appointments, and follow-up.",
+        decision: lang === "es" ? "Priorizar flujos CRUD rápidos y autenticación clara." : "Prioritize fast CRUD flows and clear authentication.",
+        result: lang === "es" ? "Gestión diaria más directa para una práctica veterinaria." : "More direct daily management for veterinary practice.",
     },
     {
         title: "Erling Nails",
         description: t.projects.erlingNails.description,
         image: erlingnails,
-        tags: [
-            "Astro",
-            "Typescrypt",
-            "PostgreSQL",
-            "Tailwind CSS",
-            "React.js",
-            "Node.js",
-        ],
+        tags: ["Astro", "TypeScript", "CMS", "Tailwind", "React"],
         link: "https://www.erlingnails.com/",
         haveRepo: true,
         repoLink: "https://github.com/Alessandro1809/erling-nails-v1",
         isVideo: true,
+        signal: lang === "es" ? "Portfolio visual que necesita cargar rápido y editarse fácil." : "Visual portfolio that needs speed and easy updates.",
+        decision: lang === "es" ? "Usar Astro y contenido administrable para no sacrificar rendimiento." : "Use Astro and managed content without sacrificing performance.",
+        result: lang === "es" ? "Galería clara para mostrar trabajo actualizado." : "A clean gallery for current work samples.",
     },
     {
-        title: "Veterinary patient management API",
+        title: "Veterinary Patient API",
         description: t.projects.apvApi.description,
         image: apv.src,
-        tags: ["Express.js", "Javascript", "MongoDB", "Email.js", "Node.js"],
+        tags: ["Express", "MongoDB", "Auth", "Node", "Email"],
         link: "https://apv-docs.netlify.app/",
         haveRepo: true,
         repoLink: "https://github.com/Alessandro1809/MERN_APV_Backend",
         isVideo: false,
+        signal: lang === "es" ? "API con autenticación, roles y datos clínicos." : "API with authentication, roles, and clinical records.",
+        decision: lang === "es" ? "Centralizar reglas de seguridad antes de exponer datos sensibles." : "Centralize security rules before exposing sensitive records.",
+        result: lang === "es" ? "Base backend confiable para clientes web o móviles." : "Reliable backend base for web or mobile clients.",
     },
     {
         title: "Blog API",
         description: t.projects.blogApi.description,
         image: blogApi.src,
-        tags: [
-            "Fastify",
-            "Typescript",
-            "Drizzle",
-            "Clerk",
-            "Node.js",
-            "SQLite",
-            "Vitest",
-            "Supertest",
-        ],
+        tags: ["Fastify", "TypeScript", "Drizzle", "Turso", "Vitest"],
         link: "https://blogapidocs.netlify.app/",
         haveRepo: true,
         repoLink: "https://github.com/Alessandro1809/blog-api",
         isVideo: false,
+        signal: lang === "es" ? "API tipada para contenido, categorías y métricas." : "Typed API for content, categories, and metrics.",
+        decision: lang === "es" ? "Mantener contratos Zod y una capa de datos simple para edge." : "Keep Zod contracts and a simple data layer for edge.",
+        result: lang === "es" ? "Rutas predecibles, pruebas e iteración más segura." : "Predictable routes, tests, and safer iteration.",
     },
 ];
 
-const displayedProjects =
-    typeof limit === "number" ? projects.slice(0, limit) : projects;
+const displayedProjects = typeof limit === "number" ? projects.slice(0, limit) : projects;
+const isHomeSlice = displayedProjects.length === 2;
+const spanClasses = [
+    "md:col-span-6 xl:col-span-12",   // 0: full-width lead
+    "md:col-span-3 xl:col-span-7",    // 1: wide
+    "md:col-span-3 xl:col-span-5",    // 2: narrow
+    "md:col-span-3 xl:col-span-4",    // 3: third
+    "md:col-span-3 xl:col-span-4",    // 4: third
+    "md:col-span-6 xl:col-span-4",    // 5: full-at-md, third-at-xl
+];
 ---
 
-<section class="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-    <header
-        class="mb-10 grid gap-6 lg:grid-cols-[0.9fr_1fr] lg:items-end"
-        data-aos="fade-up"
-        data-aos-duration="800"
-        data-aos-once="true"
-    >
-        <div>
-            <p class="section-kicker">{t.nav.projects}</p>
-            <HeadingTag class="mt-4 text-3xl font-semibold text-white sm:text-5xl">
-                {heading}
-            </HeadingTag>
-        </div>
-
-        <div class="flex flex-col gap-5 lg:items-end">
-            <p class="max-w-2xl text-sm leading-7 text-neutral-400 lg:text-right">
+<section class="relative mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-12 lg:py-24" data-motion-section="projects">
+    <header class="mb-10" data-motion-header>
+        <HeadingTag data-gsap-heading class="text-3xl font-semibold leading-tight text-white sm:text-[clamp(2rem,4vw,3.15rem)]">
+            {heading}
+        </HeadingTag>
+        <div class="mt-4 flex flex-wrap items-center justify-between gap-4">
+            <p class="max-w-2xl text-sm leading-[1.8] text-neutral-400 sm:text-base" data-motion-copy>
                 {description}
             </p>
-            {
-                showAllLink && (
-                    <a
-                        href="/my-projects"
-                        class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.22em] text-primary-green transition-colors hover:text-white"
-                    >
-                        {viewAllLabel}
-                        <GoToAll />
-                    </a>
-                )
-            }
+            {showAllLink && (
+                <a
+                    href="/my-projects"
+                    class="shrink-0 inline-flex w-fit items-center gap-2 rounded-lg border border-white/10 bg-white/[0.025] px-4 py-2.5 text-sm font-semibold text-neutral-300 transition-all duration-250 hover:border-primary-green/60 hover:text-primary-green"
+                >
+                    {viewAllLabel}
+                    <span aria-hidden="true">↗</span>
+                </a>
+            )}
         </div>
     </header>
 
-    <div class="grid gap-6 lg:grid-cols-2">
-        {
-            displayedProjects.map((project, index) => (
+    <div
+        class:list={[
+            "project-board grid gap-4",
+            isHomeSlice ? "lg:grid-cols-2" : "md:grid-cols-6 xl:grid-cols-12 xl:grid-flow-dense",
+        ]}
+        data-gsap-cards
+    >
+        {displayedProjects.map((project, index) => {
+            const isLead = !isHomeSlice && index === 0;
+            const isCompact = isHomeSlice || !isLead;
+            const visibleProof = isLead ? [
+                [labels.signal, project.signal],
+                [labels.decision, project.decision],
+                [labels.result, project.result],
+            ] : [
+                [labels.signal, project.signal],
+                [labels.result, project.result],
+            ];
+
+            return (
                 <article
-                    class="group surface-panel relative overflow-hidden"
-                    data-aos="fade-up"
-                    data-aos-duration="800"
-                    data-aos-delay={index * 80}
-                    data-aos-once="true"
+                    class:list={[
+                        "project-card precision-tilt group relative isolate grid overflow-hidden rounded-xl border border-white/8 bg-[#09090A]",
+                        isHomeSlice ? "min-h-[27rem]" : spanClasses[index] ?? "md:col-span-6 xl:col-span-6",
+                    ]}
+                    data-project-card
+                    data-tilt-card
                 >
+                    <span class="project-scan-line"></span>
+
                     <a
                         href={project.link}
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={project.title}
-                        class="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-green/70"
+                        class:list={[
+                            "project-media-panel relative block overflow-hidden border-b border-white/8 bg-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-green/70",
+                            isLead ? "h-[16rem] sm:h-[18rem]" : "h-[12.5rem] sm:h-[14rem]",
+                            isHomeSlice ? "h-[15rem] sm:h-[16rem]" : "",
+                        ]}
+                        data-motion-media
                     >
-                        <div class="relative aspect-[16/10] overflow-hidden bg-black lg:aspect-[16/11]">
-                            {project.isVideo ? (
-                                <video
-                                    class="project-video h-full w-full object-cover opacity-80 saturate-[0.85] transition duration-700 group-hover:scale-[1.03] group-hover:opacity-100"
-                                    autoplay
-                                    muted
-                                    loop
-                                    playsinline
-                                    preload="metadata"
-                                    src={project.image}
-                                />
-                            ) : (
-                                <img
-                                    src={project.image}
-                                    alt={project.title}
-                                    class="h-full w-full object-cover opacity-80 saturate-[0.85] transition duration-700 group-hover:scale-[1.03] group-hover:opacity-100"
-                                    loading="lazy"
-                                    decoding="async"
-                                />
-                            )}
-                            <div class="absolute inset-0 bg-linear-to-t from-black via-black/25 to-transparent"></div>
-                            <div class="absolute left-4 top-4 rounded-full border border-white/10 bg-black/60 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-neutral-300 backdrop-blur-xl">
-                                0{index + 1}
-                            </div>
+                        {project.isVideo ? (
+                            <video
+                                class="project-video h-full w-full object-cover opacity-82 saturate-[0.82] transition-all duration-700 group-hover:scale-[1.025] group-hover:opacity-100 group-hover:saturate-100"
+                                autoplay
+                                muted
+                                loop
+                                playsinline
+                                preload="metadata"
+                                src={project.image}
+                            />
+                        ) : (
+                            <img
+                                src={project.image}
+                                alt={project.title}
+                                class="h-full w-full object-cover opacity-82 saturate-[0.82] transition-all duration-700 group-hover:scale-[1.025] group-hover:opacity-100 group-hover:saturate-100"
+                                loading={isLead ? "eager" : "lazy"}
+                                decoding="async"
+                            />
+                        )}
+                        <div class="absolute inset-0 bg-linear-to-t from-black/70 via-black/8 to-transparent"></div>
+                        <div class="absolute inset-x-4 bottom-4 flex items-center justify-end">
+                            <span class="grid h-8 w-8 place-items-center rounded-md border border-white/12 bg-black/55 text-primary-green transition-colors group-hover:border-primary-green/55">
+                                ↗
+                            </span>
                         </div>
                     </a>
 
-                    <div class="p-5 sm:p-6">
-                        <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                            <h3 class="text-2xl font-semibold text-white">
+                    <div class:list={[
+                        "relative z-10 flex min-h-[17rem] w-full flex-col justify-between gap-5 p-5 sm:p-6",
+                        isLead ? "lg:min-h-[19rem] lg:p-7" : "",
+                    ]}>
+                        <div class="space-y-5">
+                            <div class="flex items-start justify-between gap-4">
+                                <span class="project-index">{String(index + 1).padStart(2, "0")}</span>
+                                <div class="flex shrink-0 items-center gap-2 text-xs sm:text-sm">
+                                    <a class="rounded-md border border-white/10 bg-black/35 px-3 py-1.5 text-neutral-300 transition-colors hover:border-primary-green/55 hover:text-primary-green" href={project.link} target="_blank" rel="noopener noreferrer">
+                                        {labels.open}
+                                    </a>
+                                    {project.haveRepo && !isCompact && (
+                                        <a class="rounded-md border border-white/10 bg-black/35 px-3 py-1.5 text-neutral-300 transition-colors hover:border-primary-green/55 hover:text-primary-green" href={project.repoLink} target="_blank" rel="noopener noreferrer">
+                                            {labels.repo}
+                                        </a>
+                                    )}
+                                </div>
+                            </div>
+
+                            <h3 class:list={["max-w-[13ch] font-semibold leading-tight text-white transition-colors group-hover:text-primary-green", isLead ? "text-3xl sm:text-5xl" : "text-2xl sm:text-[1.7rem]"]}>
                                 {project.title}
                             </h3>
-                            {project.haveRepo && (
-                                <a
-                                    href={project.repoLink}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-white transition hover:border-primary-green/70 hover:text-primary-green"
-                                    aria-label={t.featuredProjects.repoAria}
-                                >
-                                    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                                    </svg>
-                                </a>
-                            )}
+                            <p class:list={["mt-3 max-w-[58ch] text-neutral-300", isLead ? "text-base leading-[1.75]" : "line-clamp-3 text-sm leading-[1.7]"]}>
+                                {project.description}
+                            </p>
                         </div>
 
-                        <p class="mt-4 line-clamp-5 text-sm leading-7 text-neutral-400">
-                            {project.description}
-                        </p>
+                        <div class:list={[
+                            "grid gap-3",
+                            isLead ? "sm:grid-cols-3" : "sm:grid-cols-2",
+                        ]}>
+                            {visibleProof.map(([label, value]) => (
+                                <div class="border-t border-white/10 pt-3">
+                                    <p class="font-mono text-[0.58rem] tracking-[0.14em] text-primary-green/80">{label}</p>
+                                    <p class:list={["mt-1 text-neutral-300", isLead ? "text-sm leading-[1.65]" : "line-clamp-2 text-xs leading-[1.6]"]}>{value}</p>
+                                </div>
+                            ))}
+                        </div>
 
-                        <footer class="mt-5 flex flex-wrap gap-2">
-                            {project.tags.map((tag) => (
-                                <span class="rounded-full border border-primary-green/20 bg-primary-green/10 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-[0.14em] text-primary-green/90">
+                        <footer class="flex flex-wrap gap-2">
+                            {project.tags.slice(0, isCompact ? 4 : 6).map((tag) => (
+                                <span class="rounded-md border border-white/8 bg-black/35 px-2.5 py-1 font-mono text-[0.58rem] tracking-[0.08em] text-neutral-400" data-project-tag>
                                     {tag}
                                 </span>
                             ))}
+                            {project.haveRepo && isCompact && (
+                                <a class="rounded-md border border-white/8 bg-black/35 px-2.5 py-1 font-mono text-[0.58rem] tracking-[0.08em] text-neutral-400 transition-colors hover:border-primary-green/55 hover:text-primary-green" href={project.repoLink} target="_blank" rel="noopener noreferrer">
+                                    {labels.repo}
+                                </a>
+                            )}
                         </footer>
                     </div>
                 </article>
-            ))
-        }
+            );
+        })}
     </div>
 </section>
 
 <script>
     document.addEventListener("astro:page-load", () => {
         const videos = document.querySelectorAll<HTMLVideoElement>(".project-video");
-        videos.forEach((video) => {
-            video.playbackRate = 1.35;
-        });
+        videos.forEach((video) => { video.playbackRate = 1.18; });
     });
 </script>

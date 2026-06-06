@@ -18,8 +18,8 @@ const t = translations[lang];
 >
     <Hero />
     <FeaturedProjects limit={2} />
-    <section class="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <div class="absolute inset-0 -z-10 bg-[radial-gradient(rgba(0,212,124,0.18)_1px,transparent_1px)] bg-size-[28px_28px] opacity-40 mask-[radial-gradient(ellipse_55%_45%_at_50%_42%,#000_40%,transparent_78%)]"></div>
+    <section class="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8" data-motion-section="timeline">
+        <div class="absolute inset-0 -z-10 bg-[radial-gradient(rgba(232,168,48,0.14)_1px,transparent_1px)] bg-size-[28px_28px] opacity-40 mask-[radial-gradient(ellipse_55%_45%_at_50%_42%,#000_40%,transparent_78%)]"></div>
 
         <WorkTimeline client:only="react" timeline={t.timeline} />
     </section>

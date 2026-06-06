@@ -1,10 +1,8 @@
 ---
-import ImageCard from "@/components/cards/ImageCard.astro";
-import { AboutAsciiTransition } from "@/components/react/AboutAsciiTransition";
 import Button from "./ui/buttons/Button.astro";
-import GoToAll from "./ui/icons/goToAll.astro";
 import SocialApps from "./ui/SocialApps.astro";
 import FeaturedInfo from "./ui/FeaturedInfo.astro";
+import { Play } from "lucide-react";
 import video_presentacion from "@/assets/videos/presentacion_portfolio.webm";
 import CV from "@/assets/docs/CV-Alessandro_Diaz.pdf";
 import cover from "@/assets/cover.webp";
@@ -15,72 +13,95 @@ const t = translations[lang];
 ---
 
 <section
-    class="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8"
-    data-aos="fade-up"
-    data-aos-duration="800"
-    data-aos-once="true"
+    class="relative mx-auto max-w-7xl px-5 py-28 sm:px-8 lg:px-12 lg:py-32"
+    data-motion-section="about"
 >
-    <header class="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
-        <div>
-            <p class="section-kicker">{t.profile.title}</p>
-            <h2 class="mt-4 text-3xl font-semibold text-white sm:text-5xl">
-                {t.about.heading}
-            </h2>
-        </div>
-        <p class="max-w-3xl text-base leading-8 text-neutral-300 lg:justify-self-end">
+    <header class="max-w-3xl" data-motion-header>
+        <h2 data-gsap-heading class="text-3xl font-semibold leading-tight text-white sm:text-5xl lg:text-[clamp(2.25rem,4vw,3rem)]">
+            {t.about.heading}
+        </h2>
+        <p class="mt-5 max-w-3xl text-base leading-[1.8] text-neutral-400" data-motion-copy>
             {t.about.intro}
         </p>
     </header>
 
-    <div class="mt-12 grid gap-6 lg:grid-cols-[0.72fr_1.28fr]">
-        <div class="surface-panel flex flex-col gap-4 overflow-hidden p-4">
-            <ImageCard />
-            <AboutAsciiTransition client:visible />
-        </div>
-
-        <article class="surface-panel overflow-hidden">
-            <video
-                src={video_presentacion}
-                class="h-72 w-full object-cover opacity-85 saturate-[0.8] sm:h-96"
-                poster={cover.src}
-                controls
-                playsinline
-                preload="metadata"></video>
-
-            <div class="grid gap-6 p-6 lg:grid-cols-[1fr_0.72fr]">
-                <div class="space-y-5 text-sm leading-7 text-neutral-300 sm:text-base">
-                    <p>{t.about.paragraph1}</p>
-                    <p>{t.about.paragraph2}</p>
-                    <p>{t.about.paragraph3}</p>
-                </div>
-
-                <aside class="flex flex-col justify-between gap-8 border-t border-white/10 pt-6 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
-                    <div>
-                        <p class="section-kicker">{t.profile.title}</p>
-                        <div class="mt-5 flex flex-wrap gap-3">
-                            <Button
-                                text={t.about.downloadCv}
-                                variant="primary"
-                                downloadAttr={true}
-                                downloadAttributeValue="CV-Alessandro_Diaz.pdf"
-                                href={CV}
-                                target="_blank"
-                                ariaLabel={t.about.downloadCvAria}
-                            />
-                            <a
-                                href="/my-projects"
-                                class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-5 py-2.5 text-sm font-semibold text-white transition hover:border-primary-green/70 hover:text-primary-green"
-                            >
-                                {t.about.projectsLink}
-                                <GoToAll />
-                            </a>
-                        </div>
-                    </div>
-                    <SocialApps />
-                </aside>
+    <div class="mt-14 grid gap-6 lg:grid-cols-[1.06fr_0.94fr] lg:items-start">
+        <article class="precision-tilt overflow-hidden rounded-xl border border-white/8 bg-[#09090A]" data-motion-panel data-tilt-card>
+            <div class="relative min-h-[22rem]" data-motion-media>
+                <video
+                    src={video_presentacion}
+                    class="h-full min-h-[22rem] w-full object-cover opacity-88 saturate-[0.78]"
+                    poster={cover.src}
+                    playsinline
+                    preload="metadata"
+                    data-about-video
+                />
+                <div class="pointer-events-none absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-black/10"></div>
+                <button
+                    type="button"
+                    class="group absolute left-1/2 top-1/2 z-10 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-primary-green/45 bg-black/75 text-primary-green shadow-[0_0_38px_rgba(0,255,65,0.16)] transition-all duration-250 hover:scale-105 hover:border-primary-green hover:bg-primary-green hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-green"
+                    aria-label={lang === "es" ? "Reproducir video" : "Play video"}
+                    data-video-play
+                >
+                    <Play className="ml-1 h-7 w-7 fill-current" strokeWidth={1.8} />
+                </button>
             </div>
         </article>
+
+        <aside class="grid gap-5" data-motion-panel>
+            <div class="rounded-xl border border-white/8 bg-white/[0.025] p-6 sm:p-7">
+                <div class="space-y-5 text-sm leading-[1.85] text-neutral-400 sm:text-[0.9375rem]">
+                    <p data-motion-copy>{t.about.paragraph1}</p>
+                    <p data-motion-copy>{t.about.paragraph2}</p>
+                    <p data-motion-copy>{t.about.paragraph3}</p>
+                </div>
+            </div>
+            <div class="grid gap-4 rounded-xl border border-white/8 bg-[#09090A] p-6 sm:p-7">
+                <p class="text-sm leading-7 text-neutral-400">
+                    {lang === "es"
+                        ? "Si necesitas convertir una idea ambigua en un sistema mantenible, este es el punto de partida."
+                        : "If you need to turn an ambiguous idea into a maintainable system, this is the starting point."}
+                </p>
+                <div class="flex flex-wrap items-center gap-3">
+                    <Button
+                        text={t.about.downloadCv}
+                        variant="primary"
+                        downloadAttr={true}
+                        downloadAttributeValue="CV-Alessandro_Diaz.pdf"
+                        href={CV}
+                        target="_blank"
+                        ariaLabel={t.about.downloadCvAria}
+                    />
+                    <Button
+                        text={t.about.projectsLink}
+                        variant="secondary"
+                        href="/my-projects"
+                        ariaLabel={t.about.projectsLink}
+                    />
+                    <SocialApps />
+                </div>
+            </div>
+        </aside>
     </div>
 
     <FeaturedInfo />
 </section>
+
+<script>
+    document.querySelectorAll("[data-motion-section='about']").forEach((section) => {
+        const video = section.querySelector<HTMLVideoElement>("[data-about-video]");
+        const playButton = section.querySelector<HTMLButtonElement>("[data-video-play]");
+
+        if (!video || !playButton) return;
+
+        playButton.addEventListener("click", async () => {
+            video.controls = true;
+            try {
+                await video.play();
+                playButton.hidden = true;
+            } catch {
+                playButton.hidden = true;
+            }
+        });
+    });
+</script>

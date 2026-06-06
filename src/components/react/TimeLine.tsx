@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef } from "react";
 import { Award, Briefcase, Code, Rocket } from "lucide-react";
+import { motion, useReducedMotion, useScroll, useSpring } from "motion/react";
 
 type TimelineExperience = {
     year: string;
@@ -24,8 +25,17 @@ type WorkTimelineProps = {
 const icons = [Code, Briefcase, Rocket, Award];
 
 const WorkTimeline = ({ timeline }: WorkTimelineProps) => {
-    const [scrollProgress, setScrollProgress] = useState(0);
     const timelineRef = useRef<HTMLDivElement>(null);
+    const reduceMotion = useReducedMotion();
+    const { scrollYProgress } = useScroll({
+        target: timelineRef,
+        offset: ["start 78%", "end 24%"],
+    });
+    const railScale = useSpring(scrollYProgress, {
+        stiffness: 120,
+        damping: 28,
+        mass: 0.55,
+    });
 
     const experiences = useMemo(
         () =>
@@ -37,90 +47,70 @@ const WorkTimeline = ({ timeline }: WorkTimelineProps) => {
         [timeline.experiences],
     );
 
-    useEffect(() => {
-        let rafId: number | null = null;
-
-        const calculateProgress = () => {
-            if (!timelineRef.current) return;
-
-            const rect = timelineRef.current.getBoundingClientRect();
-            const visibleRange = window.innerHeight + rect.height;
-            const scrolled = window.innerHeight - rect.top;
-            setScrollProgress(Math.max(0, Math.min(1, scrolled / visibleRange)));
-        };
-
-        const handleScroll = () => {
-            if (rafId !== null) return;
-            rafId = window.requestAnimationFrame(() => {
-                rafId = null;
-                calculateProgress();
-            });
-        };
-
-        calculateProgress();
-        window.addEventListener("scroll", handleScroll, { passive: true });
-        window.addEventListener("resize", calculateProgress);
-
-        return () => {
-            window.removeEventListener("scroll", handleScroll);
-            window.removeEventListener("resize", calculateProgress);
-            if (rafId !== null) window.cancelAnimationFrame(rafId);
-        };
-    }, []);
-
     return (
-        <div id="experience" className="relative w-full text-white">
-            <div className="mb-12 grid gap-5 lg:grid-cols-[0.8fr_1fr] lg:items-end">
-                <div>
-                    <p className="section-kicker">{timeline.subheading}</p>
-                    <h2 className="mt-4 text-3xl font-semibold sm:text-5xl">
-                        {timeline.heading}
-                    </h2>
-                </div>
-                <p className="max-w-xl text-sm leading-7 text-neutral-400 lg:justify-self-end lg:text-right">
-                    {timeline.journeyContinues}
+        <div id="experience" className="relative w-full text-white" data-motion-section="timeline">
+            <div className="mb-14 max-w-3xl" data-motion-header>
+                <h2 data-gsap-heading className="text-3xl font-semibold leading-tight sm:text-5xl lg:text-[clamp(2.25rem,4vw,3rem)]">
+                    {timeline.heading}
+                </h2>
+                <p className="mt-4 max-w-2xl text-sm leading-7 text-neutral-400" data-motion-copy>
+                    {timeline.subheading}. {timeline.journeyContinues}
                 </p>
             </div>
 
             <div ref={timelineRef} className="relative">
-                <div className="absolute left-4 top-0 h-full w-px bg-white/10 lg:left-1/2" />
-                <div
-                    className="absolute left-4 top-0 w-px bg-primary-green shadow-[0_0_24px_rgba(0,212,124,0.55)] lg:left-1/2"
-                    style={{ height: `${scrollProgress * 100}%` }}
+                <div className="absolute left-3 top-0 h-full w-px bg-white/8 lg:left-[12.5rem]" />
+                <motion.div
+                    className="absolute left-3 top-0 h-full w-px bg-primary-green lg:left-[12.5rem]"
+                    style={{
+                        scaleY: reduceMotion ? 1 : railScale,
+                        transformOrigin: "top",
+                    }}
                 />
 
-                <div className="space-y-6">
+                <div className="grid gap-5">
                     {experiences.map((exp, index) => {
                         const Icon = exp.icon;
-                        const alignRight = index % 2 === 1;
-                        const cardPosition = alignRight
-                            ? "lg:col-start-2 lg:ml-10"
-                            : "lg:mr-10";
 
                         return (
-                            <article
+                            <motion.article
                                 key={exp.id}
-                                className="relative grid gap-4 pl-12 lg:grid-cols-2 lg:pl-0"
+                                className="group relative grid gap-4 pl-12 lg:grid-cols-[12.5rem_1fr] lg:pl-0"
+                                data-timeline-item
+                                initial={false}
                             >
-                                <span className="absolute left-0 top-6 flex h-8 w-8 items-center justify-center rounded-full border border-primary-green/50 bg-black text-primary-green shadow-[0_0_22px_rgba(0,212,124,0.25)] lg:left-1/2 lg:-translate-x-1/2">
-                                    <Icon className="h-4 w-4" strokeWidth={2} />
-                                </span>
-
-                                <div className={`rounded-lg border border-white/10 bg-black/55 p-5 backdrop-blur-xl transition duration-300 hover:border-primary-green/40 hover:bg-white/[0.045] ${cardPosition}`}>
-                                    <p className="font-mono text-xs uppercase tracking-[0.22em] text-primary-green">
+                                <div className="hidden pt-5 lg:block">
+                                    <p className="font-mono text-[0.68rem] tracking-[0.16em] text-neutral-500">
                                         {exp.year}
                                     </p>
-                                    <h3 className="mt-3 text-2xl font-semibold text-white">
-                                        {exp.title}
-                                    </h3>
-                                    <p className="mt-1 text-sm font-medium text-neutral-300">
-                                        {exp.company}
+                                </div>
+
+                                <span className="timeline-node absolute left-0 top-5 flex h-7 w-7 items-center justify-center rounded-lg border border-primary-green/35 bg-[#0C0C0E] text-primary-green lg:left-[11.65rem]">
+                                    <Icon className="h-3.5 w-3.5" strokeWidth={1.6} />
+                                </span>
+
+                                <div className="timeline-card border border-white/8 bg-black/35 p-5 transition-colors duration-250 group-hover:border-primary-green/35 group-hover:bg-white/[0.035] sm:p-6">
+                                    <p className="font-mono text-[0.68rem] tracking-[0.16em] text-primary-green lg:hidden">
+                                        {exp.year}
                                     </p>
-                                    <p className="mt-4 text-sm leading-7 text-neutral-400">
+                                    <div className="grid gap-2 sm:grid-cols-[1fr_auto] sm:items-start">
+                                        <div>
+                                            <h3 className="text-xl font-semibold leading-tight text-white">
+                                                {exp.title}
+                                            </h3>
+                                            <p className="mt-1 text-sm font-medium text-neutral-400">
+                                                {exp.company}
+                                            </p>
+                                        </div>
+                                        <span className="hidden rounded-md border border-white/8 px-2.5 py-1 font-mono text-[0.58rem] tracking-[0.12em] text-neutral-500 sm:inline-flex">
+                                            {String(index + 1).padStart(2, "0")}
+                                        </span>
+                                    </div>
+                                    <p className="mt-4 max-w-3xl text-sm leading-[1.8] text-neutral-400">
                                         {exp.description}
                                     </p>
                                 </div>
-                            </article>
+                            </motion.article>
                         );
                     })}
                 </div>

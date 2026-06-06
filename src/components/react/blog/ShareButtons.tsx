@@ -30,55 +30,62 @@ export function ShareButtons({ title, url, labels }: ShareButtonsProps) {
       await navigator.clipboard.writeText(url)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
-    } catch (err) {
-      console.error("Failed to copy link:", err)
+    } catch {
+      /* clipboard API unavailable — silent fail */
     }
   }
 
   return (
-    <div className="flex items-center gap-3 animate-fade-in">
-      <span className="text-xs font-mono text-neutral-500 uppercase tracking-widest mr-2 flex items-center gap-2">
-        <Share2 className="w-3.5 h-3.5" /> {labels.label}
+    <div className="flex items-center gap-3">
+      <span className="text-xs font-mono text-neutral-400 uppercase tracking-widest mr-2 flex items-center gap-2">
+        <Share2 className="w-3.5 h-3.5" aria-hidden="true" /> {labels.label}
       </span>
-      
+
       <div className="flex items-center gap-2">
         <a
           href={shareLinks.twitter}
           target="_blank"
           rel="noopener noreferrer"
+          aria-label={`${labels.shareOnX}, opens in new tab`}
           className="p-2 rounded-full bg-white/5 border border-white/10 text-neutral-400 hover:text-primary-green hover:border-primary-green/30 hover:bg-primary-green/5 transition-all duration-300"
-          title={labels.shareOnX}
         >
-          <Twitter className="w-4 h-4" />
+          <Twitter className="w-4 h-4" aria-hidden="true" />
         </a>
-        
+
         <a
           href={shareLinks.linkedin}
           target="_blank"
           rel="noopener noreferrer"
+          aria-label={`${labels.shareOnLinkedIn}, opens in new tab`}
           className="p-2 rounded-full bg-white/5 border border-white/10 text-neutral-400 hover:text-primary-green hover:border-primary-green/30 hover:bg-primary-green/5 transition-all duration-300"
-          title={labels.shareOnLinkedIn}
         >
-          <Linkedin className="w-4 h-4" />
+          <Linkedin className="w-4 h-4" aria-hidden="true" />
         </a>
-        
+
         <button
+          type="button"
           onClick={copyToClipboard}
+          aria-label={copied ? labels.copied : labels.copyLink}
+          aria-pressed={copied}
           className={`p-2 rounded-full border transition-all duration-300 relative ${
-            copied 
-              ? "bg-primary-green/20 border-primary-green text-primary-green" 
+            copied
+              ? "bg-primary-green/20 border-primary-green text-primary-green"
               : "bg-white/5 border-white/10 text-neutral-400 hover:text-primary-green hover:border-primary-green/30 hover:bg-primary-green/5"
           }`}
-          title={labels.copyLink}
         >
           {copied ? (
-            <Check className="w-4 h-4 animate-in zoom-in duration-300" />
+            <Check className="w-4 h-4" aria-hidden="true" />
           ) : (
-            <LinkIcon className="w-4 h-4" />
+            <LinkIcon className="w-4 h-4" aria-hidden="true" />
           )}
-          
+
+          {/* Tooltip — only shown when copied */}
           {copied && (
-            <span className="absolute -top-10 left-1/2 -translate-x-1/2 px-2 py-1 bg-primary-green text-black text-[10px] font-bold rounded shadow-lg animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <span
+              role="status"
+              className="absolute -top-10 left-1/2 -translate-x-1/2 px-2 py-1 bg-primary-green text-black text-[10px] font-bold rounded shadow-lg"
+              aria-live="polite"
+            >
               {labels.copied}
             </span>
           )}

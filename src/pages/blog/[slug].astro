@@ -128,10 +128,11 @@ try {
     tags={tags}
 >
     <ViewTracker slug={slug} client:load />
-    <article class="container max-w-5xl mx-auto px-4 pt-44 relative z-32 pb-32">
+    <article class="container max-w-5xl mx-auto px-4 pt-44 relative z-32 pb-32" data-motion-section="blog-post">
         {/* Navigation Header */}
         <nav
             class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-12 animate-fade-in group"
+            data-motion-header
         >
             <a
                 href="/blog"
@@ -172,7 +173,7 @@ try {
             </div>
         </nav>
 
-        <header class="mb-12">
+        <header class="mb-12" data-motion-panel>
             {isFeatured && (
                 <div class="mb-4 inline-flex items-center gap-1 rounded-full border border-accent/50 bg-accent/10 px-3 py-1 text-xs font-medium text-accent backdrop-blur-sm">
                     <span class="h-1.5 w-1.5 rounded-full bg-accent"></span>
@@ -207,9 +208,9 @@ try {
             </div>
         </header>
 
-        <div class="max-w-4xl mx-auto mb-16">
+        <div class="max-w-4xl mx-auto mb-16" data-motion-media>
             <img
-                class="w-full rounded-2xl shadow-[0_0_50px_rgba(0,212,124,0.15)] border border-white/10"
+                class="w-full rounded-2xl shadow-[0_0_50px_rgba(232,168,48,0.12)] border border-white/10"
                 src={post.featuredImage as string}
                 alt={post.title as string}
                 loading="eager"
@@ -220,6 +221,7 @@ try {
 
         <div
             class="max-w-4xl mx-auto prose dark:prose-invert prose-lg prose-primary"
+            data-motion-panel
         >
             <BlogContent
                 content={content}
@@ -229,7 +231,7 @@ try {
         </div>
 
         {/* More articles loader */}
-        <footer class="mt-32 pt-20 border-t border-white/5">
+        <footer class="mt-32 pt-20 border-t border-white/5" data-motion-section="more-posts">
             <div class="flex justify-between items-end mb-12">
                 <div>
                     <h2 class="text-3xl font-bold mb-4">{t.blog.youLikedIt}</h2>
@@ -251,6 +253,7 @@ try {
                         <a
                             href={`/blog/${p.slug}`}
                             class="group p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-primary-green/30 hover:bg-primary-green/5 transition-all duration-500"
+                            data-motion-panel
                         >
                             <time class="text-xs font-mono text-neutral-500 mb-3 block">
                                 {p.date}

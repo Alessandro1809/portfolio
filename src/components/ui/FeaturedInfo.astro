@@ -1,54 +1,87 @@
 ---
-import { TechStack } from "../react/TechStack";
-import { NumberTicker } from "../react/NumberTicker";
 import { defaultLang, translations, type Language } from "@/lib/i18n";
 
 const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
 const t = translations[lang];
 
-const stats = [
-    { value: 8, label: t.featuredInfo.finishedProjects },
-    { value: 3, label: t.featuredInfo.yearsExperience },
-    { value: 6, label: t.featuredInfo.happyClients },
-];
+const ranges = lang === "es"
+    ? [
+        {
+            title: "Interfaces",
+            body: "Astro, React, Tailwind y estados de UI que se sienten rápidos sin esconder complejidad.",
+            tools: ["Astro", "React", "Tailwind", "Motion"],
+        },
+        {
+            title: "Backends",
+            body: "APIs, autenticación, modelos de datos e integraciones preparadas para cambios reales.",
+            tools: ["Node", "Fastify", "Express", "Auth"],
+        },
+        {
+            title: "Datos",
+            body: "PostgreSQL, SQLite, MongoDB y capas de acceso pensadas para mantenimiento.",
+            tools: ["Postgres", "Turso", "Drizzle", "MongoDB"],
+        },
+        {
+            title: "Automatización",
+            body: "Procesos, IA aplicada e integración con sistemas corporativos cuando el flujo lo exige.",
+            tools: ["AI", "Workflows", "APIs", "Ops"],
+        },
+    ]
+    : [
+        {
+            title: "Interfaces",
+            body: "Astro, React, Tailwind, and UI states that feel fast without hiding complexity.",
+            tools: ["Astro", "React", "Tailwind", "Motion"],
+        },
+        {
+            title: "Backends",
+            body: "APIs, authentication, data models, and integrations prepared for real change.",
+            tools: ["Node", "Fastify", "Express", "Auth"],
+        },
+        {
+            title: "Data",
+            body: "PostgreSQL, SQLite, MongoDB, and access layers designed for maintenance.",
+            tools: ["Postgres", "Turso", "Drizzle", "MongoDB"],
+        },
+        {
+            title: "Automation",
+            body: "Processes, applied AI, and corporate-system integration when the workflow requires it.",
+            tools: ["AI", "Workflows", "APIs", "Ops"],
+        },
+    ];
 ---
 
-<div class="relative mt-16 overflow-hidden rounded-lg border border-white/10 bg-black/35">
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_12%_10%,rgba(0,212,124,0.16),transparent_28rem)]"></div>
+<div class="relative mt-16 overflow-hidden rounded-xl border border-white/8 bg-[#09090A]" data-motion-section="proof">
+    <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_10%_12%,rgba(232,168,48,0.09),transparent_26rem)]"></div>
 
-    <article
-        class="relative z-10 grid gap-8 p-5 sm:p-8 lg:grid-cols-[1fr_0.95fr] lg:p-10"
-        data-aos="fade-up"
-        data-aos-duration="800"
-        data-aos-once="true"
-    >
-        <TechStack
-            client:visible
-            title={t.techStack.title}
-            closing={t.techStack.closing}
-        />
+    <article class="relative z-10 grid gap-10 p-6 sm:p-8 lg:grid-cols-[0.78fr_1.22fr] lg:p-10" data-motion-panel>
+        <div>
+            <h3 class="text-2xl font-semibold leading-tight text-white sm:text-3xl">
+                {t.featuredInfo.heading}
+            </h3>
+            <p class="mt-4 max-w-md text-sm leading-7 text-neutral-400">
+                {t.techStack.closing}
+            </p>
+        </div>
 
-        <div class="flex flex-col justify-center">
-            <p class="section-kicker">{t.featuredInfo.heading}</p>
-            <div class="mt-8 grid gap-px overflow-hidden rounded-lg border border-white/10 bg-white/10 sm:grid-cols-3">
-                {
-                    stats.map((stat) => (
-                        <div class="bg-black/70 p-5">
-                            <span class="flex items-baseline gap-1 text-5xl font-semibold text-white">
-                                +
-                                <NumberTicker
-                                    client:visible
-                                    value={stat.value}
-                                    className="drop-shadow-[0_0_18px_rgba(0,212,124,0.35)]"
-                                />
+        <div class="grid gap-px overflow-hidden rounded-lg border border-white/8 bg-white/8 sm:grid-cols-2">
+            {ranges.map((item) => (
+                <section class="group bg-[#0D0D0F] p-5 transition-colors duration-250 hover:bg-white/[0.035]" data-motion-panel>
+                    <h4 class="text-base font-semibold text-white transition-colors group-hover:text-primary-green">
+                        {item.title}
+                    </h4>
+                    <p class="mt-3 min-h-[4.75rem] text-sm leading-6 text-neutral-400">
+                        {item.body}
+                    </p>
+                    <div class="mt-5 flex flex-wrap gap-1.5">
+                        {item.tools.map((tool) => (
+                            <span class="rounded-md border border-white/8 px-2.5 py-1 font-mono text-[0.58rem] tracking-[0.08em] text-neutral-500">
+                                {tool}
                             </span>
-                            <p class="mt-3 text-sm leading-5 text-neutral-400">
-                                {stat.label}
-                            </p>
-                        </div>
-                    ))
-                }
-            </div>
+                        ))}
+                    </div>
+                </section>
+            ))}
         </div>
     </article>
 </div>

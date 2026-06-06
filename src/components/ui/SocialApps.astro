@@ -1,47 +1,37 @@
 ---
-import Github from "@/components/ui/icons/gitHub.astro";
-import LinkedIn from "@/components/ui/icons/LinkedIn.astro";
-import Twitter from "@/components/ui/icons/Twitter.astro";
-
 export interface SocialLink {
     href: string;
-    icon: any;
+    label: string;
 }
 
 const links: SocialLink[] = [
     {
         href: "https://github.com/Alessandro1809",
-        icon: Github,
+        label: "GitHub",
     },
     {
         href: "https://www.linkedin.com/in/alessandrodg/",
-        icon: LinkedIn,
+        label: "LinkedIn",
     },
     {
         href: "https://x.com/ddiaz_ale",
-        icon: Twitter,
+        label: "X",
     },
 ];
 ---
 
-<div class="flex gap-2">
+<div class="flex flex-wrap gap-2">
     {
-        links.map((link, index) => {
-            const Icon = link.icon;
-            return (
-                <a
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="group h-fit rounded-md border border-white/10 bg-white/[0.03] p-2 transition-all duration-300 hover:scale-105 hover:cursor-pointer hover:border-primary-green/70 hover:bg-primary-green/10"
-                    data-aos="fade-up"
-                    data-aos-duration="1000"
-                    data-aos-delay={index * 100}
-                    data-aos-once="true"
-                >
-                    <Icon class="h-5 w-5 text-neutral-200 transition-colors group-hover:text-primary-green" />
-                </a>
-            );
-        })
+        links.map((link) => (
+            <a
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${link.label}, opens in new tab`}
+                class="rounded-md border border-white/10 bg-white/[0.025] px-3 py-2 font-mono text-[0.68rem] tracking-[0.12em] text-neutral-400 transition-all duration-250 hover:border-primary-green/55 hover:text-primary-green"
+            >
+                {link.label}
+            </a>
+        ))
     }
 </div>

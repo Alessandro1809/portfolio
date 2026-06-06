@@ -1,6 +1,5 @@
 ---
 import Button from "@/components/ui/buttons/Button.astro";
-import Flag from "@/components/ui/icons/Flag.astro";
 import SocialApps from "@/components/ui/SocialApps.astro";
 import footerImage from "@/assets/FooterAvatar.png";
 import { defaultLang, translations, type Language } from "@/lib/i18n";
@@ -8,26 +7,23 @@ import { defaultLang, translations, type Language } from "@/lib/i18n";
 const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
 const t = translations[lang];
 const year = new Date().getFullYear();
-const footerLinkClass =
-    "inline-flex rounded-md border border-transparent px-2 py-1 -mx-2 text-neutral-300 transition-all duration-300 hover:border-primary-green/20 hover:bg-primary-green/8 hover:text-primary-green focus-visible:border-primary-green/35 focus-visible:bg-primary-green/10 focus-visible:text-primary-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-green/15";
 ---
 
-<footer class="relative z-10 mx-auto max-w-7xl px-4 pb-10 pt-16 sm:px-6 lg:px-8">
-    <div class="hairline mb-10"></div>
+<footer class="relative z-10 mx-auto max-w-7xl px-5 pb-12 pt-20 sm:px-8 lg:px-12" data-motion-section="footer">
+    <div class="hairline mb-12"></div>
 
-    <article class="grid gap-8 lg:grid-cols-[1fr_0.7fr_0.9fr]">
-        <div class="surface-panel p-6">
-            <p class="section-kicker">{t.footer.getInTouch}</p>
-            <h3 class="mt-4 text-3xl font-semibold text-white">
+    <article class="grid gap-5 rounded-xl border border-white/8 bg-[#09090A] p-6 sm:p-8 lg:grid-cols-[1.05fr_0.75fr_0.9fr]">
+        <div data-motion-panel>
+            <h3 class="text-2xl font-semibold text-white sm:text-3xl">
                 Alessandro Diaz
             </h3>
-            <p class="mt-4 max-w-xl text-sm leading-7 text-neutral-400">
-                {t.footer.tagline}
-            </p>
-            <div class="mt-6 flex flex-wrap items-center gap-3">
+            <blockquote class="mt-4 max-w-sm text-sm leading-[1.8] text-neutral-400 italic">
+                "{t.footer.tagline}"
+            </blockquote>
+            <div class="mt-7 flex flex-wrap items-center gap-3">
                 <Button
-                    text={t.socialLinks.scheduleMeeting}
-                    variant="secondary"
+                    text={t.nav.hireMe}
+                    variant="primary"
                     href="/hire-me"
                     ariaLabel={t.socialLinks.scheduleMeetingAria}
                 />
@@ -35,74 +31,66 @@ const footerLinkClass =
             </div>
         </div>
 
-        <nav class="surface-panel p-6">
-            <p class="section-kicker">{t.footer.interestLinks}</p>
-            <ul class="mt-5 grid gap-3 text-sm text-neutral-400">
+        <nav class="border-t border-white/8 pt-6 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0" aria-label="Footer navigation" data-motion-panel>
+            <p class="text-sm font-semibold text-white">{t.footer.interestLinks}</p>
+            <ul class="mt-5 grid gap-3 text-sm">
                 <li>
-                    <a class={footerLinkClass} href="/my-projects">
+                    <a class="inline-flex rounded-md px-2 py-1 -mx-2 text-neutral-400 transition-all duration-200 hover:text-primary-green focus-visible:outline-none focus-visible:text-primary-green" href="/my-projects">
                         {t.footer.projects}
                     </a>
                 </li>
                 <li>
-                    <a class={footerLinkClass} href="/blog">
+                    <a class="inline-flex rounded-md px-2 py-1 -mx-2 text-neutral-400 transition-all duration-200 hover:text-primary-green focus-visible:outline-none focus-visible:text-primary-green" href="/blog">
                         {t.footer.blog}
                     </a>
                 </li>
                 <li>
-                    <a
-                        class={footerLinkClass}
-                        href="https://nous.cr"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={t.footer.visitNousAria}
-                    >
+                    <a class="inline-flex rounded-md px-2 py-1 -mx-2 text-neutral-400 transition-all duration-200 hover:text-primary-green focus-visible:outline-none focus-visible:text-primary-green" href="https://nous.cr" target="_blank" rel="noopener noreferrer" aria-label={`${t.footer.visitNousAria}, opens in new tab`}>
                         {t.footer.knowInitiative}
                     </a>
                 </li>
                 <li>
-                    <a
-                        class={footerLinkClass}
-                        href="/hire-me"
-                        aria-label={t.footer.contactAria}
-                    >
+                    <a class="inline-flex rounded-md px-2 py-1 -mx-2 text-neutral-400 transition-all duration-200 hover:text-primary-green focus-visible:outline-none focus-visible:text-primary-green" href="/hire-me" aria-label={t.footer.contactAria}>
                         {t.footer.contactMe}
                     </a>
                 </li>
             </ul>
         </nav>
 
-        <div class="surface-panel relative min-h-72 overflow-hidden p-6">
+        <div class="relative min-h-52 overflow-hidden border-t border-white/8 pt-6 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0" data-motion-panel>
             <img
-                class="absolute -bottom-2 -right-4 max-h-64 opacity-25"
+                class="footer-ghost absolute -bottom-5 -right-6 max-h-56 opacity-16"
                 src={footerImage.src}
                 alt=""
+                aria-hidden="true"
                 loading="lazy"
                 decoding="async"
                 style={{
-                    WebkitMaskImage:
-                        "linear-gradient(to top, transparent 0%, #000 28%, #000 100%)",
-                    maskImage:
-                        "linear-gradient(to top, transparent 0%, #000 28%, #000 100%)",
+                    WebkitMaskImage: "linear-gradient(to top, transparent 0%, #000 38%, #000 100%)",
+                    maskImage: "linear-gradient(to top, transparent 0%, #000 38%, #000 100%)",
                     WebkitMaskRepeat: "no-repeat",
                     maskRepeat: "no-repeat",
                     WebkitMaskSize: "100% 100%",
                     maskSize: "100% 100%",
                 }}
             />
-            <div class="relative z-20 max-w-[14rem]">
-                <p class="section-kicker">{t.seo.siteName}</p>
-                <div class="mt-4 inline-flex items-center gap-2 text-lg font-medium text-white">
-                    {t.footer.madeIn}
-                    <Flag />
-                </div>
-                <p class="mt-6 text-sm font-medium leading-7 text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
+            <div class="relative z-20 max-w-[15rem]">
+                <p class="text-sm font-semibold text-white">{t.footer.madeIn} Costa Rica</p>
+                <p class="mt-5 text-xs leading-[1.7] text-neutral-400 drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
                     {t.footer.builtWith}
                 </p>
             </div>
         </div>
     </article>
 
-    <p class="mt-8 text-xs text-neutral-600">
-        {t.footer.copyright.replace("{year}", String(year))}
-    </p>
+    <div class="mt-8 flex items-center justify-between gap-4 text-xs text-neutral-500">
+        <p>{t.footer.copyright.replace("{year}", String(year))}</p>
+        <a
+            href="#hero-section"
+            class="font-mono tracking-[0.16em] text-neutral-400 transition-colors hover:text-primary-green"
+            aria-label="Back to top"
+        >
+            ↑ Top
+        </a>
+    </div>
 </footer>

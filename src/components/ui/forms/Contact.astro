@@ -1,19 +1,18 @@
 ---
-import Button from "../buttons/Button.astro";
-import SendIcon from "../icons/SendIcon.astro";
 import { defaultLang, translations, type Language } from "@/lib/i18n";
 
 const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
 const t = translations[lang];
 const [emailExamplePrefix, emailExampleDomain = ""] =
     t.contactForm.emailExample.split("@");
-const emailExampleFallback = `${emailExamplePrefix} [at] ${emailExampleDomain}`;
 ---
 
 <section class="relative z-10">
     <form
-        class="surface-panel mt-10 flex flex-col gap-5 p-5 sm:p-7"
+        class="precision-tilt flex flex-col gap-5 rounded-xl border border-white/8 bg-[#09090A] p-5 sm:p-6"
         id="contact-form"
+        data-motion-panel
+        data-tilt-card
         data-sending-text={t.contactForm.sending}
         data-success-text={t.contactForm.success}
         data-error-text={t.contactForm.errorGeneric}
@@ -21,60 +20,111 @@ const emailExampleFallback = `${emailExamplePrefix} [at] ${emailExampleDomain}`;
         data-success-prefix={t.contactForm.successPrefix}
     >
         <div class="grid gap-5 md:grid-cols-2">
-            <div class="flex flex-col gap-2">
-                <label class="font-mono text-xs uppercase tracking-[0.18em] text-neutral-400" for="name">{t.contactForm.nameLabel}</label>
+            <!-- Name -->
+            <div class="contact-field flex flex-col gap-2" data-contact-field>
+                <label
+                    class="font-mono text-[0.65rem] tracking-[0.16em] text-neutral-400"
+                    for="name"
+                >
+                    {t.contactForm.nameLabel}
+                    <span class="text-primary-green ml-0.5" aria-hidden="true">*</span>
+                </label>
                 <input
-                    class="w-full rounded-md border border-white/10 bg-black/50 p-3 text-white outline-none transition placeholder:text-neutral-600 focus:border-primary-green/70 focus:ring-2 focus:ring-primary-green/20"
+                    class="contact-input w-full rounded-lg border border-white/8 bg-white/[0.025] px-4 py-3 text-sm text-white outline-none placeholder:text-neutral-400 focus:border-primary-green/60 focus:bg-white/[0.05] focus:ring-2 focus:ring-primary-green/15"
                     type="text"
                     id="name"
                     name="name"
                     required
+                    minlength="2"
+                    maxlength="120"
+                    autocomplete="name"
+                    placeholder={t.contactForm.nameExample}
+                    aria-describedby="name-error"
                 />
-                <p class="font-mono text-xs text-primary-green/80">
-                    {t.contactForm.nameExample}
-                </p>
+                <p id="name-error" class="hidden text-[0.7rem] text-red-400" role="alert" aria-live="polite"></p>
             </div>
-            <div class="flex flex-col gap-2">
-                <label class="font-mono text-xs uppercase tracking-[0.18em] text-neutral-400" for="email">{t.contactForm.emailLabel}</label>
+
+            <!-- Email -->
+            <div class="contact-field flex flex-col gap-2" data-contact-field>
+                <label
+                    class="font-mono text-[0.65rem] tracking-[0.16em] text-neutral-400"
+                    for="email"
+                >
+                    {t.contactForm.emailLabel}
+                    <span class="text-primary-green ml-0.5" aria-hidden="true">*</span>
+                </label>
                 <input
-                    class="w-full rounded-md border border-white/10 bg-black/50 p-3 text-white outline-none transition placeholder:text-neutral-600 focus:border-primary-green/70 focus:ring-2 focus:ring-primary-green/20"
+                    class="contact-input w-full rounded-lg border border-white/8 bg-white/[0.025] px-4 py-3 text-sm text-white outline-none placeholder:text-neutral-400 focus:border-primary-green/60 focus:bg-white/[0.05] focus:ring-2 focus:ring-primary-green/15"
                     type="email"
                     id="email"
                     name="email"
                     required
+                    autocomplete="email"
+                    placeholder={`${emailExamplePrefix}@${emailExampleDomain}`}
+                    aria-describedby="email-error"
                 />
-                <p
-                    class="font-mono text-xs text-primary-green/80"
-                    data-email-example
-                    data-email-prefix={emailExamplePrefix}
-                    data-email-domain={emailExampleDomain}
-                >
-                    {emailExampleFallback}
-                </p>
+                <p id="email-error" class="hidden text-[0.7rem] text-red-400" role="alert" aria-live="polite"></p>
             </div>
         </div>
-        <div class="relative flex flex-col gap-2 pt-4">
-            <label class="font-mono text-xs uppercase tracking-[0.18em] text-neutral-400" for="message">{t.contactForm.messageLabel}</label>
+
+        <!-- Message -->
+        <div class="contact-field flex flex-col gap-2" data-contact-field>
+            <div class="flex items-baseline justify-between">
+                <label
+                    class="font-mono text-[0.65rem] tracking-[0.16em] text-neutral-400"
+                    for="message"
+                >
+                    {t.contactForm.messageLabel}
+                    <span class="text-primary-green ml-0.5" aria-hidden="true">*</span>
+                </label>
+                <span id="msg-count" class="font-mono text-[0.6rem] text-neutral-500" aria-live="polite">0 / 2000</span>
+            </div>
             <textarea
-                class="relative z-10 h-52 w-full rounded-md border border-white/10 bg-black/50 p-3 text-white outline-none transition placeholder:text-neutral-600 focus:border-primary-green/70 focus:ring-2 focus:ring-primary-green/20"
+                class="contact-input h-40 w-full resize-none rounded-lg border border-white/8 bg-white/[0.025] px-4 py-3 text-sm text-white outline-none placeholder:text-neutral-400 focus:border-primary-green/60 focus:bg-white/[0.05] focus:ring-2 focus:ring-primary-green/15"
                 id="message"
                 name="message"
                 required
-                minlength="10"></textarea>
-            <p class="font-mono text-xs text-primary-green/80">
-                {t.contactForm.messageExample}
-            </p>
+                minlength="10"
+                maxlength="2000"
+                placeholder={t.contactForm.messageExample}
+                aria-describedby="message-error msg-count"
+            ></textarea>
+            <p id="message-error" class="hidden text-[0.7rem] text-red-400" role="alert" aria-live="polite"></p>
         </div>
-        <div class="flex justify-end">
+
+        <!-- Submit row -->
+        <div class="flex items-center justify-between gap-4">
+            <p class="text-xs text-neutral-400">
+                {lang === "es" ? "Respondo a todos los mensajes." : "I respond to every message."}
+            </p>
+
             <button
-                class="inline-flex w-fit items-center gap-2 rounded-full border border-primary-green bg-primary-green px-8 py-3 font-semibold text-black transition-all duration-300 hover:cursor-pointer hover:bg-white focus:outline-none focus:ring-2 focus:ring-primary-green/60 focus:ring-offset-2 focus:ring-offset-black disabled:cursor-not-allowed disabled:opacity-70"
+                class="contact-submit group inline-flex items-center gap-2.5 rounded-lg border border-primary-green bg-primary-green px-7 py-3 text-sm font-semibold text-black transition-all duration-200 hover:border-white hover:bg-white active:translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-green/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:cursor-not-allowed disabled:opacity-50"
                 type="submit"
+                id="contact-submit"
             >
-                {t.contactForm.send}
-                <SendIcon />
+                <span id="submit-text">{t.contactForm.send}</span>
+                <span aria-hidden="true" class="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
             </button>
         </div>
-        <div id="form-message" class="mt-4 hidden rounded-md p-4"></div>
+
+        <!-- Feedback message — persistent until dismissed -->
+        <div
+            id="form-message"
+            class="hidden items-start justify-between gap-3 rounded-lg border px-4 py-3 text-sm font-medium"
+            role="alert"
+            aria-live="assertive"
+        >
+            <span id="form-message-text"></span>
+            <button
+                type="button"
+                id="form-message-dismiss"
+                class="shrink-0 text-current opacity-60 hover:opacity-100 transition-opacity focus-visible:outline-none"
+                aria-label={lang === "es" ? "Cerrar mensaje" : "Dismiss message"}
+            >
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
     </form>
 </section>
 
@@ -84,68 +134,144 @@ const emailExampleFallback = `${emailExamplePrefix} [at] ${emailExampleDomain}`;
     const setupContactForm = () => {
         const form = document.getElementById('contact-form') as HTMLFormElement | null;
         const messageDiv = document.getElementById('form-message');
-
-        document.querySelectorAll<HTMLElement>('[data-email-example]').forEach((example) => {
-            const prefix = example.dataset.emailPrefix;
-            const domain = example.dataset.emailDomain;
-
-            if (prefix && domain) {
-                example.textContent = `${prefix}@${domain}`;
-            }
-        });
+        const messageText = document.getElementById('form-message-text');
+        const dismissBtn = document.getElementById('form-message-dismiss');
+        const submitBtn = document.getElementById('contact-submit') as HTMLButtonElement | null;
+        const submitText = document.getElementById('submit-text');
+        const msgCount = document.getElementById('msg-count');
+        const textarea = document.getElementById('message') as HTMLTextAreaElement | null;
 
         if (!form || form.dataset.listenerAttached) return;
         form.dataset.listenerAttached = 'true';
 
+        const originalText = submitText?.textContent ?? 'Send';
+
+        /* Character counter for message */
+        textarea?.addEventListener('input', () => {
+            const len = textarea.value.length;
+            if (msgCount) msgCount.textContent = `${len} / 2000`;
+        });
+
+        /* Dismiss handler */
+        dismissBtn?.addEventListener('click', () => {
+            messageDiv?.classList.add('hidden');
+            messageDiv?.classList.remove('flex');
+        });
+
+        /* Inline blur validation — field-level, not submit-level */
+        const validateField = (field: HTMLInputElement | HTMLTextAreaElement): boolean => {
+            const errorEl = document.getElementById(`${field.id}-error`);
+            if (!errorEl) return true;
+
+            if (field.validity.valueMissing) {
+                const label = field.id === 'name'
+                    ? (form.querySelector(`label[for="name"]`)?.textContent?.trim().replace('*', '').trim() ?? 'This field')
+                    : field.id === 'email'
+                    ? (form.querySelector(`label[for="email"]`)?.textContent?.trim().replace('*', '').trim() ?? 'Email')
+                    : (form.querySelector(`label[for="message"]`)?.textContent?.trim().replace('*', '').trim() ?? 'Message');
+                errorEl.textContent = `${label} is required.`;
+                errorEl.classList.remove('hidden');
+                field.classList.add('border-red-500/60');
+                field.closest('[data-contact-field]')?.classList.add('is-invalid');
+                field.closest('[data-contact-field]')?.classList.remove('is-valid');
+                return false;
+            }
+
+            if (field.type === 'email' && field.validity.typeMismatch) {
+                errorEl.textContent = 'Enter a valid email address.';
+                errorEl.classList.remove('hidden');
+                field.classList.add('border-red-500/60');
+                field.closest('[data-contact-field]')?.classList.add('is-invalid');
+                field.closest('[data-contact-field]')?.classList.remove('is-valid');
+                return false;
+            }
+
+            if (field.validity.tooShort) {
+                errorEl.textContent = `Must be at least ${field.minLength} characters.`;
+                errorEl.classList.remove('hidden');
+                field.classList.add('border-red-500/60');
+                field.closest('[data-contact-field]')?.classList.add('is-invalid');
+                field.closest('[data-contact-field]')?.classList.remove('is-valid');
+                return false;
+            }
+
+            /* Clear error */
+            errorEl.textContent = '';
+            errorEl.classList.add('hidden');
+            field.classList.remove('border-red-500/60');
+            field.closest('[data-contact-field]')?.classList.remove('is-invalid');
+            if (field.value.trim()) {
+                field.closest('[data-contact-field]')?.classList.add('is-valid');
+            } else {
+                field.closest('[data-contact-field]')?.classList.remove('is-valid');
+            }
+            return true;
+        };
+
+        form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea').forEach((field) => {
+            field.addEventListener('blur', () => validateField(field), { passive: true });
+            field.addEventListener('input', () => {
+                if (!field.classList.contains('border-red-500/60')) return;
+                validateField(field);
+            }, { passive: true });
+        });
+
+        /* Show feedback message */
+        const showMessage = (text: string, isSuccess: boolean) => {
+            if (!messageDiv || !messageText) return;
+            messageText.textContent = text;
+            messageDiv.className = isSuccess
+                ? 'feedback-pop flex items-start justify-between gap-3 rounded-lg border border-primary-green/30 bg-primary-green/10 px-4 py-3 text-sm font-medium text-primary-green'
+                : 'feedback-pop flex items-start justify-between gap-3 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm font-medium text-red-300';
+        };
+
+        /* Submit handler */
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const formData = new FormData(form);
-            const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
-            const originalContent = submitButton.innerHTML;
+            /* Validate all fields before submitting */
+            const fields = Array.from(form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea'));
+            const allValid = fields.map(validateField).every(Boolean);
+            if (!allValid) {
+                fields.find(f => !f.validity.valid)?.focus();
+                return;
+            }
+
             const sendingText = form.dataset.sendingText ?? 'Sending...';
-            const successText = form.dataset.successText ?? 'Message sent successfully!';
-            const errorText = form.dataset.errorText ?? 'An error occurred. Please try again later.';
+            const successText = form.dataset.successText ?? 'Message sent!';
+            const errorText = form.dataset.errorText ?? 'An error occurred.';
             const errorPrefix = form.dataset.errorPrefix ?? '✗';
             const successPrefix = form.dataset.successPrefix ?? '✓';
 
-            // Disable button and show loading state
-            submitButton.disabled = true;
-            submitButton.innerHTML = `
-                <span>${sendingText}</span>
-                <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-            `;
+            if (submitBtn) submitBtn.disabled = true;
+            if (submitText) submitText.textContent = sendingText;
+            messageDiv?.classList.add('hidden');
+            messageDiv?.classList.remove('flex');
 
             try {
-                const { data, error } = await actions.sendContactEmail(formData);
+                const formData = new FormData(form);
+                const { error } = await actions.sendContactEmail(formData);
 
-                if (messageDiv) {
-                    messageDiv.classList.remove('hidden');
-
-                    if (error) {
-                        messageDiv.className = 'mt-4 p-4 rounded-md bg-red-100 text-red-800';
-                        messageDiv.textContent = `${errorPrefix} ${error.message}`;
-                    } else {
-                        messageDiv.className = 'mt-4 p-4 rounded-md bg-green-100 text-green-800';
-                        messageDiv.textContent = `${successPrefix} ${successText}`;
-                        form.reset();
-                    }
+                if (error) {
+                    showMessage(`${errorPrefix} ${error.message || errorText}`, false);
+                } else {
+                    showMessage(`${successPrefix} ${successText}`, true);
+                    form.reset();
+                    if (msgCount) msgCount.textContent = '0 / 2000';
+                    /* Clear all inline errors */
+                    form.querySelectorAll('[id$="-error"]').forEach(el => {
+                        el.textContent = '';
+                        el.classList.add('hidden');
+                    });
+                    form.querySelectorAll('[data-contact-field]').forEach((el) => {
+                        el.classList.remove('is-valid', 'is-invalid');
+                    });
                 }
-            } catch (error) {
-                if (messageDiv) {
-                    messageDiv.classList.remove('hidden');
-                    messageDiv.className = 'mt-4 p-4 rounded-md bg-red-100 text-red-800';
-                    messageDiv.textContent = `${errorPrefix} ${errorText}`;
-                }
+            } catch {
+                showMessage(`${errorPrefix} ${errorText}`, false);
             } finally {
-                submitButton.disabled = false;
-                submitButton.innerHTML = originalContent;
-                setTimeout(() => {
-                    messageDiv?.classList.add('hidden');
-                }, 5000);
+                if (submitBtn) submitBtn.disabled = false;
+                if (submitText) submitText.textContent = originalText;
             }
         });
     };

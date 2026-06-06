@@ -7,34 +7,44 @@ import { defaultLang, translations, type Language } from "@/lib/i18n";
 
 const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
 const t = translations[lang];
+
+const heroSignals = lang === "es"
+    ? [
+        ["Arquitectura", "Del modelo a la interfaz"],
+        ["Entrega", "Construido para producción"],
+    ]
+    : [
+        ["Architecture", "From model to interface"],
+        ["Delivery", "Built for production use"],
+    ];
 ---
 
 <section
     id="hero-section"
-    class="relative mx-auto grid min-h-screen max-w-7xl items-center gap-10 px-4 pb-20 pt-32 sm:px-6 lg:grid-cols-[minmax(0,1.18fr)_minmax(0,0.82fr)] lg:gap-6 lg:px-8 lg:pt-28"
+    class="relative mx-auto grid min-h-[100dvh] max-w-7xl items-center gap-8 px-5 pb-14 pt-24 sm:px-8 lg:grid-cols-[minmax(0,1.18fr)_minmax(21rem,0.82fr)] lg:gap-10 lg:px-12 lg:pt-24"
+    data-motion-section="hero"
 >
-    <div class="relative z-10 min-w-0">
-        <div class="mb-8 inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.035] px-4 py-2 font-mono text-xs uppercase tracking-[0.24em] text-neutral-300 backdrop-blur-xl">
-            <span class="h-2 w-2 rounded-full bg-primary-green shadow-[0_0_16px_rgba(0,212,124,0.8)]"></span>
-            {t.profile.title}
+    <div class="pointer-events-none absolute left-5 top-28 hidden h-[46vh] w-px bg-linear-to-b from-transparent via-primary-green/35 to-transparent lg:block"></div>
+
+    <div class="relative z-10 min-w-0" data-motion-header>
+
+        <div class="hero-badge mb-7 inline-flex items-center gap-3 rounded-lg border border-white/10 bg-white/[0.025] px-3.5 py-2">
+            <span class="h-1.5 w-8 rounded-full bg-primary-green"></span>
+            <span data-gsap-kicker class="font-mono text-[0.62rem] tracking-[0.18em] text-neutral-400">{t.profile.title}</span>
         </div>
 
         <h1
-            class="glitch-title max-w-5xl text-4xl font-semibold leading-[0.98] text-white sm:text-6xl lg:text-6xl xl:text-7xl"
-            data-text={t.hero.title}
+            data-gsap-word-split
+            class="max-w-[12.5ch] text-[clamp(2.45rem,5.4vw,4.65rem)] font-semibold leading-[1.02] tracking-[-0.03em] text-white [text-wrap:normal]"
         >
             {t.hero.title}
         </h1>
 
-        <p
-            class="mt-8 max-w-2xl text-pretty text-base leading-8 text-neutral-300 sm:text-lg"
-        >
+        <p class="hero-sub mt-6 max-w-[52ch] text-pretty text-base leading-[1.7] text-neutral-400 sm:text-lg" data-motion-copy>
             {t.hero.subtitle}
         </p>
 
-        <div
-            class="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center"
-        >
+        <div class="hero-actions mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
             <Button
                 text={t.hero.downloadCv}
                 variant="primary"
@@ -44,26 +54,42 @@ const t = translations[lang];
                 target="_blank"
                 ariaLabel={t.hero.downloadCvAria}
             />
-            <Button
-                text={t.nav.hireMe}
-                variant="secondary"
-                href="/hire-me"
-                ariaLabel={t.nav.hireMe}
-            />
+            <div data-magnetic class="inline-flex">
+                <div data-magnetic-inner>
+                    <Button
+                        text={t.featuredProjects.viewAll}
+                        variant="secondary"
+                        href="/my-projects"
+                        ariaLabel={t.featuredProjects.viewAll}
+                    />
+                </div>
+            </div>
         </div>
 
-        <div>
+        <div class="hero-social">
             <SocialLinks />
         </div>
     </div>
 
-    <div class="relative z-10 min-w-0">
-        <AsciiStudioPanel
-            client:load
-            name={t.seo.siteName}
-            title={t.profile.title}
-            subtitle={t.hero.subtitle}
-            className="lg:justify-items-start"
-        />
+    <div class="hero-ascii relative z-10 min-w-0" data-motion-panel>
+        <div class="precision-tilt relative overflow-hidden rounded-xl border border-white/10 bg-[#080809]/85 p-1.5" data-hero-ascii-frame data-tilt-card>
+            <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_72%_18%,rgba(232,168,48,0.13),transparent_18rem)]"></div>
+            <div class="pointer-events-none absolute left-0 top-0 h-px w-full bg-linear-to-r from-transparent via-primary-green/70 to-transparent"></div>
+            <AsciiStudioPanel
+                client:load
+                name={t.seo.siteName}
+                title={t.profile.title}
+                subtitle={t.hero.subtitle}
+                className="lg:justify-items-start"
+            />
+            <div class="absolute bottom-0 inset-x-0 grid grid-cols-2 gap-px border-t border-white/8 bg-white/8">
+                {heroSignals.map(([label, value]) => (
+                    <div class="bg-black/80 px-4 py-3">
+                        <p class="font-mono text-[0.58rem] tracking-[0.16em] text-neutral-500">{label}</p>
+                        <p class="mt-1 text-sm font-medium text-neutral-200">{value}</p>
+                    </div>
+                ))}
+            </div>
+        </div>
     </div>
 </section>

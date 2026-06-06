@@ -141,7 +141,7 @@ const structuredData = [
 		<meta name="viewport" content="width=device-width" />
 		<meta name="description" content={resolvedDescription} />
 		<meta name="author" content={siteName} />
-		<meta name="theme-color" content="#0B100E" />
+		<meta name="theme-color" content="#0A0A0B" />
 		{noindex && <meta name="robots" content="noindex, follow" />}
 		<link rel="canonical" href={canonicalUrl} />
 		<link rel="icon" type="image/x-icon" href="/favicon.ico" />
@@ -179,13 +179,31 @@ const structuredData = [
 		</script>
 	</head>
 	<body>
+		<!-- Skip to main content for keyboard users -->
+		<a href="#main-content" class="skip-link">Skip to main content</a>
+
 		<div class="portfolio-shell min-h-screen w-full relative overflow-hidden">
+			<!-- Static layers -->
 			<div class="precision-grid pointer-events-none absolute inset-0 z-0 opacity-70"></div>
-			<div class="layout-noise pointer-events-none absolute inset-0 z-0"></div>
-			<div class="pointer-events-none absolute inset-x-0 top-0 z-0 h-px bg-linear-to-r from-transparent via-primary-green/70 to-transparent"></div>
-			<div class="pointer-events-none absolute left-1/2 top-0 z-0 h-[34rem] w-[34rem] -translate-x-1/2 rounded-full bg-primary-green/10 blur-[120px]"></div>
+			<!-- Amber light beams that traverse the grid -->
+			<div class="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
+				<div class="beam beam-h"       style="top: 11%; --dur: 28s; --delay: -5s;"></div>
+				<div class="beam beam-h beam-rev" style="top: 37%; --dur: 21s; --delay: -13s;"></div>
+				<div class="beam beam-h"       style="top: 64%; --dur: 34s; --delay: -20s;"></div>
+				<div class="beam beam-v"       style="left: 21%; --dur: 26s; --delay: -9s;"></div>
+				<div class="beam beam-v beam-rev" style="left: 57%; --dur: 32s; --delay: -18s;"></div>
+				<div class="beam beam-v"       style="left: 84%; --dur: 19s; --delay: -4s;"></div>
+			</div>
+			<div class="layout-noise pointer-events-none fixed inset-0 z-0"></div>
+			<div class="precision-scroll-rail" aria-hidden="true">
+				<span id="precision-scroll-fill"></span>
+			</div>
+			<div id="cursor-aura" class="cursor-aura" aria-hidden="true"></div>
+			<!-- Top edge hairline -->
+			<div class="pointer-events-none absolute inset-x-0 top-0 z-0 h-px bg-linear-to-r from-transparent via-primary-green/55 to-transparent"></div>
+
 			<Header />
-			<main class="relative z-10">
+			<main id="main-content" class="relative z-10">
 				<slot />
 			</main>
 			<Footer />
@@ -194,29 +212,444 @@ const structuredData = [
 </html>
 
 <style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-	}
+	html, body { margin: 0; width: 100%; }
 </style>
 
+<!-- Utility scripts: lang toggle, scroll reveal, spotlight, magnetic -->
 <script is:inline>
 	const setupLangToggle = () => {
 		const button = document.getElementById("lang-toggle");
 		if (!button || button.dataset.listenerAttached) return;
-
 		button.addEventListener("click", () => {
 			const nextLang = button.dataset.nextLang;
 			if (!nextLang) return;
-
 			document.cookie = `lang=${nextLang}; Path=/; Max-Age=31536000; SameSite=Lax`;
 			window.location.reload();
 		});
-
 		button.dataset.listenerAttached = "true";
 	};
 
-	setupLangToggle();
-	document.addEventListener("astro:after-swap", setupLangToggle);
+	const initReveal = () => {
+		const els = document.querySelectorAll("[data-aos]:not(.aos-animate)");
+		if (!els.length) return;
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						entry.target.classList.add("aos-animate");
+						observer.unobserve(entry.target);
+					}
+				});
+			},
+			{ threshold: 0.08, rootMargin: "0px 0px -32px 0px" }
+		);
+		els.forEach((el) => observer.observe(el));
+	};
+
+	const initSpotlight = () => {
+		document.querySelectorAll(".spotlight-card").forEach((card) => {
+			if (card._spotlightAttached) return;
+			card._spotlightAttached = true;
+			card.addEventListener("mousemove", (e) => {
+				const rect = card.getBoundingClientRect();
+				card.style.setProperty("--spotlight-x", `${e.clientX - rect.left}px`);
+				card.style.setProperty("--spotlight-y", `${e.clientY - rect.top}px`);
+			}, { passive: true });
+			card.addEventListener("mouseleave", () => {
+				card.style.setProperty("--spotlight-x", "-100px");
+				card.style.setProperty("--spotlight-y", "-100px");
+			}, { passive: true });
+		});
+	};
+
+	const initMagnetic = () => {
+		document.querySelectorAll("[data-magnetic]").forEach((btn) => {
+			if (btn._magneticAttached) return;
+			btn._magneticAttached = true;
+			const inner = btn.querySelector("[data-magnetic-inner]");
+			if (!inner) return;
+			btn.addEventListener("mousemove", (e) => {
+				const rect = btn.getBoundingClientRect();
+				const x = (e.clientX - rect.left - rect.width / 2) * 0.25;
+				const y = (e.clientY - rect.top - rect.height / 2) * 0.25;
+				inner.style.transform = `translate(${x}px, ${y}px)`;
+				inner.style.transition = "transform 0.1s ease";
+			}, { passive: true });
+			btn.addEventListener("mouseleave", () => {
+				inner.style.transform = "translate(0, 0)";
+				inner.style.transition = "transform 0.55s cubic-bezier(0.16, 1, 0.3, 1)";
+			}, { passive: true });
+		});
+	};
+
+	const initPrecisionOverdrive = () => {
+		const root = document.documentElement;
+		const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		const cursorAura = document.getElementById("cursor-aura");
+
+		if (!reducedMotion && cursorAura && !root.dataset.cursorAuraAttached) {
+			let raf = 0;
+			let nextX = window.innerWidth / 2;
+			let nextY = window.innerHeight / 2;
+			const moveAura = () => {
+				raf = 0;
+				cursorAura.style.transform = `translate3d(${nextX}px, ${nextY}px, 0) translate(-50%, -50%)`;
+			};
+			window.addEventListener("pointermove", (event) => {
+				if (event.pointerType === "touch") return;
+				nextX = event.clientX;
+				nextY = event.clientY;
+				if (!raf) raf = window.requestAnimationFrame(moveAura);
+			}, { passive: true });
+			root.dataset.cursorAuraAttached = "true";
+		}
+
+		if (reducedMotion) return;
+		document.querySelectorAll("[data-tilt-card]").forEach((card) => {
+			if (card._tiltAttached) return;
+			card._tiltAttached = true;
+			card.addEventListener("pointermove", (event) => {
+				if (event.pointerType === "touch") return;
+				const rect = card.getBoundingClientRect();
+				const x = (event.clientX - rect.left) / rect.width - 0.5;
+				const y = (event.clientY - rect.top) / rect.height - 0.5;
+				card.style.setProperty("--tilt-x", `${(-y * 3.5).toFixed(2)}deg`);
+				card.style.setProperty("--tilt-y", `${(x * 4.5).toFixed(2)}deg`);
+				card.style.setProperty("--tilt-lift", "-4px");
+			}, { passive: true });
+			card.addEventListener("pointerleave", () => {
+				card.style.setProperty("--tilt-x", "0deg");
+				card.style.setProperty("--tilt-y", "0deg");
+				card.style.setProperty("--tilt-lift", "0px");
+			}, { passive: true });
+		});
+	};
+
+	const runAll = () => {
+		setupLangToggle();
+		initReveal();
+		initSpotlight();
+		initMagnetic();
+		initPrecisionOverdrive();
+	};
+	runAll();
+	document.addEventListener("astro:page-load", runAll);
+	document.addEventListener("astro:after-swap", runAll);
+</script>
+
+<!-- GSAP + ScrollTrigger + Lenis: scroll feel & choreography -->
+<script>
+	import Lenis from "lenis";
+	import { gsap } from "gsap";
+	import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+	gsap.registerPlugin(ScrollTrigger);
+
+	let ctx: gsap.Context | null = null;
+	let lenis: InstanceType<typeof Lenis> | null = null;
+	let lenisTick: ((time: number) => void) | null = null;
+
+	function initLenis() {
+		if (lenisTick) { gsap.ticker.remove(lenisTick); lenisTick = null; }
+		if (lenis) { lenis.destroy(); lenis = null; }
+		const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		if (reduced) return;
+		lenis = new Lenis({ lerp: 0.09, smoothWheel: true, syncTouch: false });
+		lenis.on("scroll", ScrollTrigger.update);
+		lenisTick = (time: number) => lenis!.raf(time * 1000);
+		gsap.ticker.add(lenisTick);
+		gsap.ticker.lagSmoothing(0);
+	}
+
+	function initGSAP() {
+		if (ctx) ctx.revert();
+
+		ctx = gsap.context(() => {
+			const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+			if (reducedMotion) return;
+
+			/* ── Hero entrance sequence ── */
+			const heroTitle = document.querySelector("[data-gsap-word-split]") as HTMLElement | null;
+			if (heroTitle) {
+				const raw = (heroTitle.textContent || "").trim();
+				const words = raw.split(/\s+/);
+				heroTitle.innerHTML = words
+					.map((w) => `<span class="gsap-word-wrap"><span class="gsap-word-inner">${w}</span></span>`)
+					.join(" ");
+
+				gsap.from(".gsap-word-inner", {
+					yPercent: 115,
+					duration: 0.9,
+					stagger: 0.065,
+					ease: "power4.out",
+					delay: 0.08,
+					clearProps: "transform",
+				});
+			}
+
+			const heroAsciiPanel = document.querySelector<HTMLElement>(".hero-ascii");
+			const heroSub        = document.querySelector<HTMLElement>(".hero-sub");
+			const heroActions    = document.querySelector<HTMLElement>(".hero-actions");
+			const heroSocial     = document.querySelector<HTMLElement>(".hero-social");
+
+			if (heroAsciiPanel) {
+				gsap.from(heroAsciiPanel, {
+					opacity: 0, y: 26, scale: 0.97,
+					duration: 0.92, ease: "power3.out", delay: 0.26,
+					clearProps: "all",
+				});
+			}
+			if (heroSub) {
+				gsap.from(heroSub, {
+					y: 22, opacity: 0,
+					duration: 0.72, ease: "power2.out", delay: 0.5,
+					clearProps: "all",
+				});
+			}
+			if (heroActions) {
+				gsap.from(heroActions, {
+					y: 18, opacity: 0,
+					duration: 0.65, ease: "power2.out", delay: 0.66,
+					clearProps: "all",
+				});
+			}
+			if (heroSocial) {
+				gsap.from(heroSocial, {
+					y: 14, opacity: 0,
+					duration: 0.55, ease: "power2.out", delay: 0.8,
+					clearProps: "all",
+				});
+			}
+
+			/* ── Section headings (H2 / H3) ── */
+			gsap.utils.toArray<HTMLElement>("[data-gsap-heading]").forEach((el) => {
+				gsap.from(el, {
+					y: 26,
+					opacity: 0,
+					duration: 0.75,
+					ease: "power2.out",
+					scrollTrigger: {
+						trigger: el,
+						start: "top 88%",
+						once: true,
+					},
+					clearProps: "all",
+				});
+			});
+
+			/* ── Section kickers ── */
+			gsap.utils.toArray<HTMLElement>("[data-gsap-kicker]").forEach((el) => {
+				gsap.from(el, {
+					opacity: 0,
+					x: -14,
+					duration: 0.5,
+					ease: "power2.out",
+					scrollTrigger: {
+						trigger: el,
+						start: "top 90%",
+						once: true,
+					},
+					clearProps: "all",
+				});
+			});
+
+			/* ── Bento card grids — stagger on scroll ── */
+			gsap.utils.toArray<HTMLElement>("[data-gsap-cards]").forEach((container) => {
+				const cards = container.querySelectorAll<HTMLElement>("[data-gsap-card]");
+				if (!cards.length) return;
+				gsap.from(cards, {
+					y: 48,
+					opacity: 0,
+					duration: 0.72,
+					stagger: 0.09,
+					ease: "power2.out",
+					scrollTrigger: {
+						trigger: container,
+						start: "top 85%",
+						once: true,
+					},
+					clearProps: "all",
+				});
+			});
+
+			/* ── Precision choreography: each section gets a distinct reveal path ── */
+			gsap.utils.toArray<HTMLElement>("[data-motion-section]").forEach((section) => {
+				const kind = section.dataset.motionSection;
+				if (kind === "hero") return;
+				const belongsToSection = (el: HTMLElement) =>
+					el.closest("[data-motion-section]") === section;
+				const header = gsap.utils
+					.toArray<HTMLElement>(section.querySelectorAll("[data-motion-header]"))
+					.find(belongsToSection);
+				const copy = gsap.utils
+					.toArray<HTMLElement>(section.querySelectorAll("[data-motion-copy]"))
+					.filter(belongsToSection);
+				const panels = gsap.utils
+					.toArray<HTMLElement>(section.querySelectorAll("[data-motion-panel]"))
+					.filter(belongsToSection);
+				const media = gsap.utils
+					.toArray<HTMLElement>(section.querySelectorAll("[data-motion-media]"))
+					.filter(belongsToSection);
+
+				if (header) {
+					gsap.from(header, {
+						clipPath: "inset(0 0 100% 0)",
+						y: 24,
+						duration: 0.85,
+						ease: "power3.out",
+							scrollTrigger: { trigger: section, start: "top 82%", once: true },
+						clearProps: "all",
+					});
+				}
+
+				if (copy.length) {
+					gsap.from(copy, {
+						y: 18,
+						opacity: 0,
+						duration: 0.62,
+						stagger: 0.055,
+						ease: "power2.out",
+							scrollTrigger: { trigger: section, start: "top 80%", once: true },
+						clearProps: "all",
+					});
+				}
+
+				if (panels.length) {
+					gsap.from(panels, {
+						y: kind === "about" ? 38 : 30,
+						x: kind === "about" ? (i: number) => (i % 2 === 0 ? -20 : 20) : 0,
+						opacity: 0,
+						scale: 0.984,
+						rotateX: kind === "projects" ? -5 : 0,
+						duration: 0.82,
+						stagger: 0.085,
+						ease: "power3.out",
+							scrollTrigger: { trigger: section, start: "top 78%", once: true },
+						clearProps: "all",
+					});
+				}
+
+				if (media.length) {
+					gsap.from(media, {
+						clipPath: kind === "projects" ? "inset(0 18% 0 0)" : "inset(8% 0 8% 0)",
+						filter: "saturate(0.45) brightness(0.75)",
+						duration: 0.95,
+						stagger: 0.06,
+						ease: "power3.out",
+							scrollTrigger: { trigger: section, start: "top 76%", once: true },
+						clearProps: "all",
+					});
+				}
+			});
+
+			/* ── Project cards: coordinated grid reveal, all cards in a grid fire together ── */
+			document.querySelectorAll<HTMLElement>("[data-gsap-cards]").forEach((grid) => {
+				const cards = Array.from(grid.querySelectorAll<HTMLElement>("[data-project-card]"));
+				if (!cards.length) return;
+
+				cards.forEach((card, i) => {
+					const cardDelay = Math.min(i * 0.075, 0.32);
+
+					gsap.from(card, {
+						y: 30,
+						opacity: 0,
+						duration: 0.95,
+						delay: cardDelay,
+						ease: "power2.out",
+						scrollTrigger: { trigger: grid, start: "top 82%", once: true },
+						clearProps: "all",
+					});
+
+					const tags = card.querySelectorAll<HTMLElement>("[data-project-tag]");
+					if (tags.length) {
+						gsap.from(tags, {
+							y: 8,
+							opacity: 0,
+							duration: 0.32,
+							stagger: 0.018,
+							ease: "power2.out",
+							delay: cardDelay + 0.2,
+							scrollTrigger: { trigger: grid, start: "top 82%", once: true },
+							clearProps: "all",
+						});
+					}
+				});
+			});
+
+			/* ── Timeline: alternating cards lock into the gold rail ── */
+			gsap.utils.toArray<HTMLElement>("[data-timeline-item]").forEach((item, index) => {
+				gsap.from(item, {
+					x: index % 2 === 0 ? -28 : 28,
+					y: 18,
+					opacity: 0,
+					duration: 0.7,
+					ease: "power3.out",
+					scrollTrigger: { trigger: item, start: "top 84%", once: true },
+					clearProps: "all",
+				});
+			});
+
+			/* ── Blog rows and contact fields get faster, task-like motion ── */
+			const blogSection = document.querySelector<HTMLElement>("[data-motion-section='blog']");
+			const blogRows = document.querySelectorAll<HTMLElement>("[data-blog-row]");
+			if (blogSection && blogRows.length) {
+				gsap.from(blogRows, {
+					x: -24,
+					opacity: 0,
+					duration: 0.52,
+					stagger: 0.06,
+					ease: "power2.out",
+					scrollTrigger: { trigger: blogSection, start: "top 80%", once: true },
+					clearProps: "all",
+				});
+			}
+
+			const contactSection = document.querySelector<HTMLElement>("[data-motion-section='contact']");
+			const contactFields = document.querySelectorAll<HTMLElement>("[data-contact-field]");
+			if (contactSection && contactFields.length) {
+				gsap.from(contactFields, {
+					y: 18,
+					opacity: 0,
+					duration: 0.48,
+					stagger: 0.055,
+					ease: "power2.out",
+					scrollTrigger: { trigger: contactSection, start: "top 80%", once: true },
+					clearProps: "all",
+				});
+			}
+
+			/* ── Hero overdrive: ASCII frame breathes against scroll without stealing focus ── */
+			const heroAscii = document.querySelector<HTMLElement>("[data-hero-ascii-frame]");
+			if (heroAscii) {
+				gsap.to(heroAscii, {
+					yPercent: 6,
+					rotateX: -3,
+					ease: "none",
+					scrollTrigger: {
+						trigger: "#hero-section",
+						start: "top top",
+						end: "bottom top",
+						scrub: 0.45,
+					},
+				});
+			}
+		});
+	}
+
+	/* Cleanup before view transition swap */
+	document.addEventListener("astro:before-swap", () => {
+		if (ctx) { ctx.revert(); ctx = null; }
+		ScrollTrigger.getAll().forEach((st) => st.kill());
+	});
+
+	/* Re-init after page load (view transitions) */
+	document.addEventListener("astro:page-load", () => {
+		initLenis();
+		ScrollTrigger.refresh();
+		initGSAP();
+	});
+
+	/* Initial load */
+	initLenis();
+	initGSAP();
 </script>
