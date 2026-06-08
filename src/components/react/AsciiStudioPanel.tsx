@@ -1,10 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-    PROGRAMMING_WEBSITE_ENCODED_FRAMES,
-    PROGRAMMING_WEBSITE_FRAME_HEIGHT,
-    PROGRAMMING_WEBSITE_FRAME_WIDTH,
-    PROGRAMMING_WEBSITE_FPS,
-} from "./programmingWebsiteFrames";
 
 type AsciiStudioPanelProps = {
     name: string;
@@ -34,9 +28,13 @@ const decodeFrame = (encodedFrame: string) =>
 
 const MONO_CHARACTER_WIDTH = 4.82;
 const MONO_LINE_HEIGHT = 8 * 0.78;
+const PROGRAMMING_WEBSITE_FRAME_WIDTH = 262;
+const PROGRAMMING_WEBSITE_FRAME_HEIGHT = 120;
+const PROGRAMMING_WEBSITE_FPS = 30;
 
 export const AsciiStudioPanel = ({ className = "" }: AsciiStudioPanelProps) => {
     const [currentFrame, setCurrentFrame] = useState(0);
+    const [encodedFrames, setEncodedFrames] = useState<readonly string[]>([]);
     const [scale, setScale] = useState(0.4);
     const [contentSize, setContentSize] = useState({
         width: PROGRAMMING_WEBSITE_FRAME_WIDTH * MONO_CHARACTER_WIDTH,
@@ -45,11 +43,25 @@ export const AsciiStudioPanel = ({ className = "" }: AsciiStudioPanelProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLPreElement>(null);
     const frames = useMemo(
-        () => PROGRAMMING_WEBSITE_ENCODED_FRAMES.map(decodeFrame),
-        [],
+        () => encodedFrames.map(decodeFrame),
+        [encodedFrames],
     );
 
     useEffect(() => {
+        let mounted = true;
+
+        void import("./programmingWebsiteFrames").then((module) => {
+            if (!mounted) return;
+            setEncodedFrames(module.PROGRAMMING_WEBSITE_ENCODED_FRAMES);
+        });
+
+        return () => {
+            mounted = false;
+        };
+    }, []);
+
+    useEffect(() => {
+        if (!frames.length) return;
         const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         if (reducedMotion) return;
 
@@ -109,7 +121,7 @@ export const AsciiStudioPanel = ({ className = "" }: AsciiStudioPanelProps) => {
         if (containerRef.current) observer.observe(containerRef.current);
 
         return () => observer.disconnect();
-    }, []);
+    }, [frames.length]);
 
     return (
         <div
@@ -150,7 +162,7 @@ export const AsciiStudioPanel = ({ className = "" }: AsciiStudioPanelProps) => {
                         transformOrigin: "left top",
                     }}
                 >
-                    {frames[currentFrame]}
+                    {frames[currentFrame] ?? ""}
                 </pre>
             </div>
         </div>

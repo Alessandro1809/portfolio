@@ -28,15 +28,15 @@ const {
     downloadAttributeValue,
 } = Astro.props;
 
-const baseStyles = `px-5 py-2.5 font-semibold rounded-${rounded} transition-all duration-250 group inline-flex justify-${justify} items-center gap-2 w-auto md:w-${width} cursor-pointer whitespace-nowrap text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-green/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black relative overflow-hidden isolate`;
+const baseStyles = `motion-button px-5 py-2.5 font-semibold rounded-${rounded} transition-all duration-250 group inline-flex justify-${justify} items-center gap-2 w-auto md:w-${width} cursor-pointer whitespace-nowrap text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-green/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black relative overflow-hidden isolate`;
 
 const variants = {
     primary:
-        "text-black min-w-[140px] bg-primary-green border border-primary-green text-center hover:bg-white hover:border-white",
+        "text-black min-w-[140px] bg-primary-green border border-primary-green text-center",
     secondary:
-        "text-neutral-300 min-w-auto bg-white/[0.025] border border-white/12 text-center hover:border-primary-green/55 hover:text-primary-green hover:bg-primary-green/[0.07]",
+        "text-neutral-300 min-w-auto bg-white/[0.025] border border-white/12 text-center",
     tertiary:
-        "text-black min-w-[140px] bg-primary-green border border-primary-green text-center hover:bg-white hover:border-white",
+        "text-black min-w-[140px] bg-primary-green border border-primary-green text-center",
 };
 ---
 
@@ -45,65 +45,10 @@ const variants = {
     aria-label={ariaLabel}
     target={target}
     data-variant={variant}
+    data-micro-button
+    data-magnetic
     download={downloadAttr ? downloadAttributeValue : undefined}
     class:list={[baseStyles, variants[variant], className]}
 >
-    <span class="relative z-[1]">{text}</span>
+    <span data-magnetic-inner class="relative z-[1]">{text}</span>
 </a>
-
-<style>
-    /* Shimmer sweep — diagonal light beam crosses on hover */
-    a::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -110%;
-        width: 46%;
-        height: 100%;
-        background: linear-gradient(
-            118deg,
-            transparent 10%,
-            rgba(255, 255, 255, 0.30) 50%,
-            transparent 90%
-        );
-        transform: skewX(-14deg);
-        transition: left 0.62s cubic-bezier(0.16, 1, 0.3, 1);
-        pointer-events: none;
-        z-index: 0;
-    }
-    a:hover::before,
-    a:focus-visible::before {
-        left: 154%;
-    }
-
-    /* Lift physics — subtle float on hover, press on active */
-    a:hover {
-        transform: translateY(-2px);
-    }
-    a:active {
-        transform: translateY(1px);
-        transition-duration: 60ms;
-    }
-
-    /* Primary + tertiary: warm amber glow radiates outward */
-    a[data-variant="primary"]:hover,
-    a[data-variant="tertiary"]:hover {
-        box-shadow:
-            0 0 0 1px rgba(232, 168, 48, 0.32),
-            0 4px 18px rgba(232, 168, 48, 0.26),
-            0 10px 30px rgba(0, 0, 0, 0.22);
-    }
-
-    /* Secondary: whisper glow — border sparks without overpowering */
-    a[data-variant="secondary"]:hover {
-        box-shadow:
-            0 0 0 1px rgba(232, 168, 48, 0.24),
-            0 2px 14px rgba(232, 168, 48, 0.13);
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        a::before { display: none; }
-        a:hover  { transform: none; }
-        a:active { transform: none; }
-    }
-</style>

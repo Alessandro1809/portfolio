@@ -282,6 +282,35 @@ const structuredData = [
 		});
 	};
 
+	const initMicroButtons = () => {
+		document.querySelectorAll<HTMLElement>("[data-micro-button]").forEach((button) => {
+			if (button._microButtonAttached) return;
+			button._microButtonAttached = true;
+
+			button.addEventListener("pointermove", (event) => {
+				if (event.pointerType === "touch") return;
+				const rect = button.getBoundingClientRect();
+				button.style.setProperty("--button-x", `${event.clientX - rect.left}px`);
+				button.style.setProperty("--button-y", `${event.clientY - rect.top}px`);
+			}, { passive: true });
+
+			button.addEventListener("pointerdown", (event) => {
+				const rect = button.getBoundingClientRect();
+				button.style.setProperty("--button-x", `${event.clientX - rect.left}px`);
+				button.style.setProperty("--button-y", `${event.clientY - rect.top}px`);
+				button.classList.remove("is-pressed");
+				void button.offsetWidth;
+				button.classList.add("is-pressed");
+			}, { passive: true });
+
+			button.addEventListener("animationend", (event) => {
+				if (event.animationName === "button-pulse") {
+					button.classList.remove("is-pressed");
+				}
+			});
+		});
+	};
+
 	const initPrecisionOverdrive = () => {
 		const root = document.documentElement;
 		const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -330,6 +359,7 @@ const structuredData = [
 		initReveal();
 		initSpotlight();
 		initMagnetic();
+		initMicroButtons();
 		initPrecisionOverdrive();
 	};
 	runAll();

@@ -362,6 +362,104 @@ html {
         transition: opacity 300ms ease;
     }
 
+    .motion-button {
+        --button-x: 50%;
+        --button-y: 50%;
+        --button-fill: rgba(244, 240, 230, 0.96);
+        --button-glint: rgba(255, 255, 255, 0.32);
+        transform: translateY(0) scale(1);
+        transition:
+            transform 220ms var(--ease-out-quart),
+            border-color 220ms var(--ease-out-quart),
+            color 180ms var(--ease-out-quart),
+            box-shadow 220ms var(--ease-out-quart);
+    }
+
+    .motion-button::before {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        z-index: 0;
+        border-radius: inherit;
+        background:
+            radial-gradient(120px circle at var(--button-x) var(--button-y), var(--button-glint), transparent 46%),
+            radial-gradient(155% 155% at var(--button-x) var(--button-y), var(--button-fill) 0 38%, transparent 39%),
+            conic-gradient(from 210deg at var(--button-x) var(--button-y), transparent 0 24%, rgba(232, 168, 48, 0.24) 32%, transparent 42% 100%);
+        clip-path: circle(0 at var(--button-x) var(--button-y));
+        opacity: 0;
+        transition:
+            opacity 180ms var(--ease-out-quart),
+            clip-path 540ms var(--ease-out-expo);
+        pointer-events: none;
+    }
+
+    .motion-button::after {
+        content: "";
+        position: absolute;
+        left: var(--button-x);
+        top: var(--button-y);
+        z-index: 0;
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.48);
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0);
+        pointer-events: none;
+    }
+
+    .motion-button:hover,
+    .motion-button:focus-visible {
+        transform: translateY(-2px) scale(1.012);
+        box-shadow:
+            0 0 0 1px rgba(232, 168, 48, 0.24),
+            0 6px 8px rgba(232, 168, 48, 0.16);
+    }
+
+    .motion-button:hover::before,
+    .motion-button:focus-visible::before {
+        opacity: 1;
+        clip-path: circle(145% at var(--button-x) var(--button-y));
+    }
+
+    .motion-button[data-variant="primary"],
+    .motion-button[data-variant="tertiary"] {
+        --button-fill: rgba(244, 240, 230, 0.98);
+        --button-glint: rgba(255, 255, 255, 0.34);
+    }
+
+    .motion-button[data-variant="primary"]:hover,
+    .motion-button[data-variant="primary"]:focus-visible,
+    .motion-button[data-variant="tertiary"]:hover,
+    .motion-button[data-variant="tertiary"]:focus-visible {
+        border-color: rgba(244, 240, 230, 0.95);
+    }
+
+    .motion-button[data-variant="secondary"] {
+        --button-fill: rgba(232, 168, 48, 0.13);
+        --button-glint: rgba(22, 163, 74, 0.14);
+    }
+
+    .motion-button[data-variant="secondary"]:hover,
+    .motion-button[data-variant="secondary"]:focus-visible {
+        border-color: rgba(232, 168, 48, 0.48);
+        color: #E8A830;
+    }
+
+    .motion-button.is-pressed::after {
+        animation: button-pulse 420ms var(--ease-out-expo);
+    }
+
+    .motion-button:active {
+        transform: translateY(1px) scale(0.985);
+        transition-duration: 80ms;
+    }
+
+    @keyframes button-pulse {
+        0% { opacity: 0.5; transform: translate(-50%, -50%) scale(0); }
+        100% { opacity: 0; transform: translate(-50%, -50%) scale(18); }
+    }
+
     .project-card {
         isolation: isolate;
         transform-origin: 50% 100%;
@@ -374,18 +472,46 @@ html {
         z-index: 2;
         border-radius: inherit;
         background:
-            linear-gradient(115deg, transparent 0 38%, rgba(232, 168, 48, 0.085) 44%, transparent 50% 100%);
+            radial-gradient(30rem circle at 100% 0%, rgba(232, 168, 48, 0.22), rgba(232, 168, 48, 0.095) 34%, transparent 68%),
+            linear-gradient(138deg, rgba(232, 168, 48, 0.105) 0 18%, transparent 48%),
+            linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 26%);
+        clip-path: polygon(100% 0, 100% 0, 100% 0);
         opacity: 0;
-        transform: translateX(-24%);
         transition:
-            opacity 260ms var(--ease-out-quart),
-            transform 850ms var(--ease-out-expo);
+            opacity 220ms var(--ease-out-quart),
+            clip-path 560ms var(--ease-out-expo);
         pointer-events: none;
     }
 
     .project-card:hover::before {
         opacity: 1;
-        transform: translateX(24%);
+        clip-path: polygon(100% 0, 100% 100%, 0 100%, 0 0);
+    }
+
+    .project-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        border-radius: inherit;
+        padding: 1px;
+        background:
+            conic-gradient(from 270deg at 100% 0%, rgba(232, 168, 48, 0.82) 0 74deg, transparent 116deg 360deg);
+        -webkit-mask:
+            linear-gradient(#000 0 0) content-box,
+            linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask:
+            linear-gradient(#000 0 0) content-box,
+            linear-gradient(#000 0 0);
+        mask-composite: exclude;
+        opacity: 0;
+        transition: opacity 260ms var(--ease-out-quart);
+        pointer-events: none;
+    }
+
+    .project-card:hover::after {
+        opacity: 1;
     }
 
     .project-card > * {
@@ -467,6 +593,106 @@ html {
         box-shadow: 0 0 28px rgba(232, 168, 48, 0.28);
     }
 
+    .contact-brief,
+    .contact-console {
+        isolation: isolate;
+    }
+
+    .contact-pulse-grid {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background:
+            linear-gradient(90deg, rgba(232, 168, 48, 0.08) 1px, transparent 1px),
+            linear-gradient(0deg, rgba(242, 240, 235, 0.045) 1px, transparent 1px);
+        background-size: 4.25rem 4.25rem;
+        mask-image: radial-gradient(circle at 18% 16%, black, transparent 68%);
+        opacity: 0.72;
+        pointer-events: none;
+    }
+
+    .contact-brief::after {
+        content: "";
+        position: absolute;
+        inset: auto -18% -38% 12%;
+        z-index: 0;
+        height: 11rem;
+        border-radius: 999px;
+        background: radial-gradient(circle, rgba(232, 168, 48, 0.18), transparent 68%);
+        filter: blur(18px);
+        pointer-events: none;
+    }
+
+    .contact-signal-row {
+        transition:
+            background-color 220ms var(--ease-out-quart),
+            color 220ms var(--ease-out-quart);
+    }
+
+    .contact-signal-row:hover {
+        background: rgba(232, 168, 48, 0.055);
+    }
+
+    .contact-signal-row span:last-child {
+        overflow-wrap: anywhere;
+    }
+
+    .contact-section[data-contact-layout="embedded"] .contact-brief {
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.035),
+            0 12px 32px rgba(0, 0, 0, 0.22);
+    }
+
+    .contact-section[data-contact-layout="embedded"] .contact-pulse-grid {
+        background-size: 3.5rem 3.5rem;
+        mask-image: radial-gradient(ellipse at 24% 12%, black, transparent 62%);
+        opacity: 0.5;
+    }
+
+    .contact-section[data-contact-layout="embedded"] .contact-brief::after {
+        inset: auto -12% -42% 48%;
+        height: 8rem;
+        opacity: 0.72;
+    }
+
+    .contact-live-indicator {
+        position: relative;
+        display: grid;
+        width: 2.4rem;
+        height: 2.4rem;
+        place-items: center;
+        border-radius: 999px;
+        border: 1px solid rgba(232, 168, 48, 0.24);
+        background: rgba(232, 168, 48, 0.08);
+    }
+
+    .contact-live-indicator::before,
+    .contact-live-indicator::after {
+        content: "";
+        position: absolute;
+        inset: 0.42rem;
+        border-radius: inherit;
+        border: 1px solid rgba(232, 168, 48, 0.42);
+        animation: contact-signal 1.8s var(--ease-out-expo) infinite;
+    }
+
+    .contact-live-indicator::after {
+        animation-delay: 0.45s;
+    }
+
+    .contact-live-indicator span {
+        width: 0.48rem;
+        height: 0.48rem;
+        border-radius: 999px;
+        background: #E8A830;
+        box-shadow: 0 0 0 3px rgba(232, 168, 48, 0.14);
+    }
+
+    @keyframes contact-signal {
+        0% { opacity: 0.7; transform: scale(0.7); }
+        100% { opacity: 0; transform: scale(1.85); }
+    }
+
     .blog-row {
         transform-origin: left center;
     }
@@ -531,29 +757,6 @@ html {
 
     .contact-field:focus-within .contact-input {
         transform: translateY(-1px);
-    }
-
-    .contact-submit {
-        position: relative;
-        overflow: hidden;
-    }
-
-    .contact-submit::after {
-        content: "";
-        position: absolute;
-        inset: -45%;
-        background: radial-gradient(circle, rgba(255, 255, 255, 0.38), transparent 42%);
-        opacity: 0;
-        transform: scale(0.45);
-        transition:
-            opacity 220ms var(--ease-out-quart),
-            transform 420ms var(--ease-out-expo);
-        pointer-events: none;
-    }
-
-    .contact-submit:hover::after {
-        opacity: 0.36;
-        transform: scale(1);
     }
 
     @keyframes feedback-pop {

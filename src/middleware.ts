@@ -55,33 +55,19 @@ export const onRequest = defineMiddleware(async (context, next) => {
     context.locals.contactEmail = CONTACT_EMAIL;
     context.locals.siteUrl = SITE_URL;
 
-    if (RESEND_API_KEY) {
-        console.log("[Middleware] RESEND_API_KEY found");
-    } else {
+    if (!RESEND_API_KEY) {
         console.warn("[Middleware] RESEND_API_KEY is missing");
     }
 
-    if (CONTACT_EMAIL) {
-        console.log("[Middleware] CONTACT_EMAIL found");
-    } else {
+    if (!CONTACT_EMAIL) {
         console.warn("[Middleware] CONTACT_EMAIL is missing");
     }
 
-    if (RESEND_AUDIENCE_ID) {
-        console.log("[Middleware] RESEND_AUDIENCE_ID found");
-    } else {
+    if (!RESEND_AUDIENCE_ID) {
         console.warn("[Middleware] RESEND_AUDIENCE_ID is missing");
     }
 
-    if (SITE_URL) {
-        console.log("[Middleware] SITE_URL found");
-    }
-
-    if (TURSO_DB_URL) {
-        if (runtime?.env?.TURSO_DB_URL) console.log("[Middleware] Found TURSO_DB_URL in runtime.env");
-        else if ((context as any).env?.TURSO_DB_URL) console.log("[Middleware] Found TURSO_DB_URL in context.env");
-        else if (import.meta.env.TURSO_DB_URL) console.log("[Middleware] Found TURSO_DB_URL in import.meta.env");
-    } else {
+    if (!TURSO_DB_URL) {
         console.warn("[Middleware] TURSO_DB_URL is missing. Sources checked: runtime.env, context.env, globalThis, import.meta.env");
         return next();
     }
@@ -92,7 +78,6 @@ export const onRequest = defineMiddleware(async (context, next) => {
             TURSO_DB_URL,
             TURSO_AUTH_TOKEN: TURSO_AUTH_TOKEN || "" // Ensure it's at least a string
         });
-        console.log("[Middleware] Turso client initialized successfully");
     } catch (e) {
         console.error("[Middleware] Failed to initialize Turso client:", e);
     }

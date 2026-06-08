@@ -35,7 +35,6 @@ if (!turso) {
     );
 } else {
     try {
-        console.log(`[SlugPage] Fetching post: ${slug}`);
         const { rows } = await turso.execute({
             sql: "SELECT * FROM posts WHERE slug = ? LIMIT 1",
             args: [slug as string],
@@ -43,9 +42,14 @@ if (!turso) {
         post = rows[0];
 
         if (post) {
-            console.log(`[SlugPage] Post found. Fetching related posts...`);
             const { rows: morePostsRows } = await turso.execute({
-                sql: "SELECT * FROM posts WHERE STATUS = 'PUBLISHED' AND slug != ? ORDER BY createdAt DESC LIMIT 3",
+                sql: `
+                    SELECT title, slug, createdAt
+                    FROM posts
+                    WHERE STATUS = 'PUBLISHED' AND slug != ?
+                    ORDER BY createdAt DESC
+                    LIMIT 3
+                `,
                 args: [slug as string],
             });
 
@@ -127,7 +131,7 @@ try {
     section={section}
     tags={tags}
 >
-    <ViewTracker slug={slug} client:load />
+    <ViewTracker slug={slug} client:idle />
     <article class="container max-w-5xl mx-auto px-4 pt-44 relative z-32 pb-32" data-motion-section="blog-post">
         {/* Navigation Header */}
         <nav

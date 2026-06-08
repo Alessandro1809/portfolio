@@ -22,25 +22,18 @@ if (!turso) {
     console.error("[BlogGrid] Turso client is missing in Astro.locals");
 } else {
     try {
-        console.log("[BlogGrid] Fetching posts from Turso...");
         const result = await turso.execute({
             sql: "SELECT * FROM posts WHERE STATUS = 'PUBLISHED' ORDER BY createdAt DESC",
             args: [],
         });
 
-        console.log(
-            `[BlogGrid] Query successful. Found ${result.rows.length} rows.`,
-        );
-
         blogPosts = result.rows.map((post: any) => ({
             id: post.id,
             title: post.title,
             slug: post.slug,
-            featuredImage: post.featuredImage,
             excerpt: post.excerpt,
             date: post.createdAt ?? "",
             categorie: post.categorie,
-            tags: post.tags,
             read_time: post.read_time ?? post.readTime ?? "",
             featured: Boolean(post.featured),
         }));

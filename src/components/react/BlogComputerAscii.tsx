@@ -1,11 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-    BLOG_COMPUTER_ASCII_COLOR,
-    BLOG_COMPUTER_ASCII_ENCODED_FRAMES,
-    BLOG_COMPUTER_ASCII_FRAME_HEIGHT,
-    BLOG_COMPUTER_ASCII_FRAME_WIDTH,
-    BLOG_COMPUTER_ASCII_FPS,
-} from "./blogComputerFrames";
 
 type BlogComputerAsciiProps = {
     className?: string;
@@ -32,22 +25,41 @@ const decodeFrame = (encodedFrame: string) =>
 
 const MONO_CHARACTER_WIDTH = 4.82;
 const MONO_LINE_HEIGHT = 8 * 0.78;
+const BLOG_COMPUTER_ASCII_COLOR = "#2df9ff";
+const BLOG_COMPUTER_ASCII_FRAME_WIDTH = 188;
+const BLOG_COMPUTER_ASCII_FRAME_HEIGHT = 72;
+const BLOG_COMPUTER_ASCII_FPS = 30;
 
 export const BlogComputerAscii = ({ className = "" }: BlogComputerAsciiProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLPreElement>(null);
     const [currentFrame, setCurrentFrame] = useState(0);
+    const [encodedFrames, setEncodedFrames] = useState<readonly string[]>([]);
     const [scale, setScale] = useState(0.42);
     const [contentSize, setContentSize] = useState({
         width: BLOG_COMPUTER_ASCII_FRAME_WIDTH * MONO_CHARACTER_WIDTH,
         height: BLOG_COMPUTER_ASCII_FRAME_HEIGHT * MONO_LINE_HEIGHT,
     });
     const frames = useMemo(
-        () => BLOG_COMPUTER_ASCII_ENCODED_FRAMES.map(decodeFrame),
-        [],
+        () => encodedFrames.map(decodeFrame),
+        [encodedFrames],
     );
 
     useEffect(() => {
+        let mounted = true;
+
+        void import("./blogComputerFrames").then((module) => {
+            if (!mounted) return;
+            setEncodedFrames(module.BLOG_COMPUTER_ASCII_ENCODED_FRAMES);
+        });
+
+        return () => {
+            mounted = false;
+        };
+    }, []);
+
+    useEffect(() => {
+        if (!frames.length) return;
         const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         if (reducedMotion) return;
 
@@ -108,7 +120,7 @@ export const BlogComputerAscii = ({ className = "" }: BlogComputerAsciiProps) =>
         if (containerRef.current) observer.observe(containerRef.current);
 
         return () => observer.disconnect();
-    }, []);
+    }, [frames.length]);
 
     return (
         <div
@@ -151,7 +163,7 @@ export const BlogComputerAscii = ({ className = "" }: BlogComputerAsciiProps) =>
                             transformOrigin: "left top",
                         }}
                     >
-                        {frames[currentFrame]}
+                        {frames[currentFrame] ?? ""}
                     </pre>
                 </div>
             </div>

@@ -9,7 +9,7 @@ const [emailExamplePrefix, emailExampleDomain = ""] =
 
 <section class="relative z-10">
     <form
-        class="precision-tilt flex flex-col gap-5 rounded-xl border border-white/8 bg-[#09090A] p-5 sm:p-6"
+        class="contact-console spotlight-card precision-tilt flex flex-col gap-5 rounded-xl border border-white/8 bg-[#09090A] p-5 sm:p-6"
         id="contact-form"
         data-motion-panel
         data-tilt-card
@@ -19,6 +19,20 @@ const [emailExamplePrefix, emailExampleDomain = ""] =
         data-error-prefix={t.contactForm.errorPrefix}
         data-success-prefix={t.contactForm.successPrefix}
     >
+        <div class="flex items-center justify-between gap-4 border-b border-white/8 pb-4">
+            <div>
+                <p class="text-sm font-semibold text-white">
+                    {lang === "es" ? "Canal directo" : "Direct channel"}
+                </p>
+                <p class="mt-1 text-xs leading-5 text-neutral-400">
+                    {lang === "es" ? "Cuéntame el contexto y la restricción principal." : "Share the context and main constraint."}
+                </p>
+            </div>
+            <div class="contact-live-indicator" aria-hidden="true">
+                <span></span>
+            </div>
+        </div>
+
         <div class="grid gap-5 md:grid-cols-2">
             <!-- Name -->
             <div class="contact-field flex flex-col gap-2" data-contact-field>
@@ -90,6 +104,9 @@ const [emailExamplePrefix, emailExampleDomain = ""] =
                 aria-describedby="message-error msg-count"
             ></textarea>
             <p id="message-error" class="hidden text-[0.7rem] text-red-400" role="alert" aria-live="polite"></p>
+            <div class="h-1 overflow-hidden rounded-full bg-white/8" aria-hidden="true">
+                <span id="msg-progress" class="block h-full w-0 rounded-full bg-primary-green transition-[width] duration-200 ease-out"></span>
+            </div>
         </div>
 
         <!-- Submit row -->
@@ -99,12 +116,17 @@ const [emailExamplePrefix, emailExampleDomain = ""] =
             </p>
 
             <button
-                class="contact-submit group inline-flex items-center gap-2.5 rounded-lg border border-primary-green bg-primary-green px-7 py-3 text-sm font-semibold text-black transition-all duration-200 hover:border-white hover:bg-white active:translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-green/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:cursor-not-allowed disabled:opacity-50"
+                class="contact-submit motion-button group inline-flex items-center gap-2.5 rounded-lg border border-primary-green bg-primary-green px-7 py-3 text-sm font-semibold text-black transition-all duration-200 active:translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-green/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:cursor-not-allowed disabled:opacity-50"
                 type="submit"
                 id="contact-submit"
+                data-variant="primary"
+                data-micro-button
+                data-magnetic
             >
-                <span id="submit-text">{t.contactForm.send}</span>
-                <span aria-hidden="true" class="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+                <span data-magnetic-inner class="relative z-[1] inline-flex items-center gap-2.5">
+                    <span id="submit-text">{t.contactForm.send}</span>
+                    <span aria-hidden="true" class="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+                </span>
             </button>
         </div>
 
@@ -139,6 +161,7 @@ const [emailExamplePrefix, emailExampleDomain = ""] =
         const submitBtn = document.getElementById('contact-submit') as HTMLButtonElement | null;
         const submitText = document.getElementById('submit-text');
         const msgCount = document.getElementById('msg-count');
+        const msgProgress = document.getElementById('msg-progress');
         const textarea = document.getElementById('message') as HTMLTextAreaElement | null;
 
         if (!form || form.dataset.listenerAttached) return;
@@ -150,6 +173,7 @@ const [emailExamplePrefix, emailExampleDomain = ""] =
         textarea?.addEventListener('input', () => {
             const len = textarea.value.length;
             if (msgCount) msgCount.textContent = `${len} / 2000`;
+            if (msgProgress) msgProgress.style.width = `${Math.min((len / 2000) * 100, 100)}%`;
         });
 
         /* Dismiss handler */
@@ -258,6 +282,7 @@ const [emailExamplePrefix, emailExampleDomain = ""] =
                     showMessage(`${successPrefix} ${successText}`, true);
                     form.reset();
                     if (msgCount) msgCount.textContent = '0 / 2000';
+                    if (msgProgress) msgProgress.style.width = '0%';
                     /* Clear all inline errors */
                     form.querySelectorAll('[id$="-error"]').forEach(el => {
                         el.textContent = '';

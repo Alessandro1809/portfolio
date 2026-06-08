@@ -2,24 +2,90 @@
 import Contact from "@/components/ui/forms/Contact.astro";
 import { defaultLang, translations, type Language } from "@/lib/i18n";
 
+interface Props {
+    layout?: "standalone" | "embedded";
+}
+
+const { layout = "standalone" } = Astro.props;
 const lang = (Astro.locals.lang as Language | undefined) ?? defaultLang;
 const t = translations[lang];
+const isEmbedded = layout === "embedded";
+
+const signals = lang === "es"
+    ? [
+        ["Tiempo de respuesta", "24-48h"],
+        ["Mejor fit", "CMS, APIs, automatización"],
+        ["Modalidad", "Remoto desde Costa Rica"],
+    ]
+    : [
+        ["Response time", "24-48h"],
+        ["Best fit", "CMS, APIs, automation"],
+        ["Mode", "Remote from Costa Rica"],
+    ];
 ---
 
 <section
-    class="relative mx-auto grid max-w-7xl gap-7 px-5 py-14 sm:px-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-start lg:px-12 lg:py-16"
+    id="contact"
+    data-contact-layout={layout}
+    class:list={[
+        "contact-section relative mx-auto grid gap-6",
+        isEmbedded
+            ? "w-full max-w-none px-0 py-0 lg:grid-cols-1"
+            : "max-w-7xl px-5 py-16 sm:px-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-start lg:px-12 lg:py-20",
+    ]}
     data-motion-section="contact"
 >
     <header
-        class="max-w-2xl"
+        class:list={[
+            "contact-brief relative overflow-hidden rounded-xl border border-white/8 bg-[#09090A]",
+            isEmbedded ? "p-5 sm:p-6" : "p-6 sm:p-7 lg:sticky lg:top-28",
+        ]}
         data-motion-header
     >
-        <h2 data-gsap-heading class="text-3xl font-semibold leading-tight text-white sm:text-4xl lg:text-[clamp(2rem,3.4vw,2.85rem)]">
-            {t.contactSection.heading}
-        </h2>
-        <p class="mt-5 max-w-2xl text-base leading-[1.8] text-neutral-400" data-motion-copy>
-            {t.contactSection.description}
-        </p>
+        <div class="contact-pulse-grid" aria-hidden="true"></div>
+        <div class="relative">
+            <h2
+                data-gsap-heading
+                class:list={[
+                    "font-semibold leading-tight text-white",
+                    isEmbedded
+                        ? "max-w-[12ch] text-3xl sm:max-w-none sm:text-4xl lg:text-[clamp(2rem,3.2vw,2.75rem)]"
+                        : "text-3xl sm:text-4xl lg:text-[clamp(2rem,3.4vw,2.85rem)]",
+                ]}
+            >
+                {t.contactSection.heading}
+            </h2>
+            <p
+                class:list={[
+                    "mt-5 text-base leading-[1.8] text-neutral-400",
+                    isEmbedded ? "max-w-3xl" : "max-w-2xl",
+                ]}
+                data-motion-copy
+            >
+                {t.contactSection.description}
+            </p>
+
+            <div
+                class:list={[
+                    "mt-8 grid gap-px overflow-hidden rounded-lg border border-white/8 bg-white/8",
+                    isEmbedded ? "sm:grid-cols-3" : "",
+                ]}
+            >
+                {signals.map(([label, value]) => (
+                    <div
+                        class:list={[
+                            "contact-signal-row min-w-0 bg-[#0D0D0F] px-4 py-3",
+                            isEmbedded
+                                ? "flex flex-col items-start gap-2"
+                                : "grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4",
+                        ]}
+                    >
+                        <span class="text-sm text-neutral-400">{label}</span>
+                        <span class="font-mono text-[0.7rem] leading-5 text-primary-green">{value}</span>
+                    </div>
+                ))}
+            </div>
+        </div>
     </header>
 
     <div data-motion-panel>
